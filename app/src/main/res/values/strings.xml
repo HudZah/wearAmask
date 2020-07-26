@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">wearAmask</string>
+    <string name="onboarding_heading_1">Location Based</string>
+    <string name="onboarding_heading_2">Mask Reminder</string>
+    <string name="onboarding_heading_3">Save Lives</string>
+
+    <string name="onboarding_desc_1">We allow for you to select a location, and upon leaving it, we send you a reminder to wear your mask</string>
+    <string name="onboarding_desc_2">We remind you to take and wear your mask in case you ever forget it</string>
+    <string name="onboarding_desc_3">Wearing a mask helps save lives and protects you and others around you</string>
+
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_back">Back</string>
+    <string name="onboarding_finish">Finish</string>
+    <string name="onboarding_skip">Skip</string>
+</resources>
