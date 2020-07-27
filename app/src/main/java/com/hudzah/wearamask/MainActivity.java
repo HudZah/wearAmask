@@ -3,6 +3,9 @@ package com.hudzah.wearamask;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -10,6 +13,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.parse.ParseInstallation;
+import com.parse.ParseUser;
 
 import org.w3c.dom.Text;
 
@@ -27,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
     private Button skipButton;
 
     private int currentPage;
+    private boolean firstTime;
+
+    private SharedPreferences sharedPreferences;
 
     private static final String TAG = "MainActivity";
 
@@ -34,6 +44,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ParseInstallation.getCurrentInstallation().saveInBackground();
+        sharedPreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+
+        firstTime = sharedPreferences.getBoolean("firstTime", true);
+        if(!firstTime){
+            // TODO: 7/27/2020 If logged in and !firstTime, then go to maps else go to login
+            if(ParseUser.getCurrentUser() != null){
+                goToMaps();
+            }
+            else{
+                Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
+                goToMaps();
+            }
+        }
 
         sliderViewPager = (ViewPager) findViewById(R.id.slideViewPager);
         dotsLayout = (LinearLayout) findViewById(R.id.dotsLayout);
@@ -43,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         skipButton = (Button) findViewById(R.id.skipButton);
 
         sliderAdapter = new SliderAdapter(this);
+
 
         sliderViewPager.setAdapter(sliderAdapter);
 
@@ -54,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
              @Override
              public void onClick(View v) {
                  sliderViewPager.setCurrentItem(currentPage + 1);
+                 if(nextButton.getText() == getResources().getString(R.string.onboarding_finish)){
+                     goToMaps();
+                 }
              }
         });
 
@@ -68,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: In here");
+                // TODO: 7/27/2020 ADd sharedpref, firstime = false and move to maps, if is not firsttime, go to login
+                goToMaps();
             }
         });
 
@@ -137,4 +168,12 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+
+    private void goToMaps(){
+        if(firstTime) {
+            sharedPreferences.edit().putBoolean("firstTime", false).apply();
+        }
+        Intent mapIntent = new Intent(this, MapsActivity.class);
+        startActivity(mapIntent);
+    }
 }

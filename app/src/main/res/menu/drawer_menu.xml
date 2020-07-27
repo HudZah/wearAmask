@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/locationsFragment"
+            android:icon="@drawable/ic_location_on_black_24dp"
+            android:title="@string/drawer_title_locations"/>
+
+        <item
+            android:id="@+id/settingsFragment"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/drawer_title_locations"/>
+
+
+    </group>
+
+</menu>
