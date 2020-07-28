@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="450dp"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="200dp"
+    app:cardCornerRadius="30dp"
+    android:background="@color/white"
+    app:layout_behavior="@string/bottom_sheet_behavior">
+
+
+    <View
+        android:layout_width="60dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="4.5dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/light_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/dark_gray"
+            android:layout_gravity="center_horizontal"
+            android:textSize="17sp"
+            android:padding="15dp"
+            android:text="@string/bottom_sheet_to_start"/>
+
+        <Button
+            android:id="@+id/skipButton"
+            android:layout_width="138dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/roundedbutton"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:foreground="@drawable/ripple_rounded"
+            android:text="@string/bottom_sheet_login"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_gravity="center_horizontal"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:padding="15dp"
+            android:text="@string/bottom_sheet_register"/>
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

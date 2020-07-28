@@ -6,31 +6,171 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MapFragment">
 
-    <RelativeLayout
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/mapView"
+    </com.google.android.gms.maps.MapView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        app:fabSize="auto"
+        android:src="@drawable/ic_gps_fixed_black_24dp"
+        android:clickable="true"
+        android:layout_marginRight="30dp"
+        android:layout_gravity="bottom|end"
+        app:layout_dodgeInsetEdges="bottom"
+        android:layout_marginBottom="25dp"
+        />
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/fabUpArrow"
+        android:visibility="invisible"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:clickable="true"
+        android:layout_gravity="bottom|center"
+        app:layout_dodgeInsetEdges="bottom"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        app:lottie_loop="true"
+        android:rotationX="180"
+        app:lottie_rawRes="@raw/up_arrow_2"
+        />
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/bottomSheet"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="380dp"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="200dp"
+        app:cardCornerRadius="30dp"
+        app:layout_insetEdge="bottom"
+        android:background="@color/white"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+
+        <RelativeLayout
+            android:id="@+id/notLoggedInLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-
-
-        </com.google.android.gms.maps.MapView>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            app:fabSize="auto"
-            android:src="@drawable/ic_gps_fixed_black_24dp"
-            android:clickable="true"
-            android:layout_margin="40dp"
-            />
+            android:visibility="invisible"
+            android:orientation="vertical">
 
-    </RelativeLayout>
+            <View
+                android:layout_width="60dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="4.5dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/light_gray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/dark_blue"
+                    android:layout_gravity="center_horizontal"
+                    android:textAlignment="center"
+                    android:textSize="17sp"
+                    android:padding="15dp"
+                    android:text="@string/bottom_sheet_to_start"/>
+
+                <Button
+                    android:id="@+id/loginButton"
+                    android:layout_width="138dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="center"
+                    android:background="@drawable/roundedbutton"
+                    android:backgroundTint="@color/colorPrimaryDark"
+                    android:foreground="@drawable/ripple_rounded"
+                    android:text="@string/bottom_sheet_login"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/registerButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:padding="15dp"
+                    android:text="@string/bottom_sheet_register"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/loggedInLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="60dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="4.5dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/light_gray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/welcomeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/dark_gray"
+                    android:layout_gravity="left"
+                    android:textSize="24sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:padding="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/bottom_sheet_welcome"/>
+
+                <EditText
+                    android:id="@+id/passwordEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@drawable/roundedbutton"
+                    android:hint="@string/bottom_sheet_add_location_hint"
+                    android:textSize="20sp"
+                    android:inputType="textPassword"
+                    android:paddingLeft="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:singleLine="true"/>
+
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

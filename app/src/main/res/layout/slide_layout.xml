@@ -40,7 +40,7 @@
         android:layout_below="@id/slideHeading"
         android:text="We use your location to remind you to wear a mask!"
         android:textAlignment="center"
-        android:textColor="@color/dark_gray"
+        android:textColor="@color/dark_blue"
         android:textSize="16sp"
         android:fontFamily="sans-serif-medium"
         />

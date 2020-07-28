@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
 
         firstTime = sharedPreferences.getBoolean("firstTime", true);
+        ParseUser.logOut();
         if(!firstTime){
             // TODO: 7/27/2020 If logged in and !firstTime, then go to maps else go to login
             if(ParseUser.getCurrentUser() != null){
