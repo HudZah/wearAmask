@@ -10,10 +10,12 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
+import com.parse.ParseUser;
 
 public class MapsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -87,6 +89,10 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
                 navController.navigate(R.id.settingsFragment);
                 break;
 
+            case R.id.logout:
+                ParseUser.logOut();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
 
 
         }

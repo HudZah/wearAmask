@@ -11,7 +11,12 @@
         <item
             android:id="@+id/settingsFragment"
             android:icon="@drawable/ic_settings_black_24dp"
-            android:title="@string/drawer_title_locations"/>
+            android:title="@string/drawer_title_settings"/>
+
+        <item
+            android:id="@+id/logout"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"
+            android:title="@string/drawer_title_logout"/>
 
 
     </group>

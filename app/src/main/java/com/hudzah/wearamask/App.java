@@ -3,6 +3,7 @@ package com.hudzah.wearamask;
 import android.app.Application;
 
 import com.parse.Parse;
+import com.parse.facebook.ParseFacebookUtils;
 
 public class App extends Application {
 
@@ -17,6 +18,9 @@ public class App extends Application {
                 .enableLocalDataStore()
                 .build()
         );
+
+        ParseFacebookUtils.initialize(this);
+
 
 
     }

@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         ParseInstallation.getCurrentInstallation().saveInBackground();
         sharedPreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
         firstTime = sharedPreferences.getBoolean("firstTime", true);
         ParseUser.logOut();
@@ -55,6 +58,11 @@ public class MainActivity extends AppCompatActivity {
             if(ParseUser.getCurrentUser() != null){
                 goToMaps();
             }
+
+            else if(account != null){
+                goToMaps();
+            }
+
             else{
                 Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
                 goToMaps();
@@ -175,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
             sharedPreferences.edit().putBoolean("firstTime", false).apply();
         }
         Intent mapIntent = new Intent(this, MapsActivity.class);
+        mapIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(mapIntent);
     }
 }

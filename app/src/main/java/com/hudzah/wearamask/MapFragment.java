@@ -38,6 +38,8 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+import org.w3c.dom.Text;
+
 import java.util.Map;
 
 
@@ -57,6 +59,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     BottomSheetBehavior bottomSheetBehavior;
     CardView bottomSheet;
+    TextView registerButton;
 
     private Button loginButton;
 
@@ -122,6 +125,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         fabUpButton = (LottieAnimationView) view.findViewById(R.id.fabUpArrow);
 
+        registerButton = (TextView) view.findViewById(R.id.registerButton);
+
         checkIfLoggedIn();
 
         fabUpButton.setOnClickListener(new View.OnClickListener() {
@@ -135,6 +140,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 login();
+            }
+        });
+
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToSignUp();
             }
         });
 
@@ -192,6 +204,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private void login() {
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         Intent intent = new Intent(getActivity(), LoginActivity.class);
+        getContext().startActivity(intent);
+    }
+
+    private void goToSignUp(){
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        Intent intent = new Intent(getActivity(), SignUpActivity.class);
         getContext().startActivity(intent);
     }
 
