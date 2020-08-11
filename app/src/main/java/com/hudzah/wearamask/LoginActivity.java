@@ -1,20 +1,23 @@
 package com.hudzah.wearamask;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -23,9 +26,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -35,7 +38,6 @@ import com.parse.facebook.ParseFacebookUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -50,10 +52,13 @@ public class LoginActivity extends AppCompatActivity {
     String password;
     TextView registerTextView;
     TextView forgotPasswordTextView;
-    private SignInButton signInGoogleButton;
+    private FloatingActionButton signInGoogleButton;
     private int RC_SIGN_IN = 0;
     GoogleSignInClient mGoogleSignInClient;
-    Button signInFacebookButton;
+    FloatingActionButton signInFacebookButton;
+    DialogAdapter dialog;
+    Dialog errorDialog;
+
 
 
 
@@ -69,9 +74,11 @@ public class LoginActivity extends AppCompatActivity {
         passwordInput = (TextInputLayout) findViewById(R.id.passwordInput);
         registerTextView = (TextView) findViewById(R.id.registerButton);
         forgotPasswordTextView = (TextView)findViewById(R.id.forgotButton);
-        signInGoogleButton = (SignInButton) findViewById(R.id.signInGoogleButton);
-        signInFacebookButton = (Button) findViewById(R.id.signInFacebookButton);
+        signInGoogleButton = (FloatingActionButton) findViewById(R.id.signInGoogleButton);
+        signInFacebookButton = (FloatingActionButton) findViewById(R.id.signInFacebookButton);
+        dialog = new DialogAdapter(this);
 
+        errorDialog = new Dialog(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -153,6 +160,9 @@ public class LoginActivity extends AppCompatActivity {
         username = usernameInput.getEditText().getText().toString();
         password = passwordInput.getEditText().getText().toString();
         if(validateData()){
+
+            dialog.loadingDialog();
+
             ParseUser.logInInBackground(username, password, new LogInCallback() {
                 @Override
                 public void done(ParseUser user, ParseException e) {
@@ -160,9 +170,12 @@ public class LoginActivity extends AppCompatActivity {
                        goToMaps();
                     }
                     else{
-                        // TODO: 7/28/2020 Display dialog
+                        displayErrorDialog(e.getMessage());
                     }
+
+                    dialog.dismissLoadingDialog();
                 }
+
             });
         }
     }
@@ -195,7 +208,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void forgotPassword(){
-
     }
 
     @Override
@@ -213,13 +225,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void facebookSignUp() {
+        dialog.loadingDialog();
+
         Collection<String> permissions = Arrays.asList("public_profile", "email");
         ParseFacebookUtils.logInWithReadPermissionsInBackground(LoginActivity.this, permissions, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException err) {
                 if (err != null) {
                     ParseUser.logOut();
-                    Log.e("err", "err", err);
+                    displayErrorDialog(err.getMessage());
                 }
                 if (user == null) {
                     ParseUser.logOut();
@@ -234,9 +248,11 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d("MyApp", "User logged in through Facebook!");
                     goToMaps();
 
-                    // TODO: 8/6/2020 ALERT for login account already exists and to login instead
                 }
+
+                dialog.dismissLoadingDialog();
             }
+
         });
     }
 
@@ -260,7 +276,9 @@ public class LoginActivity extends AppCompatActivity {
                 user.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-                        goToMaps();
+                        if(e == null) {
+                            goToMaps();
+                        }
                         //alertDisplayer("First Time Login", "Welcome!");
                     }
                 });
@@ -292,5 +310,27 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+    }
+
+    private void displayErrorDialog(String error){
+        errorDialog.setContentView(R.layout.dialog_error);
+        errorDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        TextView errorTextView = (TextView) errorDialog.findViewById(R.id.errorTextView);
+        errorTextView.setText(error);
+        Window window = errorDialog.getWindow();
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
+
+        Button closeButton = (Button) errorDialog.findViewById(R.id.closeButton);
+
+
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                errorDialog.dismiss();
+            }
+        });
+
+        errorDialog.show();
     }
 }

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:backgroundTint="@color/white"
+    android:layout_marginLeft="30dp"
+    android:layout_marginRight="30dp"
+    android:layout_gravity="center"
+    app:cardCornerRadius="15dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="70dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginBottom="30dp">
+
+        <ImageView
+            android:id="@+id/loading"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_cloud_error"
+            android:layout_centerInParent="true"
+
+            />
+
+        <TextView
+            android:id="@+id/error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_error_occured"
+            android:textColor="@color/dark_blue"
+            android:layout_below="@id/loading"
+            android:layout_marginTop="24dp"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/errorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_below="@id/loading"
+            android:padding="5dp"
+            android:layout_marginTop="24dp"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="17sp"
+            android:textAlignment="center"
+            android:layout_centerHorizontal="true"/>
+
+        <Button
+            android:id="@+id/closeButton"
+            android:layout_width="138dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/roundedbutton"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:foreground="@drawable/ripple_rounded"
+            android:text="@string/dialog_close"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:layout_below="@id/error"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="35dp"
+            android:textSize="18sp" />
+
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

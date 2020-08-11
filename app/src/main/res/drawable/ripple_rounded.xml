@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:color="@color/colorAccent">
+    android:color="@color/colorPrimary">
     <item android:id="@android:id/mask">
         <shape android:shape="rectangle">
             <corners
@@ -9,7 +9,7 @@
                 android:bottomRightRadius="20dp"
                 android:topLeftRadius="20dp"
                 android:bottomLeftRadius="20dp"/>
-            <solid android:color="?android:colorAccent" />
+            <solid android:color="?android:colorPrimary" />
         </shape>
     </item>
 </ripple>

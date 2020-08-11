@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:id="@+id/layout"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -16,11 +18,35 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@null"
             android:translationZ="90dp"
-            android:theme="@style/ToolbarColoredBackArrow" />
+            android:theme="@style/ToolbarColoredBackArrow">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <TextView
+                    android:id="@+id/registerButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="-1dp"
+                    android:layout_marginBottom="0dp"
+                    android:paddingRight="20dp"
+                    android:text="@string/sign_up_login"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+        </androidx.appcompat.widget.Toolbar>
 
 
         <LinearLayout
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -32,10 +58,64 @@
                 android:layout_height="wrap_content"
                 android:text="@string/sign_up_heading"
                 android:textSize="32sp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 android:fontFamily="sans-serif-medium"
                 android:textColor="@color/dark_blue"
-                android:layout_gravity="left"
+                android:layout_gravity="center_horizontal"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:padding="15dp">
+
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/signInGoogleButton"
+                        android:layout_width="70dp"
+                        android:src="@drawable/google_icon"
+                        android:backgroundTint="@color/white"
+                        app:fabCustomSize="70dp"
+                        app:borderWidth="0dp"
+                        app:elevation="4dp"
+                        android:layout_height="70dp" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/signInFacebookButton"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        app:fabCustomSize="70dp"
+                        android:src="@drawable/facebook_icon_2"
+                        android:layout_toRightOf="@id/signInGoogleButton"
+                        android:backgroundTint="@color/white"
+                        android:layout_marginLeft="10dp"
+                        app:borderWidth="0dp"
+                        app:elevation="4dp"
+                        android:textColor="@android:color/white" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                android:layout_gravity="center_horizontal"
+                android:padding="15dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/sign_up_with_email"
+                android:textColor="@color/dark_blue"
                 />
 
 
@@ -47,6 +127,10 @@
                 app:hintTextAppearance="@style/MyHintStyle"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:boxStrokeColor="@color/colorPrimaryDark"
+                app:boxCornerRadiusBottomEnd="15dp"
+                app:boxCornerRadiusBottomStart="15dp"
+                app:boxCornerRadiusTopEnd="15dp"
+                app:boxCornerRadiusTopStart="15dp"
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -65,6 +149,10 @@
                 app:hintTextAppearance="@style/MyHintStyle"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:boxStrokeColor="@color/colorPrimaryDark"
+                app:boxCornerRadiusBottomEnd="15dp"
+                app:boxCornerRadiusBottomStart="15dp"
+                app:boxCornerRadiusTopEnd="15dp"
+                app:boxCornerRadiusTopStart="15dp"
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -84,6 +172,10 @@
                 app:passwordToggleEnabled="true"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:boxStrokeColor="@color/colorPrimaryDark"
+                app:boxCornerRadiusBottomEnd="15dp"
+                app:boxCornerRadiusBottomStart="15dp"
+                app:boxCornerRadiusTopEnd="15dp"
+                app:boxCornerRadiusTopStart="15dp"
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -100,7 +192,7 @@
                 android:id="@+id/signupCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="12dp"
+                app:cardCornerRadius="15dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="40dp"
                 android:clickable="true"
@@ -127,45 +219,6 @@
 
             </androidx.cardview.widget.CardView>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp">
-
-                <com.google.android.gms.common.SignInButton
-                    android:id="@+id/signInGoogleButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
-
-                <Button
-                    android:id="@+id/signInFacebookButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/com_facebook_blue"
-                    android:text="@string/facebook_signup_text"
-                    android:layout_alignParentEnd="true"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:textColor="@android:color/white" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp">
-
-                <TextView
-                    android:id="@+id/registerButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="16sp"
-                    android:text="@string/sign_up_login"/>
-
-
-            </RelativeLayout>
 
 
 

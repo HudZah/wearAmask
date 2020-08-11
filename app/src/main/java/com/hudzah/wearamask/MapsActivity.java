@@ -1,5 +1,10 @@
 package com.hudzah.wearamask;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -7,12 +12,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
 import com.parse.ParseUser;
@@ -23,6 +23,8 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private NavController navController;
     private NavigationView navView;
+    private static final String TAG = "MapsActivity";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,5 +99,14 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
 
         }
         return true;
+    }
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        Log.d(TAG, "onRequestPermissionsResult: call fragment onRequestPermissionsResult");
     }
 }

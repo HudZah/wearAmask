@@ -3,30 +3,35 @@ package com.hudzah.wearamask;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.login.Login;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.parse.LogInCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -50,12 +55,15 @@ public class SignUpActivity extends AppCompatActivity {
     TextInputLayout passwordInput;
     ParseUser user;
     TextInputLayout emailInput;
-    SignInButton signInGoogleButton;
+    FloatingActionButton signInGoogleButton;
     GoogleSignInClient mGoogleSignInClient;
     PasswordGenerator passwordGenerator;
     private int RC_SIGN_IN = 0;
     private static final String TAG = "SignUpActivity";
-    Button signInFacebookButton;
+    FloatingActionButton signInFacebookButton;
+    DialogAdapter dialog;
+    Dialog errorDialog;
+    TextView registerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +73,11 @@ public class SignUpActivity extends AppCompatActivity {
         usernameInput = (TextInputLayout) findViewById(R.id.usernameInput);
         passwordInput = (TextInputLayout) findViewById(R.id.passwordInput);
         emailInput = (TextInputLayout) findViewById(R.id.emailInput);
-        signInGoogleButton = (SignInButton) findViewById(R.id.signInGoogleButton);
-        signInFacebookButton = (Button) findViewById(R.id.signInFacebookButton);
+        signInGoogleButton = (FloatingActionButton) findViewById(R.id.signInGoogleButton);
+        signInFacebookButton = (FloatingActionButton) findViewById(R.id.signInFacebookButton);
+        dialog = new DialogAdapter(this);
+        errorDialog = new Dialog(this);
+        registerButton = (TextView) findViewById(R.id.registerButton);
 
         passwordGenerator = new PasswordGenerator.PasswordGeneratorBuilder()
                 .useDigits(true)
@@ -87,10 +98,18 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideKeyboard();
+                hideKeyboard(v);
             }
         });
 
@@ -123,12 +142,13 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void facebookSignUp() {
         Collection<String> permissions = Arrays.asList("public_profile", "email");
+        dialog.loadingDialog();
         ParseFacebookUtils.logInWithReadPermissionsInBackground(SignUpActivity.this, permissions, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException err) {
                 if (err != null) {
                     ParseUser.logOut();
-                    Log.e("err", "err", err);
+                    displayErrorDialog(err.getMessage());
                 }
                 if (user == null) {
                     ParseUser.logOut();
@@ -143,9 +163,11 @@ public class SignUpActivity extends AppCompatActivity {
                     Log.d("MyApp", "User logged in through Facebook!");
                    goToMaps();
 
-                    // TODO: 8/6/2020 ALERT for login account already exists and to login instead
                 }
+
+                dialog.dismissLoadingDialog();
             }
+
         });
     }
 
@@ -159,10 +181,10 @@ public class SignUpActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void hideKeyboard(){
+    private void hideKeyboard(View view){
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         if(getCurrentFocus() != null) {
-            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
@@ -246,6 +268,8 @@ public class SignUpActivity extends AppCompatActivity {
         ParseUser.logOut();
         user = new ParseUser();
 
+        dialog.loadingDialog();
+
         user.setUsername(username);
         user.setEmail(email);
         user.setPassword(password);
@@ -255,19 +279,25 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void done(ParseException e) {
                 if(e == null){
+
+                    dialog.dismissLoadingDialog();
+
                     if(!method.equals("google")) {
                         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                     }
                     else{
-                       goToMaps();
+                        goToMaps();
                     }
                 }
                 else{
-                    // TODO: 7/28/2020 Show custom error dialog
+                    dialog.dismissLoadingDialog();
                     Log.d(TAG, "done: " + e.getMessage());
+                    displayErrorDialog(e.getMessage());
                 }
+
+
             }
         });
     }
@@ -292,8 +322,14 @@ public class SignUpActivity extends AppCompatActivity {
                 user.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-                        goToMaps();
-                        //alertDisplayer("First Time Login", "Welcome!");
+                        if(e == null) {
+                            goToMaps();
+                        }
+                        else{
+                            displayErrorDialog(e.getCode() + " " + e.getMessage());
+                        }
+
+
                     }
                 });
             }
@@ -310,6 +346,27 @@ public class SignUpActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void displayErrorDialog(String error){
+        errorDialog.setContentView(R.layout.dialog_error);
+        errorDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        TextView errorTextView = (TextView) errorDialog.findViewById(R.id.errorTextView);
+        errorTextView.setText(error);
+        Window window = errorDialog.getWindow();
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
+
+        Button closeButton = (Button) errorDialog.findViewById(R.id.closeButton);
+
+
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                errorDialog.dismiss();
+            }
+        });
+
+        errorDialog.show();
+    }
 
 
 

@@ -10,6 +10,9 @@
 
     <string name="google_maps_key">AIzaSyCrjHoNx5-vEVW1UHKG9eH1-op91B6hl9g</string>
 
+    <string name="dialog_error_occured">An Error Has Occurred</string>
+    <string name="dialog_close">Close</string>
+
 
     <string name="app_name">wearAmask</string>
     <string name="onboarding_heading_1">Location Based</string>
@@ -30,7 +33,17 @@
     <string name="bottom_sheet_login">Login</string>
     <string name="bottom_sheet_register">Or else, create an account</string>
     <string name="bottom_sheet_welcome">Welcome, </string>
-    <string name="bottom_sheet_add_location_hint">Add A Location</string>
+    <string name="bottom_sheet_add_location_hint">Enter Address, City or Zip Code</string>
+
+    <string name="location_radius">Select radius (m)</string>
+    <string name="location_color">Select color</string>
+    <string name="location_save">Save</string>
+    <string name="location_discard">Discard</string>
+    <string-array name="radius">
+        <item>15</item>
+        <item>30</item>
+        <item>50</item>
+    </string-array>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
@@ -44,6 +57,8 @@
     <string name="sign_up_email">Email</string>
     <string name="sign_up_reenter_password">Re-enter password</string>
     <string name="sign_up_login">Login instead</string>
+    <string name="sign_up_with_email">or sign up with your email</string>
+    <string name="login_instead">or use your account instead</string>
 
     <string name="error_username_length">Username must be more than 5 and less than 20 characters</string>
     <string name="error_password_length">Password must be at least 7 characters</string>

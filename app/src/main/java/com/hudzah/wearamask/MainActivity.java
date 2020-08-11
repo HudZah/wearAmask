@@ -50,22 +50,19 @@ public class MainActivity extends AppCompatActivity {
         ParseInstallation.getCurrentInstallation().saveInBackground();
         sharedPreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        // TODO: 8/6/2020 FIX GOOGLE SIGN IN
 
         firstTime = sharedPreferences.getBoolean("firstTime", true);
-        ParseUser.logOut();
         if(!firstTime){
-            // TODO: 7/27/2020 If logged in and !firstTime, then go to maps else go to login
             if(ParseUser.getCurrentUser() != null){
-                goToMaps();
-            }
-
-            else if(account != null){
                 goToMaps();
             }
 
             else{
                 Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
-                goToMaps();
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         }
 
@@ -106,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: In here");
-                // TODO: 7/27/2020 ADd sharedpref, firstime = false and move to maps, if is not firsttime, go to login
                 goToMaps();
             }
         });
