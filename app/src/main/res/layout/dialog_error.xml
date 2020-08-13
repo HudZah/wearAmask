@@ -16,13 +16,12 @@
         android:gravity="center"
         android:layout_marginBottom="30dp">
 
-        <ImageView
+        <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/loading"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@drawable/ic_cloud_error"
-            android:layout_centerInParent="true"
-
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            app:lottie_autoPlay="true"
+            app:lottie_rawRes="@raw/warning"
             />
 
         <TextView
@@ -32,7 +31,6 @@
             android:text="@string/dialog_error_occured"
             android:textColor="@color/dark_blue"
             android:layout_below="@id/loading"
-            android:layout_marginTop="24dp"
             android:fontFamily="sans-serif-medium"
             android:textSize="18sp"
             android:textAlignment="center"
