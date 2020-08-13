@@ -2,16 +2,11 @@ package com.hudzah.wearamask;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +27,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.facebook.ParseFacebookUtils;
@@ -170,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
                        goToMaps();
                     }
                     else{
-                        displayErrorDialog(e.getMessage());
+                        dialog.displayErrorDialog(e.getMessage());
                     }
 
                     dialog.dismissLoadingDialog();
@@ -233,9 +229,10 @@ public class LoginActivity extends AppCompatActivity {
             public void done(ParseUser user, ParseException err) {
                 if (err != null) {
                     ParseUser.logOut();
-                    displayErrorDialog(err.getMessage());
+                    dialog.displayErrorDialog(err.getMessage());
                 }
                 if (user == null) {
+
                     ParseUser.logOut();
                     Toast.makeText(LoginActivity.this, "The user cancelled the Facebook login.", Toast.LENGTH_LONG).show();
                     Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
@@ -257,6 +254,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     void getUserDetailFromFB(){
+        final ParseGeoPoint geoPoint = new ParseGeoPoint(0 , 0);
+
         GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(),new  GraphRequest.GraphJSONObjectCallback(){
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
@@ -264,12 +263,9 @@ public class LoginActivity extends AppCompatActivity {
                 try{
                     user.setUsername(object.getString("name"));
                     user.put("signUpMethod", "facebook");
-
-                }catch(JSONException e){
-                    e.printStackTrace();
-                }
-                try{
+                    user.put("lastKnownLocation", geoPoint);
                     user.setEmail(object.getString("email"));
+
                 }catch(JSONException e){
                     e.printStackTrace();
                 }
@@ -312,25 +308,5 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void displayErrorDialog(String error){
-        errorDialog.setContentView(R.layout.dialog_error);
-        errorDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView errorTextView = (TextView) errorDialog.findViewById(R.id.errorTextView);
-        errorTextView.setText(error);
-        Window window = errorDialog.getWindow();
-        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 
-
-        Button closeButton = (Button) errorDialog.findViewById(R.id.closeButton);
-
-
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                errorDialog.dismiss();
-            }
-        });
-
-        errorDialog.show();
-    }
 }

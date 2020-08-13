@@ -7,9 +7,14 @@ import com.parse.facebook.ParseFacebookUtils;
 
 public class App extends Application {
 
+    private static App instance;
+
     @Override
     public void onCreate() {
         super.onCreate();
+
+        instance = this;
+
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId(getString(R.string.back4app_app_id))
                 // if defined
@@ -21,7 +26,14 @@ public class App extends Application {
 
         ParseFacebookUtils.initialize(this);
 
-
-
     }
+
+    public static synchronized App getInstance(){
+        return instance;
+    }
+
+    public void setConnectivityListener(ConnectivityReceiver.ConnectivityReceiverListener listener){
+        ConnectivityReceiver.connectivityReceiverListener = listener;
+    }
+
 }

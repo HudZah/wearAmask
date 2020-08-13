@@ -35,7 +35,8 @@
             android:paddingTop="16dp"
             android:fontFamily="sans-serif-medium"
             android:textSize="18sp"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            />
 
     </RelativeLayout>
 

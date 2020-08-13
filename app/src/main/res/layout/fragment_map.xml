@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout"
     tools:context=".MapFragment">
 
     <com.google.android.gms.maps.MapView
@@ -14,35 +15,69 @@
 
     </com.google.android.gms.maps.MapView>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/recenterLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
-        app:fabSize="auto"
-        android:src="@drawable/ic_gps_fixed_black_24dp"
-        android:clickable="true"
-        android:layout_marginRight="30dp"
-        android:layout_gravity="bottom|end"
-        app:borderWidth="0dp"
-        app:layout_dodgeInsetEdges="bottom"
-        android:layout_marginBottom="25dp"
-        />
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="27dp"
+        android:layout_gravity="bottom"
+        app:layout_dodgeInsetEdges="bottom">
+
+        <androidx.cardview.widget.CardView
+            android:visibility="gone"
+            android:id="@+id/offlineModeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="20dp"
+            android:layout_marginRight="35dp"
+            android:layout_marginLeft="35dp"
+            android:layout_gravity="bottom"
+            app:layout_insetEdge="bottom"
+            app:cardBackgroundColor="@color/colorPrimaryDark">
+
+            <TextView
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/connectivity_offline"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/white"/>
+
+        </androidx.cardview.widget.CardView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/recenterLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            app:fabSize= "normal"
+            android:src="@drawable/ic_gps_fixed_black_24dp"
+            android:clickable="true"
+            android:layout_marginRight="30dp"
+            app:layout_dodgeInsetEdges="bottom"
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="15dp"
+            app:borderWidth="0dp"
+            android:layout_above="@id/offlineModeLayout"
+            />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/fabUpArrow"
+            android:visibility="invisible"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:clickable="true"
+            android:layout_gravity="bottom|center"
+            android:layout_centerHorizontal="true"
+            app:layout_dodgeInsetEdges="bottom"
+            android:backgroundTint="@color/colorPrimaryDark"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/up_arrow_3"
+            />
 
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/fabUpArrow"
-        android:visibility="invisible"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:clickable="true"
-        android:layout_gravity="bottom|center"
-        app:layout_dodgeInsetEdges="bottom"
-        android:layout_marginBottom="10dp"
-        android:backgroundTint="@color/colorPrimaryDark"
-        app:lottie_loop="true"
-        app:lottie_rawRes="@raw/up_arrow_3"
-        />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
     <androidx.cardview.widget.CardView
@@ -285,6 +320,58 @@
             </LinearLayout>
 
         </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/offlineLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="60dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="4.5dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/light_gray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/dark_blue"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="18sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:padding="10dp"
+                    android:layout_marginBottom="6dp"
+                    android:textAlignment="center"
+                    android:text="@string/offline_mode_heading"/>
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/offlineModeCheckButton"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:clickable="true"
+                    android:layout_gravity="bottom|center"
+                    android:layout_centerHorizontal="true"
+                    app:layout_dodgeInsetEdges="bottom"
+                    android:background="@drawable/circle_background"
+                    android:foreground="@drawable/ripple_circle"
+                    app:lottie_loop="true"
+                    app:lottie_autoPlay="false"
+                    app:lottie_rawRes="@raw/loading_wifi"
+                    />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
 
 
     </androidx.cardview.widget.CardView>

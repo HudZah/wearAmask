@@ -33,6 +33,7 @@ public class Location {
     public boolean saved = false;
     private static final String TAG = "Location";
     Activity activity;
+    DialogAdapter dialog;
     public ArrayList<Location> locationsArrayList = new ArrayList<>();
     CircleManager manager;
 
@@ -46,7 +47,7 @@ public class Location {
     }
 
     public void saveLocationToParse(Place place){
-        final DialogAdapter dialog = new DialogAdapter(activity);
+        dialog = new DialogAdapter(activity);
         ParseObject object = new ParseObject("Locations");
         ParseGeoPoint parseGeoPoint = new ParseGeoPoint(place.getLatLng().latitude, place.getLatLng().longitude);
         object.put("location", parseGeoPoint);
@@ -81,8 +82,11 @@ public class Location {
     }
 
     public void getAllLocations(final boolean drawLocations){
+
+        dialog = new DialogAdapter(activity);
         ParseQuery query = ParseQuery.getQuery("Locations");
         query.whereEqualTo("username", ParseUser.getCurrentUser().getUsername());
+        dialog.locationFindingDialog();
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
@@ -98,6 +102,11 @@ public class Location {
                         drawAllLocations();
                     }
                 }
+                else{
+                    dialog.displayErrorDialog(e.getMessage());
+                }
+
+                dialog.dismissLocationDialog();
             }
         });
         
@@ -105,9 +114,10 @@ public class Location {
 
     // TODO: 8/10/2020 Create draw all locations method
     private void drawAllLocations(){
-        manager = MapFragment.getInstance().circleManager;
-        manager.drawManyCirclesOnMap(locationsArrayList);
-
+        if(locationsArrayList.size() > 0) {
+            manager = MapFragment.getInstance().circleManager;
+            manager.drawManyCirclesOnMap(locationsArrayList);
+        }
     }
 
     private void saveLocationsToSharedPreferences(){

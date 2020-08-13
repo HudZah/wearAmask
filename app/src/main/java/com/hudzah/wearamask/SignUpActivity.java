@@ -1,28 +1,22 @@
 package com.hudzah.wearamask;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.login.Login;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -33,6 +27,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
@@ -148,7 +143,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void done(ParseUser user, ParseException err) {
                 if (err != null) {
                     ParseUser.logOut();
-                    displayErrorDialog(err.getMessage());
+                    dialog.displayErrorDialog(err.getMessage());
                 }
                 if (user == null) {
                     ParseUser.logOut();
@@ -270,10 +265,13 @@ public class SignUpActivity extends AppCompatActivity {
 
         dialog.loadingDialog();
 
+        ParseGeoPoint geoPoint = new ParseGeoPoint(0 , 0);
+
         user.setUsername(username);
         user.setEmail(email);
         user.setPassword(password);
         user.put("signUpMethod", method);
+        user.put("lastKnownLocation", geoPoint);
 
         user.signUpInBackground(new SignUpCallback() {
             @Override
@@ -283,6 +281,7 @@ public class SignUpActivity extends AppCompatActivity {
                     dialog.dismissLoadingDialog();
 
                     if(!method.equals("google")) {
+                        Toast.makeText(SignUpActivity.this, "Account created, continue by logging in", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
@@ -294,7 +293,7 @@ public class SignUpActivity extends AppCompatActivity {
                 else{
                     dialog.dismissLoadingDialog();
                     Log.d(TAG, "done: " + e.getMessage());
-                    displayErrorDialog(e.getMessage());
+                    dialog.displayErrorDialog(e.getMessage());
                 }
 
 
@@ -303,22 +302,21 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     void getUserDetailFromFB(){
+        final ParseGeoPoint geoPoint = new ParseGeoPoint(0 , 0);
         GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(),new  GraphRequest.GraphJSONObjectCallback(){
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
                 final ParseUser user = ParseUser.getCurrentUser();
                 try{
                     user.setUsername(object.getString("name"));
+                    user.setEmail(object.getString("email"));
                     user.put("signUpMethod", "facebook");
+                    user.put("lastKnownLocation", geoPoint);
 
                 }catch(JSONException e){
                     e.printStackTrace();
                 }
-                try{
-                    user.setEmail(object.getString("email"));
-                }catch(JSONException e){
-                    e.printStackTrace();
-                }
+
                 user.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
@@ -326,7 +324,7 @@ public class SignUpActivity extends AppCompatActivity {
                             goToMaps();
                         }
                         else{
-                            displayErrorDialog(e.getCode() + " " + e.getMessage());
+                            dialog.displayErrorDialog(e.getCode() + " " + e.getMessage());
                         }
 
 
@@ -346,27 +344,7 @@ public class SignUpActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void displayErrorDialog(String error){
-        errorDialog.setContentView(R.layout.dialog_error);
-        errorDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView errorTextView = (TextView) errorDialog.findViewById(R.id.errorTextView);
-        errorTextView.setText(error);
-        Window window = errorDialog.getWindow();
-        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 
-
-        Button closeButton = (Button) errorDialog.findViewById(R.id.closeButton);
-
-
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                errorDialog.dismiss();
-            }
-        });
-
-        errorDialog.show();
-    }
 
 
 

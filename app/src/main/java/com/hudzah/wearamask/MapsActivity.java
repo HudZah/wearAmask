@@ -15,9 +15,11 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.parse.LogOutCallback;
+import com.parse.ParseException;
 import com.parse.ParseUser;
 
-public class MapsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MapsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public Toolbar toolbar;
     private DrawerLayout drawerLayout;
@@ -92,10 +94,7 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.logout:
-                ParseUser.logOut();
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
-
+                parseLogout();
 
         }
         return true;
@@ -108,5 +107,36 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         Log.d(TAG, "onRequestPermissionsResult: call fragment onRequestPermissionsResult");
+    }
+
+    private void parseLogout(){
+        ParseUser.logOutInBackground(new LogOutCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e == null){
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
+                }
+                else{
+                    DialogAdapter dialogAdapter = new DialogAdapter(MapsActivity.this);
+                    dialogAdapter.displayErrorDialog(e.getMessage());
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

@@ -2,10 +2,12 @@ package com.hudzah.wearamask;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class DialogAdapter {
 
@@ -13,6 +15,8 @@ public class DialogAdapter {
     private AlertDialog dialog;
     AlertDialog.Builder builder;
     LayoutInflater inflater;
+
+    private AlertDialog errorDialog;
 
 
     DialogAdapter(Activity myActivity){
@@ -49,5 +53,28 @@ public class DialogAdapter {
         dialog.dismiss();
     }
 
+    public void displayErrorDialog(String error){
+
+        builder.setView(inflater.inflate(R.layout.dialog_error, null));
+
+        errorDialog = builder.create();
+        errorDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        errorDialog.show();
+        TextView errorTextView = (TextView) errorDialog.findViewById(R.id.errorTextView);
+        errorTextView.setText(error);
+
+        Button closeButton = (Button) errorDialog.findViewById(R.id.closeButton);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismissErrorDialog();
+            }
+        });
+
+    }
+
+    public void dismissErrorDialog(){
+        errorDialog.dismiss();
+    }
 
 }

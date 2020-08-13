@@ -13,6 +13,8 @@
     <string name="dialog_error_occured">An Error Has Occurred</string>
     <string name="dialog_close">Close</string>
 
+    <string name="connectivity_online">You are now online</string>
+    <string name="connectivity_offline">You are now in offline mode</string>
 
     <string name="app_name">wearAmask</string>
     <string name="onboarding_heading_1">Location Based</string>
@@ -59,6 +61,9 @@
     <string name="sign_up_login">Login instead</string>
     <string name="sign_up_with_email">or sign up with your email</string>
     <string name="login_instead">or use your account instead</string>
+
+    <string name="offline_mode_heading">You need an internet connection to add locations. Click the button to retry</string>
+    <string name="offline_mode_retry">Retry</string>
 
     <string name="error_username_length">Username must be more than 5 and less than 20 characters</string>
     <string name="error_password_length">Password must be at least 7 characters</string>
