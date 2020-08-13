@@ -32,6 +32,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 import com.parse.facebook.ParseFacebookUtils;
+import com.parse.twitter.ParseTwitterUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,6 +57,7 @@ public class SignUpActivity extends AppCompatActivity {
     private int RC_SIGN_IN = 0;
     private static final String TAG = "SignUpActivity";
     FloatingActionButton signInFacebookButton;
+    FloatingActionButton signInTwitterButton;
     DialogAdapter dialog;
     Dialog errorDialog;
     TextView registerButton;
@@ -70,6 +72,7 @@ public class SignUpActivity extends AppCompatActivity {
         emailInput = (TextInputLayout) findViewById(R.id.emailInput);
         signInGoogleButton = (FloatingActionButton) findViewById(R.id.signInGoogleButton);
         signInFacebookButton = (FloatingActionButton) findViewById(R.id.signInFacebookButton);
+        signInTwitterButton = (FloatingActionButton) findViewById(R.id.signInTwitterButton);
         dialog = new DialogAdapter(this);
         errorDialog = new Dialog(this);
         registerButton = (TextView) findViewById(R.id.registerButton);
@@ -127,12 +130,41 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
+        signInTwitterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                twitterSignUp();
+            }
+        });
+
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void hideKeyboard(View view){
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if(getCurrentFocus() != null) {
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    private void googleSignUp(){
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     private void facebookSignUp() {
@@ -156,7 +188,7 @@ public class SignUpActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(SignUpActivity.this, "User logged in through Facebook.", Toast.LENGTH_LONG).show();
                     Log.d("MyApp", "User logged in through Facebook!");
-                   goToMaps();
+                    goToMaps();
 
                 }
 
@@ -166,26 +198,53 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    private void twitterSignUp(){
+        final ParseGeoPoint geoPoint = new ParseGeoPoint(0 , 0);
+        dialog.loadingDialog();
 
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
+        ParseTwitterUtils.logIn(SignUpActivity.this, new LogInCallback() {
 
-        return super.onOptionsItemSelected(item);
-    }
+            @Override
+            public void done(final ParseUser user, ParseException err) {
+                if (err != null) {
 
-    private void hideKeyboard(View view){
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        if(getCurrentFocus() != null) {
-            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
+                    ParseUser.logOut();
+                    dialog.displayErrorDialog(err.getMessage());
 
-    private void googleSignUp(){
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+                }
+                if (user == null) {
+
+                    ParseUser.logOut();
+                    Toast.makeText(SignUpActivity.this, "The user cancelled the Twitter login.", Toast.LENGTH_LONG).show();
+                    Log.d("MyApp", "Uh oh. The user cancelled the Twitter login.");
+                } else if (user.isNew()) {
+
+                    Toast.makeText(SignUpActivity.this, "User signed up and logged in through Twitter.", Toast.LENGTH_LONG).show();
+                    user.setUsername(ParseTwitterUtils.getTwitter().getScreenName());
+                    user.put("signUpMethod", "twitter");
+                    user.put("lastKnownLocation", geoPoint);
+                    user.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (null == e) {
+
+                                goToMaps();
+
+                            } else {
+                                ParseUser.logOut();
+                                dialog.displayErrorDialog(e.getMessage());
+                            }
+                        }
+                    });
+                } else {
+                    Toast.makeText(SignUpActivity.this, "User logged in through Twitter.", Toast.LENGTH_LONG).show();
+                    goToMaps();
+                }
+
+                dialog.dismissLoadingDialog();
+
+            }
+        });
     }
 
     private void signup(){
@@ -324,7 +383,7 @@ public class SignUpActivity extends AppCompatActivity {
                             goToMaps();
                         }
                         else{
-                            dialog.displayErrorDialog(e.getCode() + " " + e.getMessage());
+                            dialog.displayErrorDialog(e.getMessage());
                         }
 
 

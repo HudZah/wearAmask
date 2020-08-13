@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.parse.Parse;
 import com.parse.facebook.ParseFacebookUtils;
+import com.parse.twitter.ParseTwitterUtils;
 
 public class App extends Application {
 
@@ -25,6 +26,7 @@ public class App extends Application {
         );
 
         ParseFacebookUtils.initialize(this);
+        ParseTwitterUtils.initialize(getString(R.string.twitter_consumer_key), getString(R.string.twitter_consumer_secret));
 
     }
 

@@ -55,6 +55,9 @@ dependencies {
     implementation 'com.github.yukuku:ambilwarna:2.0.1'
 
 
+    implementation 'com.github.parse-community:ParseTwitterUtils-Android:1.13.0'
+
+
 
 
 }

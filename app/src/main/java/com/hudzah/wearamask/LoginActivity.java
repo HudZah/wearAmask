@@ -31,6 +31,7 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.facebook.ParseFacebookUtils;
+import com.parse.twitter.ParseTwitterUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
     private int RC_SIGN_IN = 0;
     GoogleSignInClient mGoogleSignInClient;
     FloatingActionButton signInFacebookButton;
+    FloatingActionButton signInTwitterButton;
     DialogAdapter dialog;
     Dialog errorDialog;
 
@@ -72,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
         forgotPasswordTextView = (TextView)findViewById(R.id.forgotButton);
         signInGoogleButton = (FloatingActionButton) findViewById(R.id.signInGoogleButton);
         signInFacebookButton = (FloatingActionButton) findViewById(R.id.signInFacebookButton);
+        signInTwitterButton = (FloatingActionButton) findViewById(R.id.signInTwitterButton);
         dialog = new DialogAdapter(this);
 
         errorDialog = new Dialog(this);
@@ -123,6 +126,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 facebookSignUp();
+            }
+        });
+
+        signInTwitterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                twitterSignUp();
             }
         });
 
@@ -252,6 +262,56 @@ public class LoginActivity extends AppCompatActivity {
 
         });
     }
+
+    private void twitterSignUp(){
+        final ParseGeoPoint geoPoint = new ParseGeoPoint(0 , 0);
+        dialog.loadingDialog();
+
+        ParseTwitterUtils.logIn(LoginActivity.this, new LogInCallback() {
+
+            @Override
+            public void done(final ParseUser user, ParseException err) {
+                if (err != null) {
+
+                    ParseUser.logOut();
+                    dialog.displayErrorDialog(err.getMessage());
+
+                }
+                if (user == null) {
+
+                    ParseUser.logOut();
+                    Toast.makeText(LoginActivity.this, "The user cancelled the Twitter login.", Toast.LENGTH_LONG).show();
+                    Log.d("MyApp", "Uh oh. The user cancelled the Twitter login.");
+                } else if (user.isNew()) {
+
+                    Toast.makeText(LoginActivity.this, "User signed up and logged in through Twitter.", Toast.LENGTH_LONG).show();
+                    user.setUsername(ParseTwitterUtils.getTwitter().getScreenName());
+                    user.put("signUpMethod", "twitter");
+                    user.put("lastKnownLocation", geoPoint);
+                    user.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (null == e) {
+
+                                goToMaps();
+
+                            } else {
+                                ParseUser.logOut();
+                                dialog.displayErrorDialog(e.getMessage());
+                            }
+                        }
+                    });
+                } else {
+                    Toast.makeText(LoginActivity.this, "User logged in through Twitter.", Toast.LENGTH_LONG).show();
+                    goToMaps();
+                }
+
+                dialog.dismissLoadingDialog();
+
+            }
+        });
+    }
+
 
     void getUserDetailFromFB(){
         final ParseGeoPoint geoPoint = new ParseGeoPoint(0 , 0);

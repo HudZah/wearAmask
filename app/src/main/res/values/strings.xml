@@ -72,4 +72,8 @@
     <string name="facebook_app_id">647975436132621</string>
     <string name="fb_login_protocol_scheme">fb647975436132621</string>
     <string name="facebook_signup_text">Facebook Sign up</string>
+
+    <string name="twitter_consumer_key">boLFXqrBCSuT7lJBSzQ3cl1Fq</string>
+    <string name="twitter_consumer_secret">zCUU683Sg3t9vQgNsRavPjohXAyvK7ZtZLdsRaFfSEtfLODZHd</string>
+
 </resources>
