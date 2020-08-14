@@ -12,6 +12,7 @@ import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.location.Location;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -36,6 +37,7 @@ import androidx.fragment.app.Fragment;
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -131,6 +133,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
     Location currentLocation;
 
+    public static GeofencingClient geofencingClient;
+    public static GeofenceHelper geofenceHelper;
+
 
     public MapFragment() {
         // Required empty public constructor
@@ -147,7 +152,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
             mapView.getMapAsync(this);
         }
         else{
-
+            if(Build.VERSION.SDK_INT >= 29){
+                requestPermissions(new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, PERMISSION_REQUEST_CODE);
+            }
             requestPermissions(PERMISSIONS, PERMISSION_REQUEST_CODE);
         }
 
@@ -165,23 +172,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         this.googleMap = googleMap;
         Log.d(TAG, "onMapReady: map is ready");
 
+        circleManager = new CircleManager(getContext(), googleMap);
+
+
         styleMap();
         if(allPermissionsGranted()){
             getLastDeviceLocation();
             googleMap.setMyLocationEnabled(true);
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);
             googleMap.getUiSettings().setCompassEnabled(false);
+
+            // retrives all locations and draws them
+            if(ParseUser.getCurrentUser() != null) {
+                if (ConnectivityReceiver.isConnected()) {
+                    location.getAllLocations(true);
+                } else locations = location.getLocationsFromSharedPreferences();
+
+            }
         }
 
-        circleManager = new CircleManager(getContext(), googleMap);
 
-        // retrives all locations and draws them
-        if(ParseUser.getCurrentUser() != null) {
-            if (ConnectivityReceiver.isConnected()) {
-                location.getAllLocations(true);
-            } else locations = location.getLocationsFromSharedPreferences();
-
-        }
     }
 
     @Override
@@ -201,6 +211,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         loggedInLayout = (RelativeLayout) view.findViewById(R.id.loggedInLayout);
         offlineLayout = (RelativeLayout) view.findViewById(R.id.offlineLayout);
         mapView = (MapView) view.findViewById(R.id.mapView);
+
+        geofencingClient = LocationServices.getGeofencingClient(getContext());
+
+        geofenceHelper = new GeofenceHelper(getContext());
 
         autocompleteFragment = (AutocompleteSupportFragment)
                 getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
@@ -606,11 +620,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     }
 
     private boolean allPermissionsGranted(){
+
         for(String permission : PERMISSIONS){
             if(ContextCompat.checkSelfPermission(getContext(), permission) != PackageManager.PERMISSION_GRANTED){
                 return false;
             }
         }
+
+        if(Build.VERSION.SDK_INT >= 29){
+            if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED){
+                return false;
+            }
+        }
+
+
         Log.d(TAG, "allPermissionsGranted: all permissions granted!");
         return true;
     }
