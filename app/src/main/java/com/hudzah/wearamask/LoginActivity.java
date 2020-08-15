@@ -176,7 +176,7 @@ public class LoginActivity extends AppCompatActivity {
                        goToMaps();
                     }
                     else{
-                        dialog.displayErrorDialog(e.getMessage());
+                        dialog.displayErrorDialog(e.getMessage(), "");
                     }
 
                     dialog.dismissLoadingDialog();
@@ -239,7 +239,7 @@ public class LoginActivity extends AppCompatActivity {
             public void done(ParseUser user, ParseException err) {
                 if (err != null) {
                     ParseUser.logOut();
-                    dialog.displayErrorDialog(err.getMessage());
+                    dialog.displayErrorDialog(err.getMessage(), "");
                 }
                 if (user == null) {
 
@@ -274,7 +274,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (err != null) {
 
                     ParseUser.logOut();
-                    dialog.displayErrorDialog(err.getMessage());
+                    dialog.displayErrorDialog(err.getMessage(), "");
 
                 }
                 if (user == null) {
@@ -297,7 +297,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             } else {
                                 ParseUser.logOut();
-                                dialog.displayErrorDialog(e.getMessage());
+                                dialog.displayErrorDialog(e.getMessage(), "");
                             }
                         }
                     });

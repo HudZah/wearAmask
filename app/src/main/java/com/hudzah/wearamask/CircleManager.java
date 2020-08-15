@@ -118,7 +118,7 @@ public class CircleManager {
                     public void onFailure(@NonNull Exception e) {
                         String errorMessage = MapFragment.geofenceHelper.getErrorString(e);
                         Log.d(TAG, "onFailure: error is " + errorMessage + " raw error message is " + e.getMessage());
-                        dialogAdapter.displayErrorDialog(errorMessage);
+                        dialogAdapter.displayErrorDialog(errorMessage, "");
                     }
                 });
     }

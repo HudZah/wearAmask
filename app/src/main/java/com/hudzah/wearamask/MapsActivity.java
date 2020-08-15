@@ -119,7 +119,7 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
                 }
                 else{
                     DialogAdapter dialogAdapter = new DialogAdapter(MapsActivity.this);
-                    dialogAdapter.displayErrorDialog(e.getMessage());
+                    dialogAdapter.displayErrorDialog(e.getMessage(), "");
                 }
             }
         });

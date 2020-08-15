@@ -12,6 +12,8 @@
 
     <string name="dialog_error_occured">An Error Has Occurred</string>
     <string name="dialog_close">Close</string>
+    <string name="dialog_enable_location_button">Enable</string>
+    <string name="dialog_enable_location_prompt">Your location is turned off, to continue using wearAmask, please turn it on.</string>
 
     <string name="connectivity_online">You are now online</string>
     <string name="connectivity_offline">You are now in offline mode</string>

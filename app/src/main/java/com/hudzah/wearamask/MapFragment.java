@@ -4,6 +4,7 @@ package com.hudzah.wearamask;
 import android.Manifest;
 import android.animation.Animator;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -11,10 +12,12 @@ import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -177,17 +180,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
         styleMap();
         if(allPermissionsGranted()){
-            getLastDeviceLocation();
-            googleMap.setMyLocationEnabled(true);
-            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-            googleMap.getUiSettings().setCompassEnabled(false);
+            if(checkLocationServicesEnabled()) {
+                getLastDeviceLocation();
+                googleMap.setMyLocationEnabled(true);
+                googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+                googleMap.getUiSettings().setCompassEnabled(false);
 
-            // retrives all locations and draws them
-            if(ParseUser.getCurrentUser() != null) {
-                if (ConnectivityReceiver.isConnected()) {
-                    location.getAllLocations(true);
-                } else locations = location.getLocationsFromSharedPreferences();
+                // retrives all locations and draws them
+                if (ParseUser.getCurrentUser() != null) {
+                    if (ConnectivityReceiver.isConnected()) {
+                        location.getAllLocations(true);
+                    } else locations = location.getLocationsFromSharedPreferences();
 
+                }
+            }
+            else{
+                Log.d(TAG, "onMapReady: location services are not enabled");
+                DialogAdapter dialogAdapter = new DialogAdapter((Activity) getContext());
+                dialogAdapter.displayErrorDialog(getResources().getString(R.string.dialog_enable_location_prompt), getResources().getString(R.string.dialog_enable_location_button));
             }
         }
 
@@ -374,6 +384,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
     }
 
+    private boolean checkLocationServicesEnabled(){
+
+        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            return locationManager.isLocationEnabled();
+
+        else{
+            int mode = Settings.Secure.getInt(getContext().getContentResolver(), Settings.Secure.LOCATION_MODE,
+                    Settings.Secure.LOCATION_MODE_OFF);
+            return  (mode != Settings.Secure.LOCATION_MODE_OFF);
+        }
+    }
+
     private void initLocationClass(){
         location = new com.hudzah.wearamask.Location(getContext(), 0, 0, null, "");
     }
@@ -545,7 +569,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         Intent intent = new Intent(getActivity(), SignUpActivity.class);
         getContext().startActivity(intent);
     }
-
 
     private void showOfflineMode(){
         enableOfflineLayout();

@@ -53,7 +53,8 @@ public class DialogAdapter {
         dialog.dismiss();
     }
 
-    public void displayErrorDialog(String error){
+    public void displayErrorDialog(String error, String buttonText){
+
 
         builder.setView(inflater.inflate(R.layout.dialog_error, null));
 
@@ -64,7 +65,8 @@ public class DialogAdapter {
         errorTextView.setText(error);
 
         Button closeButton = (Button) errorDialog.findViewById(R.id.closeButton);
-        closeButton.setOnClickListener(new View.OnClickListener() {
+        if(!buttonText.equals("")) closeButton.setText(buttonText);
+            closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismissErrorDialog();

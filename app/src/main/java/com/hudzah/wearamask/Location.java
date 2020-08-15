@@ -103,7 +103,7 @@ public class Location {
                     }
                 }
                 else{
-                    dialog.displayErrorDialog(e.getMessage());
+                    dialog.displayErrorDialog(e.getMessage(), "");
                 }
 
                 dialog.dismissLocationDialog();
