@@ -4,7 +4,6 @@ package com.hudzah.wearamask;
 import android.Manifest;
 import android.animation.Animator;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -17,7 +16,6 @@ import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,7 +68,7 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapFragment extends Fragment implements OnMapReadyCallback, ConnectivityReceiver.ConnectivityReceiverListener {
+public class MapFragment extends Fragment implements OnMapReadyCallback, ConnectivityReceiver.ConnectivityReceiverListener, GpsLocationReceiver.GpsLocationReceiverListener {
 
     private GoogleMap googleMap;
     private MapView mapView;
@@ -133,8 +131,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     private LottieAnimationView offlineModeCheckButton;
 
     ConnectivityReceiver connectivityReceiver;
+    GpsLocationReceiver gpsLocationReceiver;
 
     Location currentLocation;
+
+    public static DialogAdapter dialogAdapter;
 
     public static GeofencingClient geofencingClient;
     public static GeofenceHelper geofenceHelper;
@@ -148,6 +149,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        dialogAdapter = new DialogAdapter(getActivity());
 
         if(allPermissionsGranted()) {
             mapView.onCreate(savedInstanceState);
@@ -180,7 +183,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
         styleMap();
         if(allPermissionsGranted()){
-            if(checkLocationServicesEnabled()) {
+            if(GpsLocationReceiver.checkLocationServicesEnabled(getContext())) {
                 getLastDeviceLocation();
                 googleMap.setMyLocationEnabled(true);
                 googleMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -195,10 +198,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
                 }
             }
             else{
-                Log.d(TAG, "onMapReady: location services are not enabled");
-                DialogAdapter dialogAdapter = new DialogAdapter((Activity) getContext());
-                dialogAdapter.displayErrorDialog(getResources().getString(R.string.dialog_enable_location_prompt), getResources().getString(R.string.dialog_enable_location_button));
+                dialogAdapter.displayErrorDialog(getContext().getResources().getString(R.string.dialog_enable_location_prompt), getContext().getResources().getString(R.string.dialog_enable_location_button));
             }
+
         }
 
 
@@ -349,7 +351,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         recenterLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getLastDeviceLocation();
+                if(GpsLocationReceiver.checkLocationServicesEnabled(getContext())) {
+                    getLastDeviceLocation();
+                }
+                else{
+                    dialogAdapter.displayErrorDialog(getContext().getResources().getString(R.string.dialog_enable_location_prompt), getContext().getResources().getString(R.string.dialog_enable_location_button));
+                }
             }
         });
 
@@ -382,20 +389,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         });
 
 
-    }
-
-    private boolean checkLocationServicesEnabled(){
-
-        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-            return locationManager.isLocationEnabled();
-
-        else{
-            int mode = Settings.Secure.getInt(getContext().getContentResolver(), Settings.Secure.LOCATION_MODE,
-                    Settings.Secure.LOCATION_MODE_OFF);
-            return  (mode != Settings.Secure.LOCATION_MODE_OFF);
-        }
     }
 
     private void initLocationClass(){
@@ -480,7 +473,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
     }
 
-    private void getLastDeviceLocation(){
+    public void getLastDeviceLocation(){
         Log.d(TAG, "getDeviceLocation: get device location");
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
@@ -708,12 +701,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         super.onResume();
         Log.d(TAG, "onResume: broadcast service started");
         final IntentFilter intentFilter = new IntentFilter();
+        IntentFilter gpsIntentFilter = new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION);
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
 
         connectivityReceiver = new ConnectivityReceiver();
+        gpsLocationReceiver = new GpsLocationReceiver();
+
         getContext().registerReceiver(connectivityReceiver, intentFilter);
+        getContext().registerReceiver(gpsLocationReceiver, gpsIntentFilter);
 
         App.getInstance().setConnectivityListener(this);
+        App.getInstance().setLocationProviderListener(this);
     }
 
     @Override
@@ -721,6 +719,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         super.onPause();
 
         getContext().unregisterReceiver(connectivityReceiver);
+        getContext().unregisterReceiver(gpsLocationReceiver);
         Log.d(TAG, "onPause: broadcast service unregistered");
     }
 
@@ -760,5 +759,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         Log.d(TAG, "onDestroy: in here location");
     }
 
+    @Override
+    public void onLocationProviderChanged(boolean isLocationOn) {
+        Log.d(TAG, "onLocationProviderChanged: location is " + isLocationOn);
+        if(isLocationOn){
+            dialogAdapter.dismissErrorDialog();
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getLastDeviceLocation();
+                }
+            }, 1000);
+        }
+        else{
+            dialogAdapter.displayErrorDialog(getResources().getString(R.string.dialog_enable_location_prompt), getResources().getString(R.string.dialog_enable_location_button));
+
+        }
+    }
 }
 

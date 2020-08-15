@@ -2,11 +2,14 @@ package com.hudzah.wearamask;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class DialogAdapter {
@@ -53,7 +56,7 @@ public class DialogAdapter {
         dialog.dismiss();
     }
 
-    public void displayErrorDialog(String error, String buttonText){
+    public void displayErrorDialog(final String error, final String buttonText){
 
 
         builder.setView(inflater.inflate(R.layout.dialog_error, null));
@@ -64,14 +67,31 @@ public class DialogAdapter {
         TextView errorTextView = (TextView) errorDialog.findViewById(R.id.errorTextView);
         errorTextView.setText(error);
 
-        Button closeButton = (Button) errorDialog.findViewById(R.id.closeButton);
-        if(!buttonText.equals("")) closeButton.setText(buttonText);
-            closeButton.setOnClickListener(new View.OnClickListener() {
+        Button actionButton = (Button) errorDialog.findViewById(R.id.actionButton);
+        ImageView closeDialogButton = (ImageView) errorDialog.findViewById(R.id.closeDialogButton);
+        if(!buttonText.equals("")) actionButton.setText(buttonText);
+
+        closeDialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismissErrorDialog();
             }
         });
+
+        actionButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(buttonText.equals("")) {
+                dismissErrorDialog();
+            }
+            else if(buttonText.equals(activity.getApplicationContext().getResources().getString(R.string.dialog_enable_location_button))){
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                activity.getApplicationContext().startActivity(intent);
+                dismissErrorDialog();
+            }
+        }
+    });
 
     }
 

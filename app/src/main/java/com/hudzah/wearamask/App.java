@@ -38,4 +38,8 @@ public class App extends Application {
         ConnectivityReceiver.connectivityReceiverListener = listener;
     }
 
+    public void setLocationProviderListener(GpsLocationReceiver.GpsLocationReceiverListener listener){
+        GpsLocationReceiver.gpsLocationReceiverListener = listener;
+    }
+
 }
