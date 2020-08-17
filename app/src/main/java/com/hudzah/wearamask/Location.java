@@ -3,7 +3,6 @@ package com.hudzah.wearamask;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -32,22 +31,20 @@ public class Location {
     private String address;
     public boolean saved = false;
     private static final String TAG = "Location";
-    Activity activity;
+    String ARRAY_LIST_TAG = "locationsArrayList";
+
     DialogAdapter dialog;
-    public ArrayList<Location> locationsArrayList = new ArrayList<>();
+    public ArrayList<com.hudzah.wearamask.Location> locationsArrayList = new ArrayList<>();
     CircleManager manager;
 
-    public Location(Context context, int selectedRadius, int selectedColor, LatLng latLng, String address) {
-        this.context = context;
+    public Location(int selectedRadius, int selectedColor, LatLng latLng, String address) {
         this.selectedRadius = selectedRadius;
         this.selectedColor = selectedColor;
         this.latLng = latLng;
         this.address = address;
-        activity = (Activity) context;
     }
 
     public void saveLocationToParse(Place place){
-        dialog = new DialogAdapter(activity);
         ParseObject object = new ParseObject("Locations");
         ParseGeoPoint parseGeoPoint = new ParseGeoPoint(place.getLatLng().latitude, place.getLatLng().longitude);
         object.put("location", parseGeoPoint);
@@ -83,7 +80,6 @@ public class Location {
 
     public void getAllLocations(final boolean drawLocations){
 
-        dialog = new DialogAdapter(activity);
         ParseQuery query = ParseQuery.getQuery("Locations");
         query.whereEqualTo("username", ParseUser.getCurrentUser().getUsername());
         dialog.locationFindingDialog();
@@ -93,11 +89,12 @@ public class Location {
                 if(e == null){
                     for(ParseObject object : objects){
                         ParseGeoPoint geoPoint = object.getParseGeoPoint("location");
-                        Location loc = new Location(context, Integer.parseInt(String.valueOf(object.getNumber("radius"))), Integer.parseInt(String.valueOf(object.getString("color"))), new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude()), object.getString("address"));
+                        Location loc = new Location(Integer.parseInt(String.valueOf(object.getNumber("radius"))), Integer.parseInt(String.valueOf(object.getString("color"))), new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude()), object.getString("address"));
                         locationsArrayList.add(loc);
                     }
 
                     MapFragment.getInstance().locations = locationsArrayList;
+                    saveLocationsToSharedPreferences();
                     if(drawLocations) {
                         drawAllLocations();
                     }
@@ -109,40 +106,52 @@ public class Location {
                 dialog.dismissLocationDialog();
             }
         });
-        
+
+    }
+
+    public void saveLocationsToSharedPreferences(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(locationsArrayList);
+        Log.d(TAG, "saveLocationsToSharedPreferences: json is " + json);
+        editor.putString(ARRAY_LIST_TAG, json);
+        editor.apply();
     }
 
     // TODO: 8/10/2020 Create draw all locations method
-    private void drawAllLocations(){
+    public void drawAllLocations(){
         if(locationsArrayList.size() > 0) {
             manager = MapFragment.getInstance().circleManager;
             manager.drawManyCirclesOnMap(locationsArrayList);
         }
     }
 
-    private void saveLocationsToSharedPreferences(){
+
+    public ArrayList<Location> getLocationsFromSharedPreferences(boolean drawCircles){
+        dialog.locationFindingDialog();
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        String ARRAY_LIST_TAG = "locationsArrayList";
-
         Gson gson = new Gson();
-
-        String json = gson.toJson(locationsArrayList);
-
-        editor.putString(ARRAY_LIST_TAG, json);
-        editor.commit();
-    }
-
-    public ArrayList<Location> getLocationsFromSharedPreferences(){
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        Gson gson = new Gson();
-        String json = sharedPrefs.getString(TAG, "");
+        String json = sharedPreferences.getString(ARRAY_LIST_TAG, null);
         Type type = new TypeToken<List<Location>>() {}.getType();
         ArrayList<Location> arrayList = gson.fromJson(json, type);
 
+        locationsArrayList = arrayList;
+
+        if(drawCircles){
+            drawAllLocations();
+        }
+
+        dialog.dismissLocationDialog();
+
         return arrayList;
 
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+        dialog = new DialogAdapter((Activity) context);
     }
 
     public int getSelectedRadius() {

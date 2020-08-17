@@ -78,4 +78,14 @@
     <string name="twitter_consumer_key">boLFXqrBCSuT7lJBSzQ3cl1Fq</string>
     <string name="twitter_consumer_secret">zCUU683Sg3t9vQgNsRavPjohXAyvK7ZtZLdsRaFfSEtfLODZHd</string>
 
+    <string name="notification_exit_title">You have left your safe region</string>
+    <string name="notification_exit_text">Make sure you wearAmask</string>
+    <string name="notification_exit_big_text">You are no longer in a safe location, do not forget to wearAmask!</string>
+    <string name="notification_enter_title">You have entered a safe location</string>
+    <string name="notification_enter_text">You are now safe!</string>
+    <string name="notification_enter_big_text">has entered,</string>
+    <string name="notification_exit_part">make sure you wearAmask!</string>
+    <string name="notification_enter_part">you are now safe!</string>
+
+
 </resources>

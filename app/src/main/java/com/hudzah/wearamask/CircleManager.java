@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -50,7 +51,8 @@ public class CircleManager {
 
         MarkerOptions options = new MarkerOptions()
                 .position(place.getLatLng())
-                .title(place.getAddress());
+                .title(place.getAddress())
+                .icon(BitmapDescriptorFactory.defaultMarker(getMarkerIcon(color)));
         googleMap.addMarker(options);
         googleMap.addCircle(
                 new CircleOptions()
@@ -60,6 +62,13 @@ public class CircleManager {
                         .strokeColor(Color.argb(255, red, green, blue))
                         .fillColor(Color.argb(70, red, green, blue))
         );
+    }
+
+    public int getMarkerIcon(int color) {
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+        Log.d(TAG, "getMarkerIcon: hsv " + (int)hsv[0]);
+        return (int) hsv[0];
     }
 
     public void drawManyCirclesOnMap(ArrayList<Location> locations){
@@ -73,7 +82,8 @@ public class CircleManager {
 
             MarkerOptions options = new MarkerOptions()
                     .position(location.getLatLng())
-                    .title(location.getAddress());
+                    .title(location.getAddress())
+                    .icon(BitmapDescriptorFactory.defaultMarker((float) getMarkerIcon(location.getSelectedColor())));
             googleMap.addMarker(options);
             googleMap.addCircle(
                     new CircleOptions()

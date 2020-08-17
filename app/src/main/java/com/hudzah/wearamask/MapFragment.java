@@ -98,6 +98,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     private Boolean mLocationsPermissionsGranted = false;
     private static final int PERMISSION_REQUEST_CODE = 1234;
     String[] PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+    String[] PERMISSIONS_API_29 = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION};
     private FusedLocationProviderClient mFusedLocationClient;
 
     private SeekBar radiusSeekBar;
@@ -159,7 +160,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         }
         else{
             if(Build.VERSION.SDK_INT >= 29){
-                requestPermissions(new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, PERMISSION_REQUEST_CODE);
+                requestPermissions(PERMISSIONS_API_29, PERMISSION_REQUEST_CODE);
             }
             requestPermissions(PERMISSIONS, PERMISSION_REQUEST_CODE);
         }
@@ -193,7 +194,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
                 if (ParseUser.getCurrentUser() != null) {
                     if (ConnectivityReceiver.isConnected()) {
                         location.getAllLocations(true);
-                    } else locations = location.getLocationsFromSharedPreferences();
+                    } else {
+                        locations = location.getLocationsFromSharedPreferences(true);
+                        Log.d(TAG, "onMapReady: locations in offline mode are " + locations);
+                    }
 
                 }
             }
@@ -206,9 +210,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        initLocationClass();
 
         if (!Places.isInitialized()) {
             Places.initialize(getContext(), getResources().getString(R.string.google_maps_key));
@@ -286,8 +293,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         });
 
         recenterLocation = (FloatingActionButton) view.findViewById(R.id.recenterLocation);
-
-        initLocationClass();
 
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -392,7 +397,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     }
 
     private void initLocationClass(){
-        location = new com.hudzah.wearamask.Location(getContext(), 0, 0, null, "");
+        location = new com.hudzah.wearamask.Location( 0, 0, null, "");
+        location.setContext(getContext());
     }
 
     private void initSearchText(){
@@ -422,7 +428,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     private void saveLocation(){
         // TODO: 8/9/2020 Create object of location
         Log.d(TAG, "saveLocation: saving info " + selectedColor + " " + selectedRadius);
-        location = new com.hudzah.wearamask.Location(getContext(),
+        location = new com.hudzah.wearamask.Location(
                 selectedRadius,
                 selectedColor,
                 thePlace.getLatLng(),
@@ -574,6 +580,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
     private void showOnlineMode(){
         enableOnlineLayout();
+        //location.getAllLocations(true);
         offlineModeLayout.setAlpha(1);
         offlineModeLayout.animate().alpha(0f).translationYBy(70).setDuration(180).setListener(new Animator.AnimatorListener() {
             @Override

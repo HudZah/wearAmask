@@ -50,6 +50,7 @@ public class DialogAdapter {
         dialog = builder.create();
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
+
     }
 
     public void dismissLocationDialog(){

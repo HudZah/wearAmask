@@ -8,12 +8,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
-import android.graphics.Color;
+import android.graphics.Bitmap;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+
+import com.parse.ParseUser;
 
 import java.util.Random;
 
@@ -37,23 +39,28 @@ public class NotificationHelper extends ContextWrapper {
         notificationChannel.enableLights(true);
         notificationChannel.enableVibration(true);
         notificationChannel.setDescription("this is the description of the channel.");
-        notificationChannel.setLightColor(Color.RED);
+        notificationChannel.setLightColor(getResources().getColor(R.color.colorPrimaryDark));
         notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         manager.createNotificationChannel(notificationChannel);
     }
 
-    public void sendHighPriorityNotification(String title, String body, Class activityName) {
+    public void sendHighPriorityNotification(String title, String body, String bigBody, Bitmap largeIcon, Class activityName) {
 
         Intent intent = new Intent(this, activityName);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 267, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-//                .setContentTitle(title)
-//                .setContentText(body)
-                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setSmallIcon(R.drawable.ic_mask_icon)
+                .setContentTitle(title)
+                .setContentText(body)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setStyle(new NotificationCompat.BigTextStyle().setSummaryText("summary").setBigContentTitle(title).bigText(body))
+                .setColor(getResources().getColor(R.color.colorPrimaryDark))
+                .setLargeIcon(largeIcon)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(bigBody)
+                        .setBigContentTitle(title)
+                        .setSummaryText(ParseUser.getCurrentUser().getUsername()))
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .build();
