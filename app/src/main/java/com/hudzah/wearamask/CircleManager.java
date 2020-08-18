@@ -9,6 +9,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -22,23 +23,29 @@ import com.google.android.libraries.places.api.model.Place;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CircleManager {
+
+
+public enum CircleManager {
+    Manager;
 
     private Context context;
     private GoogleMap googleMap;
     private static final String TAG = "CircleManager";
     private GeofencingRequest geofencingRequest;
     private PendingIntent pendingIntent;
-
     private List<Geofence> geofences = new ArrayList<>();
+    DialogAdapter dialogAdapter;
+    GeofenceHelper geofenceHelper;
+    GeofencingClient geofencingClient;
 
 
-    final DialogAdapter dialogAdapter;
-
-    public CircleManager(Context context, GoogleMap googleMap) {
+    public void init(Context context, GoogleMap googleMap){
         this.context = context;
         this.googleMap = googleMap;
         dialogAdapter = new DialogAdapter((Activity) context);
+        geofenceHelper = new GeofenceHelper(context);
+        geofencingClient = new GeofencingClient(context);
+
     }
 
     public void drawCircleOnMap(int radius, int color, Place place){
@@ -62,6 +69,8 @@ public class CircleManager {
                         .strokeColor(Color.argb(255, red, green, blue))
                         .fillColor(Color.argb(70, red, green, blue))
         );
+
+
     }
 
     public int getMarkerIcon(int color) {
@@ -73,6 +82,7 @@ public class CircleManager {
 
     public void drawManyCirclesOnMap(ArrayList<Location> locations){
         googleMap.clear();
+        Log.d(TAG, "drawManyCirclesOnMap: geofences are " + geofences);
         for(Location location : locations){
             int red = Color.red(location.getSelectedColor());
             int green = Color.green(location.getSelectedColor());
@@ -93,17 +103,21 @@ public class CircleManager {
                             .strokeColor(Color.argb(255, red, green, blue))
                             .fillColor(Color.argb(70, red, green, blue))
             );
-
-            addGeofence(location.getLatLng(), location.getSelectedRadius());
         }
 
-        callGeofencingClient();
+        if(geofences.isEmpty()) {
+            for (Location location : locations) {
+                addGeofence(location.getLatLng(), location.getSelectedRadius());
+            }
+            callGeofencingClient();
+        }
+
     }
 
     private void addGeofence(LatLng latLng, int radius){
 
         String ID = String.valueOf(latLng.latitude + latLng.longitude);
-        Geofence geofence = MapFragment.geofenceHelper.getGeofence(ID, latLng, radius,
+        Geofence geofence = geofenceHelper.getGeofence(ID, latLng, radius,
                 Geofence.GEOFENCE_TRANSITION_ENTER |
                         Geofence.GEOFENCE_TRANSITION_DWELL |
                         Geofence.GEOFENCE_TRANSITION_EXIT);
@@ -113,10 +127,10 @@ public class CircleManager {
     }
 
     private void callGeofencingClient(){
-        geofencingRequest = MapFragment.geofenceHelper.getGeofencingRequest(geofences);
-        pendingIntent = MapFragment.geofenceHelper.getPendingIntent();
+        geofencingRequest = geofenceHelper.getGeofencingRequest(geofences);
+        pendingIntent = geofenceHelper.getPendingIntent();
 
-        MapFragment.geofencingClient.addGeofences(geofencingRequest, pendingIntent)
+        geofencingClient.addGeofences(geofencingRequest, pendingIntent)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -126,7 +140,7 @@ public class CircleManager {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        String errorMessage = MapFragment.geofenceHelper.getErrorString(e);
+                        String errorMessage = geofenceHelper.getErrorString(e);
                         Log.d(TAG, "onFailure: error is " + errorMessage + " raw error message is " + e.getMessage());
                         dialogAdapter.displayErrorDialog(errorMessage, "");
                     }

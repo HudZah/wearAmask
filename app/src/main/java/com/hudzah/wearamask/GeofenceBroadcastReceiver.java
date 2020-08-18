@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
@@ -60,7 +59,6 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
 
         switch (transitionType){
             case Geofence.GEOFENCE_TRANSITION_ENTER:
-                Toast.makeText(mContext, "GEOFENCE_TRANSITION_ENTER", Toast.LENGTH_SHORT).show();
                 notificationHelper.sendHighPriorityNotification(mContext.getResources().getString(R.string.notification_enter_title),
                         mContext.getResources().getString(R.string.notification_enter_text),
                         ParseUser.getCurrentUser().getUsername() + " "  + mContext.getResources().getString(R.string.notification_enter_big_text) + " " + address + ", " + mContext.getResources().getString(R.string.notification_enter_part),
@@ -69,11 +67,10 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                 break;
 
             case Geofence.GEOFENCE_TRANSITION_DWELL:
-                Toast.makeText(mContext, "GEOFENCE_TRANSITION_DWELL", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "checkGeofenceEvent: DWELL");
                 break;
 
             case Geofence.GEOFENCE_TRANSITION_EXIT:
-                Toast.makeText(mContext, "GEOFENCE_TRANSITION_EXIT", Toast.LENGTH_SHORT).show();
                 notificationHelper.sendHighPriorityNotification(mContext.getResources().getString(R.string.notification_exit_title),
                         mContext.getResources().getString(R.string.notification_exit_text),
                         mContext.getResources().getString(R.string.notification_exit_big_text),

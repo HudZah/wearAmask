@@ -20,6 +20,7 @@ import com.parse.ParseUser;
 import java.util.Random;
 
 public class NotificationHelper extends ContextWrapper {
+    NotificationManager manager;
 
     private static final String TAG = "NotificationHelper";
 
@@ -41,8 +42,9 @@ public class NotificationHelper extends ContextWrapper {
         notificationChannel.setDescription("this is the description of the channel.");
         notificationChannel.setLightColor(getResources().getColor(R.color.colorPrimaryDark));
         notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         manager.createNotificationChannel(notificationChannel);
+
     }
 
     public void sendHighPriorityNotification(String title, String body, String bigBody, Bitmap largeIcon, Class activityName) {

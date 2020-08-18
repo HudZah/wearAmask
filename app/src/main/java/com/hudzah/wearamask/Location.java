@@ -32,16 +32,17 @@ public class Location {
     public boolean saved = false;
     private static final String TAG = "Location";
     String ARRAY_LIST_TAG = "locationsArrayList";
+    private String locationName;
 
     DialogAdapter dialog;
     public ArrayList<com.hudzah.wearamask.Location> locationsArrayList = new ArrayList<>();
-    CircleManager manager;
 
-    public Location(int selectedRadius, int selectedColor, LatLng latLng, String address) {
+    public Location(int selectedRadius, int selectedColor, LatLng latLng, String address, String locationName) {
         this.selectedRadius = selectedRadius;
         this.selectedColor = selectedColor;
         this.latLng = latLng;
         this.address = address;
+        this.locationName = locationName;
     }
 
     public void saveLocationToParse(Place place){
@@ -52,6 +53,7 @@ public class Location {
         object.put("address", place.getAddress());
         object.put("radius", selectedRadius);
         object.put("color", String.valueOf(selectedColor));
+        object.put("name", locationName);
 
         dialog.loadingDialog();
         object.saveInBackground(new SaveCallback() {
@@ -63,15 +65,15 @@ public class Location {
                     MapFragment.getInstance().discardLocation();
                     Toast.makeText(context, "Saved successfully!", Toast.LENGTH_SHORT).show();
                     saveLocationsToSharedPreferences();
+                    dialog.dismissLoadingDialog();
                 }
                 else{
                     saved = false;
                     Log.d(TAG, "done: failed to save " + e.getMessage());
                 }
                 // TODO: 8/11/2020 Check this
-                manager.clearAllCircles();
+                CircleManager.Manager.clearAllCircles();
                 getAllLocations(true);
-                dialog.dismissLoadingDialog();
 
             }
 
@@ -89,13 +91,15 @@ public class Location {
                 if(e == null){
                     for(ParseObject object : objects){
                         ParseGeoPoint geoPoint = object.getParseGeoPoint("location");
-                        Location loc = new Location(Integer.parseInt(String.valueOf(object.getNumber("radius"))), Integer.parseInt(String.valueOf(object.getString("color"))), new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude()), object.getString("address"));
+                        Log.d(TAG, "done: stuck in here?");
+                        Location loc = new Location(Integer.parseInt(String.valueOf(object.getNumber("radius"))), Integer.parseInt(String.valueOf(object.getString("color"))), new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude()), object.getString("address"), object.getString("name"));
                         locationsArrayList.add(loc);
                     }
 
                     MapFragment.getInstance().locations = locationsArrayList;
                     saveLocationsToSharedPreferences();
                     if(drawLocations) {
+                        Log.d(TAG, "done: or here?");
                         drawAllLocations();
                     }
                 }
@@ -122,9 +126,8 @@ public class Location {
 
     // TODO: 8/10/2020 Create draw all locations method
     public void drawAllLocations(){
-        if(locationsArrayList.size() > 0) {
-            manager = MapFragment.getInstance().circleManager;
-            manager.drawManyCirclesOnMap(locationsArrayList);
+        if(locationsArrayList.size() > 0 && locationsArrayList != null) {
+            CircleManager.Manager.drawManyCirclesOnMap(locationsArrayList);
         }
     }
 
@@ -139,8 +142,11 @@ public class Location {
 
         locationsArrayList = arrayList;
 
-        if(drawCircles){
-            drawAllLocations();
+        if(locationsArrayList != null) {
+
+            if (drawCircles) {
+                drawAllLocations();
+            }
         }
 
         dialog.dismissLocationDialog();

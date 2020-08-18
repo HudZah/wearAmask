@@ -4,12 +4,15 @@ package com.hudzah.wearamask;
 import android.Manifest;
 import android.animation.Animator;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -38,7 +41,6 @@ import androidx.fragment.app.Fragment;
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -54,6 +56,7 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
@@ -108,20 +111,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     private ScrollView extraInfoScrollView;
     private TextView radiusTextView;
 
-    private static final float DEFAULT_ZOOM = 18f;
-    private static final float DEFAULT_RADIUS = 14f;
+    private static final float DEFAULT_ZOOM = 16f;
 
     private int selectedRadius = 15;
     private int selectedColor = 3394815;
 
     private Place thePlace;
-    public CircleManager circleManager;
+
+    private int DEFAULT_RADIUS = 30;
 
     private static MapFragment instance;
     
     private CardView offlineModeLayout;
 
     ParseGeoPoint lastKnownLocationGeoPoint;
+
+    private String locationName = "";
 
     private View layout;
 
@@ -134,13 +139,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     ConnectivityReceiver connectivityReceiver;
     GpsLocationReceiver gpsLocationReceiver;
 
+
     Location currentLocation;
 
+    AlertDialog namingDialog;
+
     public static DialogAdapter dialogAdapter;
-
-    public static GeofencingClient geofencingClient;
-    public static GeofenceHelper geofenceHelper;
-
 
     public MapFragment() {
         // Required empty public constructor
@@ -179,7 +183,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         this.googleMap = googleMap;
         Log.d(TAG, "onMapReady: map is ready");
 
-        circleManager = new CircleManager(getContext(), googleMap);
+        CircleManager.Manager.init(getContext(), googleMap);
 
 
         styleMap();
@@ -190,16 +194,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
                 googleMap.getUiSettings().setMyLocationButtonEnabled(false);
                 googleMap.getUiSettings().setCompassEnabled(false);
 
-                // retrives all locations and draws them
-                if (ParseUser.getCurrentUser() != null) {
-                    if (ConnectivityReceiver.isConnected()) {
-                        location.getAllLocations(true);
-                    } else {
-                        locations = location.getLocationsFromSharedPreferences(true);
-                        Log.d(TAG, "onMapReady: locations in offline mode are " + locations);
-                    }
-
-                }
             }
             else{
                 dialogAdapter.displayErrorDialog(getContext().getResources().getString(R.string.dialog_enable_location_prompt), getContext().getResources().getString(R.string.dialog_enable_location_button));
@@ -230,10 +224,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         loggedInLayout = (RelativeLayout) view.findViewById(R.id.loggedInLayout);
         offlineLayout = (RelativeLayout) view.findViewById(R.id.offlineLayout);
         mapView = (MapView) view.findViewById(R.id.mapView);
-
-        geofencingClient = LocationServices.getGeofencingClient(getContext());
-
-        geofenceHelper = new GeofenceHelper(getContext());
 
         autocompleteFragment = (AutocompleteSupportFragment)
                 getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
@@ -335,7 +325,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveLocation();
+                showLocationNameSelect();
             }
         });
 
@@ -369,15 +359,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 selectedRadius = progress;
-                radiusTextView.setText("Radius is " + progress + "m");
+                radiusTextView.setText("Radius is " + selectedRadius + "m");
                 if(thePlace != null) {
-                    circleManager.drawCircleOnMap(selectedRadius, selectedColor, thePlace);
+                    CircleManager.Manager.drawCircleOnMap(selectedRadius, selectedColor, thePlace);
                 }
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
@@ -397,7 +386,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     }
 
     private void initLocationClass(){
-        location = new com.hudzah.wearamask.Location( 0, 0, null, "");
+        location = new com.hudzah.wearamask.Location( 0, 0, null, "", "");
         location.setContext(getContext());
     }
 
@@ -425,25 +414,82 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
     }
 
-    private void saveLocation(){
-        // TODO: 8/9/2020 Create object of location
+    private void showLocationNameSelect(){
         Log.d(TAG, "saveLocation: saving info " + selectedColor + " " + selectedRadius);
+        displayLocationNamingDialog(thePlace.getAddress());
+        Log.d(TAG, "saveLocation: name of location is " + locationName);
+    }
+
+    private void displayLocationNamingDialog(final String address){
+        AlertDialog.Builder builder = new AlertDialog.Builder((Activity) getContext());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+
+        builder.setView(inflater.inflate(R.layout.dialog_location_name, null));
+
+        namingDialog = builder.create();
+        namingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        namingDialog.show();
+
+        final TextInputLayout locationNameInput = (TextInputLayout) namingDialog.findViewById(R.id.locationNameInput);
+        final Button saveButton = (Button) namingDialog.findViewById(R.id.saveButton);
+        TextView leaveBlankTextView = (TextView) namingDialog.findViewById(R.id.leaveBlankTextView);
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!locationNameInput.getEditText().getText().toString().equals("")) {
+                    locationName = locationNameInput.getEditText().getText().toString();
+                }
+                else{
+                    locationName = address;
+                }
+
+                saveLocation();
+
+                dismissLocationNamingDialog();
+            }
+        });
+
+        leaveBlankTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                locationName = address;
+                dismissLocationNamingDialog();
+                saveLocation();
+            }
+        });
+
+    }
+
+    private void saveLocation(){
+        Log.d(TAG, "saveLocation: location name is "+ locationName);
         location = new com.hudzah.wearamask.Location(
                 selectedRadius,
                 selectedColor,
                 thePlace.getLatLng(),
-                thePlace.getAddress());
+                thePlace.getAddress(),
+                locationName);
+
+        location.setContext(getContext());
 
         locations.add(location);
         location.saveLocationToParse(thePlace);
 
     }
 
+    public void dismissLocationNamingDialog(){
+        namingDialog.dismiss();
+    }
+
+
     public void discardLocation(){
+        dialogAdapter.loadingDialog();
         googleMap.clear();
         extraInfoScrollView.setVisibility(View.INVISIBLE);
+        radiusSeekBar.setProgress(30);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         autocompleteFragment.setText("");
+        dialogAdapter.dismissLoadingDialog();
         // TODO: 8/9/2020 show only already saved locations and discard others
     }
 
@@ -458,7 +504,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
             public void onOk(AmbilWarnaDialog dialog, int color) {
                 selectedColor = color;
                 colorTextView.setBackgroundTintList(ColorStateList.valueOf(selectedColor));
-                circleManager.drawCircleOnMap(selectedRadius, selectedColor, thePlace);
+                CircleManager.Manager.drawCircleOnMap(selectedRadius, selectedColor, thePlace);
             }
         });
 
@@ -467,14 +513,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     }
 
     private void geoLocate(Place place){
-
+        CircleManager.Manager.drawCircleOnMap(selectedRadius, selectedColor, thePlace);
         moveCamera(place.getLatLng(), DEFAULT_ZOOM/0.88f);
-        circleManager.drawCircleOnMap(selectedRadius, selectedColor, thePlace);
+        Log.d(TAG, "geoLocate: place is " + place);
         updateUI();
     }
 
     private void updateUI(){
-
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
     }
@@ -571,6 +616,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
     private void showOfflineMode(){
         enableOfflineLayout();
+        if(ParseUser.getCurrentUser() != null && locations.isEmpty()){
+            locations = location.getLocationsFromSharedPreferences(true);
+            Log.d(TAG, "showOfflineMode: locations in offline mode are " + locations);
+        }
+        else if(locations.size() > 0){
+            location.locationsArrayList = locations;
+            location.drawAllLocations();
+        }
         Log.d(TAG, "showOfflineMode: offline mode enabled");
         offlineModeLayout.setVisibility(View.VISIBLE);
         offlineModeLayout.setTranslationY(70f);
@@ -580,7 +633,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
     private void showOnlineMode(){
         enableOnlineLayout();
-        //location.getAllLocations(true);
+        Log.d(TAG, "showOnlineMode: locations is " + locations);
+        // retrives all locations and draws them
+        if(ParseUser.getCurrentUser() != null && locations.isEmpty()) {
+            Log.d(TAG, "showOnlineMode: get all locations");
+            location.getAllLocations(true);
+        }
+        else if(locations.size() > 0){
+            location.locationsArrayList = locations;
+            location.drawAllLocations();
+        }
         offlineModeLayout.setAlpha(1);
         offlineModeLayout.animate().alpha(0f).translationYBy(70).setDuration(180).setListener(new Animator.AnimatorListener() {
             @Override

@@ -14,6 +14,9 @@
     <string name="dialog_close">Close</string>
     <string name="dialog_enable_location_button">Enable</string>
     <string name="dialog_enable_location_prompt">Your location is turned off, to continue using wearAmask, please turn it on.</string>
+    <string name="dialog_enter_a_name">Name Your Location</string>
+    <string name="dialog_enter_name_para">And finally, select a good and easy to remember name for this location.</string>
+    <string name="dialog_enter_name_leave_blank">Leave blank</string>
 
     <string name="connectivity_online">You are now online</string>
     <string name="connectivity_offline">You are now in offline mode</string>
@@ -53,6 +56,7 @@
 
     <string name="username_hint">Username</string>
     <string name="password_hint">Password</string>
+    <string name="name_hint">Enter a name</string>
     <string name="login_welcome">Welcome!</string>
     <string name="login_create_account">Create an account</string>
     <string name="login_forgot_password">Forgot password</string>
@@ -80,7 +84,7 @@
 
     <string name="notification_exit_title">You have left your safe region</string>
     <string name="notification_exit_text">Make sure you wearAmask</string>
-    <string name="notification_exit_big_text">You are no longer in a safe location, do not forget to wearAmask!</string>
+    <string name="notification_exit_big_text">You are no longer in a safe location, make sure to wearAmask!</string>
     <string name="notification_enter_title">You have entered a safe location</string>
     <string name="notification_enter_text">You are now safe!</string>
     <string name="notification_enter_big_text">has entered,</string>

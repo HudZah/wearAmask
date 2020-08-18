@@ -21,6 +21,8 @@ public class DialogAdapter {
 
     private AlertDialog errorDialog;
 
+    String name = "";
+
 
     DialogAdapter(Activity myActivity){
         activity = myActivity;
