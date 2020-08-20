@@ -69,7 +69,6 @@ public class Location {
                     saved = false;
                     Log.d(TAG, "done: failed to save " + e.getMessage());
                 }
-                // TODO: 8/11/2020 Check this
                 CircleManager.Manager.clearAllCircles();
                 getAllLocations(true);
 
@@ -122,7 +121,6 @@ public class Location {
         editor.apply();
     }
 
-    // TODO: 8/10/2020 Create draw all locations method
     public void drawAllLocations(){
         if(locationsArrayList.size() > 0 && locationsArrayList != null) {
             CircleManager.Manager.drawManyCirclesOnMap(locationsArrayList);

@@ -142,6 +142,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
     private View layout;
 
+    private int transitionState;
+
     private com.hudzah.wearamask.Location location;
 
     public ArrayList<com.hudzah.wearamask.Location> locations = new ArrayList<>();
@@ -421,7 +423,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         fabSafe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 8/20/2020
+                if(transitionState > 0){
+                    if(transitionState == Geofence.GEOFENCE_TRANSITION_ENTER){
+                        // TODO: 8/20/2020 show safe dialog
+                        DialogAdapter.ADAPTER.displaySafeDialog();
+                    }
+                    else if(transitionState == Geofence.GEOFENCE_TRANSITION_EXIT){
+                        // TODO: 8/20/2020 show not safe dialog
+                        DialogAdapter.ADAPTER.displayWarningDialog();
+
+                    }
+                }
             }
         });
 
@@ -432,10 +444,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         if(state == Geofence.GEOFENCE_TRANSITION_EXIT){
             fabSafe.setImageDrawable(getResources().getDrawable(R.drawable.icon_warning_red));
             Log.d(TAG, "switchFabSafeState: not safe");
+            transitionState = state;
         }
         else if(state == Geofence.GEOFENCE_TRANSITION_ENTER){
             fabSafe.setImageDrawable(getResources().getDrawable(R.drawable.ic_noti_safe));
             Log.d(TAG, "switchFabSafeState: safe");
+            transitionState = state;
         }
     }
 
@@ -537,14 +551,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
 
     public void discardLocation(){
-        DialogAdapter.ADAPTER.loadingDialog();
         googleMap.clear();
         extraInfoScrollView.setVisibility(View.INVISIBLE);
         radiusSeekBar.setProgress(30);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         autocompleteFragment.setText("");
-        DialogAdapter.ADAPTER.dismissLoadingDialog();
-        // TODO: 8/9/2020 show only already saved locations and discard others
     }
 
     private void showColorPicker(){
@@ -835,7 +846,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         if(requestCode == PERMISSION_REQUEST_CODE){
             Log.d(TAG, "onRequestPermissionsResult: matching request code");
             if(allPermissionsGranted()){
-                // TODO: 8/7/2020 init map
                 Intent intent = new Intent(getContext(), MapsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
@@ -860,8 +870,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
         if(allPermissionsGranted()){
             if(GpsLocationReceiver.checkLocationServicesEnabled(getContext())) {
-//                getLastDeviceLocation();
-                checkSettingsAndStartLocationUpdates();
+                getLastDeviceLocation();
+                //checkSettingsAndStartLocationUpdates();
             }
             else{
                 DialogAdapter.ADAPTER.displayErrorDialog(getContext().getResources().getString(R.string.dialog_enable_location_prompt), getContext().getResources().getString(R.string.dialog_enable_location_button));
@@ -948,7 +958,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    checkSettingsAndStartLocationUpdates();
+                    //checkSettingsAndStartLocationUpdates();
+                    getLastDeviceLocation();
                 }
             }, 1000);
         }

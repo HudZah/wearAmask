@@ -17,6 +17,11 @@
     <string name="dialog_enter_a_name">Name Your Location</string>
     <string name="dialog_enter_name_para">And finally, select a good and easy to remember name for this location.</string>
     <string name="dialog_enter_name_leave_blank">Leave blank</string>
+    <string name="dialog_safe_header">You Are Safe!</string>
+    <string name="dialog_safe_para">You have entered a secure location, stay safe!</string>
+    <string name="dialog_warning_header">Stay Safe!</string>
+    <string name="dialog_warning_button_guidelines">View Guidelines</string>
+    <string name="dialog_warning_para">You are currently not in a safe zone.\nMake sure you wearAmask and follow proper guidelines to keep yourself safe!</string>
 
     <string name="connectivity_online">You are now online</string>
     <string name="connectivity_offline">You are now in offline mode</string>

@@ -5,7 +5,9 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -36,6 +38,8 @@ public enum DialogAdapter {
         builder.setView(inflater.inflate(R.layout.dialog_loading, null));
         builder.setCancelable(false);
 
+        Log.d("Tag", "loadingDialog: coming from " + activity);
+
         dialog = builder.create();
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
@@ -44,6 +48,7 @@ public enum DialogAdapter {
     public void dismissLoadingDialog(){
 
         dialog.dismiss();
+        Log.d("Tag", "dismissLoadingDialog: called");
     }
 
     public void locationFindingDialog(){
@@ -106,6 +111,61 @@ public enum DialogAdapter {
     }
 
     public void dismissErrorDialog(){
+        dialog.dismiss();
+    }
+
+    public void displaySafeDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+
+        builder.setView(inflater.inflate(R.layout.dialog_safe, null));
+
+        dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+
+        Button closeDialogButton = (Button) dialog.findViewById(R.id.closeDialogButton);
+        closeDialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismissSafeAndWarningDialog();
+            }
+        });
+    }
+
+    public void displayWarningDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+
+        builder.setView(inflater.inflate(R.layout.dialog_warning, null));
+
+        dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+
+        ImageView closeDialogButton = (ImageView) dialog.findViewById(R.id.closeDialogButton);
+        Button actionButton = (Button) dialog.findViewById(R.id.actionButton);
+
+        actionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse("https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public"); // missing 'http://' will cause crashed
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                activity.startActivity(intent);
+                dismissSafeAndWarningDialog();
+
+            }
+        });
+
+        closeDialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismissSafeAndWarningDialog();
+            }
+        });
+    }
+
+    public void dismissSafeAndWarningDialog(){
         dialog.dismiss();
     }
 
