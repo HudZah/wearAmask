@@ -59,6 +59,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
 
         switch (transitionType){
             case Geofence.GEOFENCE_TRANSITION_ENTER:
+                MapFragment.getInstance().switchFabSafeState(Geofence.GEOFENCE_TRANSITION_ENTER);
                 notificationHelper.sendHighPriorityNotification(mContext.getResources().getString(R.string.notification_enter_title),
                         mContext.getResources().getString(R.string.notification_enter_text),
                         ParseUser.getCurrentUser().getUsername() + " "  + mContext.getResources().getString(R.string.notification_enter_big_text) + " " + address + ", " + mContext.getResources().getString(R.string.notification_enter_part),
@@ -71,10 +72,11 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                 break;
 
             case Geofence.GEOFENCE_TRANSITION_EXIT:
+                MapFragment.getInstance().switchFabSafeState(Geofence.GEOFENCE_TRANSITION_EXIT);
                 notificationHelper.sendHighPriorityNotification(mContext.getResources().getString(R.string.notification_exit_title),
                         mContext.getResources().getString(R.string.notification_exit_text),
                         mContext.getResources().getString(R.string.notification_exit_big_text),
-                        BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_noti_warning),
+                        BitmapFactory.decodeResource(mContext.getResources(), R.drawable.icon_warning_red),
                         MainActivity.class);
                 break;
 

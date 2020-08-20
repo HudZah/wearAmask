@@ -12,25 +12,26 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class DialogAdapter {
+public enum DialogAdapter {
+    ADAPTER;
 
     private Activity activity;
     private AlertDialog dialog;
-    AlertDialog.Builder builder;
     LayoutInflater inflater;
-
-    private AlertDialog errorDialog;
 
     String name = "";
 
 
-    DialogAdapter(Activity myActivity){
+
+
+    public void initDialogAdapter(Activity myActivity){
         activity = myActivity;
-        builder = new AlertDialog.Builder(activity);
         inflater = activity.getLayoutInflater();
     }
 
     public void loadingDialog(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
         builder.setView(inflater.inflate(R.layout.dialog_loading, null));
         builder.setCancelable(false);
@@ -46,6 +47,10 @@ public class DialogAdapter {
     }
 
     public void locationFindingDialog(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+
         builder.setView(inflater.inflate(R.layout.dialog_location_finding, null));
         builder.setCancelable(false);
 
@@ -61,17 +66,19 @@ public class DialogAdapter {
 
     public void displayErrorDialog(final String error, final String buttonText){
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
 
         builder.setView(inflater.inflate(R.layout.dialog_error, null));
 
-        errorDialog = builder.create();
-        errorDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        errorDialog.show();
-        TextView errorTextView = (TextView) errorDialog.findViewById(R.id.errorTextView);
+        dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+        TextView errorTextView = (TextView) dialog.findViewById(R.id.errorTextView);
         errorTextView.setText(error);
 
-        Button actionButton = (Button) errorDialog.findViewById(R.id.actionButton);
-        ImageView closeDialogButton = (ImageView) errorDialog.findViewById(R.id.closeDialogButton);
+        Button actionButton = (Button) dialog.findViewById(R.id.actionButton);
+        ImageView closeDialogButton = (ImageView) dialog.findViewById(R.id.closeDialogButton);
         if(!buttonText.equals("")) actionButton.setText(buttonText);
 
         closeDialogButton.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +106,7 @@ public class DialogAdapter {
     }
 
     public void dismissErrorDialog(){
-        errorDialog.dismiss();
+        dialog.dismiss();
     }
 
 }

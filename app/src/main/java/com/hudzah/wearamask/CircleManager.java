@@ -1,6 +1,5 @@
 package com.hudzah.wearamask;
 
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.Color;
@@ -34,7 +33,6 @@ public enum CircleManager {
     private GeofencingRequest geofencingRequest;
     private PendingIntent pendingIntent;
     private List<Geofence> geofences = new ArrayList<>();
-    DialogAdapter dialogAdapter;
     GeofenceHelper geofenceHelper;
     GeofencingClient geofencingClient;
 
@@ -42,7 +40,6 @@ public enum CircleManager {
     public void init(Context context, GoogleMap googleMap){
         this.context = context;
         this.googleMap = googleMap;
-        dialogAdapter = new DialogAdapter((Activity) context);
         geofenceHelper = new GeofenceHelper(context);
         geofencingClient = new GeofencingClient(context);
 
@@ -112,6 +109,7 @@ public enum CircleManager {
             callGeofencingClient();
         }
 
+
     }
 
     private void addGeofence(LatLng latLng, int radius){
@@ -142,7 +140,7 @@ public enum CircleManager {
                     public void onFailure(@NonNull Exception e) {
                         String errorMessage = geofenceHelper.getErrorString(e);
                         Log.d(TAG, "onFailure: error is " + errorMessage + " raw error message is " + e.getMessage());
-                        dialogAdapter.displayErrorDialog(errorMessage, "");
+                        DialogAdapter.ADAPTER.displayErrorDialog(errorMessage, "");
                     }
                 });
     }

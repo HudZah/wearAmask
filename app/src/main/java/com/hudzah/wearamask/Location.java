@@ -1,6 +1,5 @@
 package com.hudzah.wearamask;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -34,7 +33,6 @@ public class Location {
     String ARRAY_LIST_TAG = "locationsArrayList";
     private String locationName;
 
-    DialogAdapter dialog;
     public ArrayList<com.hudzah.wearamask.Location> locationsArrayList = new ArrayList<>();
 
     public Location(int selectedRadius, int selectedColor, LatLng latLng, String address, String locationName) {
@@ -55,7 +53,7 @@ public class Location {
         object.put("color", String.valueOf(selectedColor));
         object.put("name", locationName);
 
-        dialog.loadingDialog();
+        DialogAdapter.ADAPTER.loadingDialog();
         object.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -65,7 +63,7 @@ public class Location {
                     MapFragment.getInstance().discardLocation();
                     Toast.makeText(context, "Saved successfully!", Toast.LENGTH_SHORT).show();
                     saveLocationsToSharedPreferences();
-                    dialog.dismissLoadingDialog();
+                    DialogAdapter.ADAPTER.dismissLoadingDialog();
                 }
                 else{
                     saved = false;
@@ -84,7 +82,7 @@ public class Location {
 
         ParseQuery query = ParseQuery.getQuery("Locations");
         query.whereEqualTo("username", ParseUser.getCurrentUser().getUsername());
-        dialog.locationFindingDialog();
+        DialogAdapter.ADAPTER.locationFindingDialog();
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
@@ -104,16 +102,16 @@ public class Location {
                     }
                 }
                 else{
-                    dialog.displayErrorDialog(e.getMessage(), "");
+                    DialogAdapter.ADAPTER.displayErrorDialog(e.getMessage(), "");
                 }
 
-                dialog.dismissLocationDialog();
+                DialogAdapter.ADAPTER.dismissLocationDialog();
             }
         });
 
     }
 
-    public void saveLocationsToSharedPreferences(){
+    public void  saveLocationsToSharedPreferences(){
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
@@ -133,7 +131,7 @@ public class Location {
 
 
     public ArrayList<Location> getLocationsFromSharedPreferences(boolean drawCircles){
-        dialog.locationFindingDialog();
+        DialogAdapter.ADAPTER.locationFindingDialog();
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPreferences.getString(ARRAY_LIST_TAG, null);
@@ -149,7 +147,7 @@ public class Location {
             }
         }
 
-        dialog.dismissLocationDialog();
+        DialogAdapter.ADAPTER.dismissLocationDialog();
 
         return arrayList;
 
@@ -157,7 +155,6 @@ public class Location {
 
     public void setContext(Context context) {
         this.context = context;
-        dialog = new DialogAdapter((Activity) context);
     }
 
     public int getSelectedRadius() {

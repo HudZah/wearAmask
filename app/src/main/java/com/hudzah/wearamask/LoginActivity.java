@@ -54,7 +54,6 @@ public class LoginActivity extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
     FloatingActionButton signInFacebookButton;
     FloatingActionButton signInTwitterButton;
-    DialogAdapter dialog;
     Dialog errorDialog;
 
 
@@ -64,6 +63,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        DialogAdapter.ADAPTER.initDialogAdapter(this);
 
         androidx.appcompat.widget.Toolbar toolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.toolbar);
         layout = (ScrollView) findViewById(R.id.layout);
@@ -75,7 +76,6 @@ public class LoginActivity extends AppCompatActivity {
         signInGoogleButton = (FloatingActionButton) findViewById(R.id.signInGoogleButton);
         signInFacebookButton = (FloatingActionButton) findViewById(R.id.signInFacebookButton);
         signInTwitterButton = (FloatingActionButton) findViewById(R.id.signInTwitterButton);
-        dialog = new DialogAdapter(this);
 
         errorDialog = new Dialog(this);
 
@@ -167,7 +167,7 @@ public class LoginActivity extends AppCompatActivity {
         password = passwordInput.getEditText().getText().toString();
         if(validateData()){
 
-            dialog.loadingDialog();
+            DialogAdapter.ADAPTER.loadingDialog();
 
             ParseUser.logInInBackground(username, password, new LogInCallback() {
                 @Override
@@ -176,10 +176,10 @@ public class LoginActivity extends AppCompatActivity {
                        goToMaps();
                     }
                     else{
-                        dialog.displayErrorDialog(e.getMessage(), "");
+                        DialogAdapter.ADAPTER.displayErrorDialog(e.getMessage(), "");
                     }
 
-                    dialog.dismissLoadingDialog();
+                    DialogAdapter.ADAPTER.dismissLoadingDialog();
                 }
 
             });
@@ -231,7 +231,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void facebookSignUp() {
-        dialog.loadingDialog();
+        DialogAdapter.ADAPTER.loadingDialog();
 
         Collection<String> permissions = Arrays.asList("public_profile", "email");
         ParseFacebookUtils.logInWithReadPermissionsInBackground(LoginActivity.this, permissions, new LogInCallback() {
@@ -239,7 +239,7 @@ public class LoginActivity extends AppCompatActivity {
             public void done(ParseUser user, ParseException err) {
                 if (err != null) {
                     ParseUser.logOut();
-                    dialog.displayErrorDialog(err.getMessage(), "");
+                    DialogAdapter.ADAPTER.displayErrorDialog(err.getMessage(), "");
                 }
                 if (user == null) {
 
@@ -257,7 +257,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 }
 
-                dialog.dismissLoadingDialog();
+                DialogAdapter.ADAPTER.dismissLoadingDialog();
             }
 
         });
@@ -265,7 +265,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void twitterSignUp(){
         final ParseGeoPoint geoPoint = new ParseGeoPoint(0 , 0);
-        dialog.loadingDialog();
+        DialogAdapter.ADAPTER.loadingDialog();
 
         ParseTwitterUtils.logIn(LoginActivity.this, new LogInCallback() {
 
@@ -274,7 +274,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (err != null) {
 
                     ParseUser.logOut();
-                    dialog.displayErrorDialog(err.getMessage(), "");
+                    DialogAdapter.ADAPTER.displayErrorDialog(err.getMessage(), "");
 
                 }
                 if (user == null) {
@@ -297,7 +297,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             } else {
                                 ParseUser.logOut();
-                                dialog.displayErrorDialog(e.getMessage(), "");
+                                DialogAdapter.ADAPTER.displayErrorDialog(e.getMessage(), "");
                             }
                         }
                     });
@@ -306,7 +306,7 @@ public class LoginActivity extends AppCompatActivity {
                     goToMaps();
                 }
 
-                dialog.dismissLoadingDialog();
+                DialogAdapter.ADAPTER.dismissLoadingDialog();
 
             }
         });

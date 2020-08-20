@@ -46,21 +46,45 @@
 
         </androidx.cardview.widget.CardView>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/recenterLocation"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
-            app:fabSize= "normal"
-            android:src="@drawable/ic_gps_fixed_black_24dp"
-            android:clickable="true"
-            android:layout_marginRight="30dp"
-            app:layout_dodgeInsetEdges="bottom"
-            android:layout_gravity="end|bottom"
-            android:layout_marginBottom="15dp"
-            app:borderWidth="0dp"
             android:layout_above="@id/offlineModeLayout"
-            />
+            android:layout_gravity="end|bottom"
+            app:layout_dodgeInsetEdges="bottom"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="vertical"
+            >
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabSafe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                app:fabSize= "mini"
+                android:clickable="true"
+                android:layout_gravity="center"
+                app:borderWidth="0dp"
+                android:layout_marginBottom="10dp"
+                android:elevation="0dp"
+                />
+
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/recenterLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
+                    app:fabSize= "normal"
+                    android:src="@drawable/ic_gps_fixed_black_24dp"
+                    android:clickable="true"
+                    app:borderWidth="0dp"
+                    android:elevation="0dp"
+                />
+
+        </LinearLayout>
+
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/fabUpArrow"

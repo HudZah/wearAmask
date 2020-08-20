@@ -33,6 +33,8 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        DialogAdapter.ADAPTER.initDialogAdapter(this);
+
         setupNavigation();
     }
 
@@ -118,8 +120,7 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
                     startActivity(intent);
                 }
                 else{
-                    DialogAdapter dialogAdapter = new DialogAdapter(MapsActivity.this);
-                    dialogAdapter.displayErrorDialog(e.getMessage(), "");
+                    DialogAdapter.ADAPTER.displayErrorDialog(e.getMessage(), "");
                 }
             }
         });
@@ -138,5 +139,15 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 }

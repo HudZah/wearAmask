@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -19,6 +20,7 @@ import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,9 +41,17 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -49,6 +59,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -139,12 +151,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     ConnectivityReceiver connectivityReceiver;
     GpsLocationReceiver gpsLocationReceiver;
 
+    public FloatingActionButton fabSafe;
+
+    LocationRequest locationRequest;
+
+    com.google.android.gms.location.LocationCallback locationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            super.onLocationResult(locationResult);
+            if(locationResult == null){
+                return;
+            }
+            else{
+                for(Location location : locationResult.getLocations()){
+                    moveCamera(new LatLng(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM);
+                }
+            }
+        }
+    };
 
     Location currentLocation;
 
     AlertDialog namingDialog;
-
-    public static DialogAdapter dialogAdapter;
 
     public MapFragment() {
         // Required empty public constructor
@@ -155,19 +183,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        dialogAdapter = new DialogAdapter(getActivity());
+        DialogAdapter.ADAPTER.initDialogAdapter(getActivity());
 
-        if(allPermissionsGranted()) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if(allPermissionsGranted()) {
+                mapView.onCreate(savedInstanceState);
+                mapView.onResume();
+                mapView.getMapAsync(this);
+            }
+            else{
+                if(Build.VERSION.SDK_INT >= 29){
+                    requestPermissions(PERMISSIONS_API_29, PERMISSION_REQUEST_CODE);
+                }
+                requestPermissions(PERMISSIONS, PERMISSION_REQUEST_CODE);
+            }
+        }
+        else{
             mapView.onCreate(savedInstanceState);
             mapView.onResume();
             mapView.getMapAsync(this);
+
         }
-        else{
-            if(Build.VERSION.SDK_INT >= 29){
-                requestPermissions(PERMISSIONS_API_29, PERMISSION_REQUEST_CODE);
-            }
-            requestPermissions(PERMISSIONS, PERMISSION_REQUEST_CODE);
-        }
+
+
 
     }
 
@@ -185,21 +223,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
         CircleManager.Manager.init(getContext(), googleMap);
 
-
         styleMap();
-        if(allPermissionsGranted()){
-            if(GpsLocationReceiver.checkLocationServicesEnabled(getContext())) {
-                getLastDeviceLocation();
-                googleMap.setMyLocationEnabled(true);
-                googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-                googleMap.getUiSettings().setCompassEnabled(false);
-
-            }
-            else{
-                dialogAdapter.displayErrorDialog(getContext().getResources().getString(R.string.dialog_enable_location_prompt), getContext().getResources().getString(R.string.dialog_enable_location_button));
-            }
-
-        }
+        googleMap.setMyLocationEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+        googleMap.getUiSettings().setCompassEnabled(false);
 
 
     }
@@ -208,6 +235,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(4000);
+        locationRequest.setFastestInterval(1000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         initLocationClass();
 
@@ -274,6 +308,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         offlineModeCheckButton = (LottieAnimationView) view.findViewById(R.id.offlineModeCheckButton);
 
         //searchText = (EditText) view.findViewById(R.id.locationEditText);
+
+        fabSafe = (FloatingActionButton) view.findViewById(R.id.fabSafe);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -350,7 +386,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
                     getLastDeviceLocation();
                 }
                 else{
-                    dialogAdapter.displayErrorDialog(getContext().getResources().getString(R.string.dialog_enable_location_prompt), getContext().getResources().getString(R.string.dialog_enable_location_button));
+                    DialogAdapter.ADAPTER.displayErrorDialog(getContext().getResources().getString(R.string.dialog_enable_location_prompt), getContext().getResources().getString(R.string.dialog_enable_location_button));
                 }
             }
         });
@@ -382,7 +418,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
             }
         });
 
+        fabSafe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: 8/20/2020
+            }
+        });
 
+
+    }
+
+    public void switchFabSafeState(int state){
+        if(state == Geofence.GEOFENCE_TRANSITION_EXIT){
+            fabSafe.setImageDrawable(getResources().getDrawable(R.drawable.icon_warning_red));
+            Log.d(TAG, "switchFabSafeState: not safe");
+        }
+        else if(state == Geofence.GEOFENCE_TRANSITION_ENTER){
+            fabSafe.setImageDrawable(getResources().getDrawable(R.drawable.ic_noti_safe));
+            Log.d(TAG, "switchFabSafeState: safe");
+        }
     }
 
     private void initLocationClass(){
@@ -438,7 +492,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
             @Override
             public void onClick(View v) {
                 if(!locationNameInput.getEditText().getText().toString().equals("")) {
-                    locationName = locationNameInput.getEditText().getText().toString();
+                    locationName = locationNameInput.getEditText().getText().toString().trim();
                 }
                 else{
                     locationName = address;
@@ -483,13 +537,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
 
     public void discardLocation(){
-        dialogAdapter.loadingDialog();
+        DialogAdapter.ADAPTER.loadingDialog();
         googleMap.clear();
         extraInfoScrollView.setVisibility(View.INVISIBLE);
         radiusSeekBar.setProgress(30);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         autocompleteFragment.setText("");
-        dialogAdapter.dismissLoadingDialog();
+        DialogAdapter.ADAPTER.dismissLoadingDialog();
         // TODO: 8/9/2020 show only already saved locations and discard others
     }
 
@@ -526,8 +580,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
     public void getLastDeviceLocation(){
         Log.d(TAG, "getDeviceLocation: get device location");
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
 
         try{
             if(allPermissionsGranted()){
@@ -739,6 +791,43 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         return instance;
     }
 
+    private void checkSettingsAndStartLocationUpdates(){
+
+        LocationSettingsRequest request = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest).build();
+        SettingsClient client = LocationServices.getSettingsClient(getContext());
+        Task<LocationSettingsResponse> locationSettingsResponseTask = client.checkLocationSettings(request);
+        locationSettingsResponseTask.addOnSuccessListener(new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                // settings satisfied
+                startLocationUpdates();
+            }
+        });
+
+        locationSettingsResponseTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if(e instanceof ResolvableApiException){
+                    ResolvableApiException apiException = (ResolvableApiException) e;
+                    try {
+                        apiException.startResolutionForResult(getActivity(), 1001);
+                    } catch (IntentSender.SendIntentException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    private void startLocationUpdates(){
+        mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+    }
+
+    private void stopLocationUpdates(){
+        mFusedLocationClient.removeLocationUpdates(locationCallback);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
@@ -763,6 +852,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if(allPermissionsGranted()){
+            if(GpsLocationReceiver.checkLocationServicesEnabled(getContext())) {
+//                getLastDeviceLocation();
+                checkSettingsAndStartLocationUpdates();
+            }
+            else{
+                DialogAdapter.ADAPTER.displayErrorDialog(getContext().getResources().getString(R.string.dialog_enable_location_prompt), getContext().getResources().getString(R.string.dialog_enable_location_button));
+            }
+
+        }
     }
 
     @Override
@@ -829,20 +934,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        stopLocationUpdates();
+    }
+
+    @Override
     public void onLocationProviderChanged(boolean isLocationOn) {
         Log.d(TAG, "onLocationProviderChanged: location is " + isLocationOn);
         if(isLocationOn){
-            dialogAdapter.dismissErrorDialog();
+            DialogAdapter.ADAPTER.dismissErrorDialog();
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    getLastDeviceLocation();
+                    checkSettingsAndStartLocationUpdates();
                 }
             }, 1000);
         }
         else{
-            dialogAdapter.displayErrorDialog(getResources().getString(R.string.dialog_enable_location_prompt), getResources().getString(R.string.dialog_enable_location_button));
+            DialogAdapter.ADAPTER.displayErrorDialog(getResources().getString(R.string.dialog_enable_location_prompt), getResources().getString(R.string.dialog_enable_location_button));
 
         }
     }

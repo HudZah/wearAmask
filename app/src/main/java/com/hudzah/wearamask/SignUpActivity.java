@@ -58,7 +58,6 @@ public class SignUpActivity extends AppCompatActivity {
     private static final String TAG = "SignUpActivity";
     FloatingActionButton signInFacebookButton;
     FloatingActionButton signInTwitterButton;
-    DialogAdapter dialog;
     Dialog errorDialog;
     TextView registerButton;
 
@@ -67,13 +66,14 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        DialogAdapter.ADAPTER.initDialogAdapter(this);
+
         usernameInput = (TextInputLayout) findViewById(R.id.usernameInput);
         passwordInput = (TextInputLayout) findViewById(R.id.passwordInput);
         emailInput = (TextInputLayout) findViewById(R.id.emailInput);
         signInGoogleButton = (FloatingActionButton) findViewById(R.id.signInGoogleButton);
         signInFacebookButton = (FloatingActionButton) findViewById(R.id.signInFacebookButton);
         signInTwitterButton = (FloatingActionButton) findViewById(R.id.signInTwitterButton);
-        dialog = new DialogAdapter(this);
         errorDialog = new Dialog(this);
         registerButton = (TextView) findViewById(R.id.registerButton);
 
@@ -169,13 +169,13 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void facebookSignUp() {
         Collection<String> permissions = Arrays.asList("public_profile", "email");
-        dialog.loadingDialog();
+        DialogAdapter.ADAPTER.loadingDialog();
         ParseFacebookUtils.logInWithReadPermissionsInBackground(SignUpActivity.this, permissions, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException err) {
                 if (err != null) {
                     ParseUser.logOut();
-                    dialog.displayErrorDialog(err.getMessage(), "");
+                    DialogAdapter.ADAPTER.displayErrorDialog(err.getMessage(), "");
                 }
                 if (user == null) {
                     ParseUser.logOut();
@@ -192,7 +192,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                 }
 
-                dialog.dismissLoadingDialog();
+                DialogAdapter.ADAPTER.dismissLoadingDialog();
             }
 
         });
@@ -200,7 +200,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void twitterSignUp(){
         final ParseGeoPoint geoPoint = new ParseGeoPoint(0 , 0);
-        dialog.loadingDialog();
+        DialogAdapter.ADAPTER.loadingDialog();
 
         ParseTwitterUtils.logIn(SignUpActivity.this, new LogInCallback() {
 
@@ -209,7 +209,7 @@ public class SignUpActivity extends AppCompatActivity {
                 if (err != null) {
 
                     ParseUser.logOut();
-                    dialog.displayErrorDialog(err.getMessage(), "");
+                    DialogAdapter.ADAPTER.displayErrorDialog(err.getMessage(), "");
 
                 }
                 if (user == null) {
@@ -232,7 +232,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                             } else {
                                 ParseUser.logOut();
-                                dialog.displayErrorDialog(e.getMessage(), "");
+                                DialogAdapter.ADAPTER.displayErrorDialog(e.getMessage(), "");
                             }
                         }
                     });
@@ -241,7 +241,7 @@ public class SignUpActivity extends AppCompatActivity {
                     goToMaps();
                 }
 
-                dialog.dismissLoadingDialog();
+                DialogAdapter.ADAPTER.dismissLoadingDialog();
 
             }
         });
@@ -322,7 +322,7 @@ public class SignUpActivity extends AppCompatActivity {
         ParseUser.logOut();
         user = new ParseUser();
 
-        dialog.loadingDialog();
+        DialogAdapter.ADAPTER.loadingDialog();
 
         ParseGeoPoint geoPoint = new ParseGeoPoint(0 , 0);
 
@@ -337,7 +337,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void done(ParseException e) {
                 if(e == null){
 
-                    dialog.dismissLoadingDialog();
+                    DialogAdapter.ADAPTER.dismissLoadingDialog();
 
                     if(!method.equals("google")) {
                         Toast.makeText(SignUpActivity.this, "Account created, continue by logging in", Toast.LENGTH_SHORT).show();
@@ -350,9 +350,9 @@ public class SignUpActivity extends AppCompatActivity {
                     }
                 }
                 else{
-                    dialog.dismissLoadingDialog();
+                    DialogAdapter.ADAPTER.dismissLoadingDialog();
                     Log.d(TAG, "done: " + e.getMessage());
-                    dialog.displayErrorDialog(e.getMessage(), "");
+                    DialogAdapter.ADAPTER.displayErrorDialog(e.getMessage(), "");
                 }
 
 
@@ -383,7 +383,7 @@ public class SignUpActivity extends AppCompatActivity {
                             goToMaps();
                         }
                         else{
-                            dialog.displayErrorDialog(e.getMessage(), "");
+                            DialogAdapter.ADAPTER.displayErrorDialog(e.getMessage(), "");
                         }
 
 
