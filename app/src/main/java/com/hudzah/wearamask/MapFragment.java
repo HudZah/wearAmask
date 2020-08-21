@@ -79,6 +79,8 @@ import java.util.Arrays;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -423,6 +425,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         fabSafe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if(transitionState > 0){
                     if(transitionState == Geofence.GEOFENCE_TRANSITION_ENTER){
                         // TODO: 8/20/2020 show safe dialog
@@ -434,23 +437,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
                     }
                 }
+                else{
+                    DialogAdapter.ADAPTER.displayWarningDialog();
+                }
             }
         });
 
 
     }
 
-    public void switchFabSafeState(int state){
+    public void switchFabSafeState(final int state){
+
         if(state == Geofence.GEOFENCE_TRANSITION_EXIT){
             fabSafe.setImageDrawable(getResources().getDrawable(R.drawable.icon_warning_red));
             Log.d(TAG, "switchFabSafeState: not safe");
             transitionState = state;
         }
-        else if(state == Geofence.GEOFENCE_TRANSITION_ENTER){
+        else {
             fabSafe.setImageDrawable(getResources().getDrawable(R.drawable.ic_noti_safe));
             Log.d(TAG, "switchFabSafeState: safe");
             transitionState = state;
         }
+
+
     }
 
     private void initLocationClass(){
@@ -887,6 +896,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         final IntentFilter intentFilter = new IntentFilter();
         IntentFilter gpsIntentFilter = new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION);
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+
+        SharedPreferences prefs = getContext().getSharedPreferences(getContext().getPackageName(), MODE_PRIVATE);
+
+        switchFabSafeState(prefs.getInt("transitionState", Geofence.GEOFENCE_TRANSITION_EXIT));
+        Log.d(TAG, "onResume: transition state is " + prefs.getInt("transitionState", Geofence.GEOFENCE_TRANSITION_EXIT));
 
         connectivityReceiver = new ConnectivityReceiver();
         gpsLocationReceiver = new GpsLocationReceiver();

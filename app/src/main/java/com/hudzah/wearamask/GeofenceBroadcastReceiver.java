@@ -3,6 +3,7 @@ package com.hudzah.wearamask;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
@@ -15,6 +16,8 @@ import com.parse.ParseUser;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class GeofenceBroadcastReceiver extends BroadcastReceiver {
 
@@ -53,12 +56,22 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void checkGeofenceEvent(){
+        SharedPreferences.Editor editor = mContext.getSharedPreferences(mContext.getPackageName(), MODE_PRIVATE).edit();
+
         int transitionType = geofencingEvent.getGeofenceTransition();
         String address = getAddress(geofencingEvent.getTriggeringLocation().getLatitude(), geofencingEvent.getTriggeringLocation().getLongitude());
         Log.d(TAG, "checkGeofenceEvent: triggered address is " + address);
 
         switch (transitionType){
             case Geofence.GEOFENCE_TRANSITION_ENTER:
+                editor.putInt("transitionState", Geofence.GEOFENCE_TRANSITION_ENTER);
+                editor.apply();
+                break;
+
+            case Geofence.GEOFENCE_TRANSITION_DWELL:
+                Log.d(TAG, "checkGeofenceEvent: DWELL");
+                editor.putInt("transitionState", Geofence.GEOFENCE_TRANSITION_DWELL);
+                editor.apply();
                 MapFragment.getInstance().switchFabSafeState(Geofence.GEOFENCE_TRANSITION_ENTER);
                 notificationHelper.sendHighPriorityNotification(mContext.getResources().getString(R.string.notification_enter_title),
                         mContext.getResources().getString(R.string.notification_enter_text),
@@ -67,11 +80,9 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                         MainActivity.class);
                 break;
 
-            case Geofence.GEOFENCE_TRANSITION_DWELL:
-                Log.d(TAG, "checkGeofenceEvent: DWELL");
-                break;
-
             case Geofence.GEOFENCE_TRANSITION_EXIT:
+                editor.putInt("transitionState", Geofence.GEOFENCE_TRANSITION_EXIT);
+                editor.apply();
                 MapFragment.getInstance().switchFabSafeState(Geofence.GEOFENCE_TRANSITION_EXIT);
                 notificationHelper.sendHighPriorityNotification(mContext.getResources().getString(R.string.notification_exit_title),
                         mContext.getResources().getString(R.string.notification_exit_text),

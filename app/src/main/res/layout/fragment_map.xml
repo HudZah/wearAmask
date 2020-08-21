@@ -64,6 +64,7 @@
                 android:backgroundTint="@color/white"
                 app:fabSize= "mini"
                 android:clickable="true"
+                android:src="@drawable/icon_warning_red"
                 android:layout_gravity="center"
                 app:borderWidth="0dp"
                 android:layout_marginBottom="10dp"
