@@ -60,17 +60,19 @@ public class Location {
                 if(e == null){
                     saved = true;
                     Log.d(TAG, "done: saved fine");
-                    MapFragment.getInstance().discardLocation();
                     Toast.makeText(context, "Saved successfully!", Toast.LENGTH_SHORT).show();
                     saveLocationsToSharedPreferences();
-                    DialogAdapter.ADAPTER.dismissLoadingDialog();
                 }
                 else{
                     saved = false;
                     Log.d(TAG, "done: failed to save " + e.getMessage());
                 }
-                CircleManager.Manager.clearAllCircles();
+
+                MapFragment.getInstance().discardLocation();
+                DialogAdapter.ADAPTER.dismissLoadingDialog();
                 getAllLocations(true);
+                MapFragment.getInstance().getLastDeviceLocation();
+
 
             }
 

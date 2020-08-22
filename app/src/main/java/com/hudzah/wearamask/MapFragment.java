@@ -41,6 +41,13 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -64,6 +71,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.FetchPlaceResponse;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -74,8 +84,13 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 
@@ -144,11 +159,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
     private View layout;
 
+    String placeId = "";
+
     private int transitionState;
 
     private com.hudzah.wearamask.Location location;
 
     public ArrayList<com.hudzah.wearamask.Location> locations = new ArrayList<>();
+
+    private RequestQueue requestQueue;;
 
     private LottieAnimationView offlineModeCheckButton;
 
@@ -232,6 +251,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         googleMap.getUiSettings().setMyLocationButtonEnabled(false);
         googleMap.getUiSettings().setCompassEnabled(false);
 
+        googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                getPlaceId(latLng);
+
+            }
+        });
+
+
 
     }
 
@@ -246,6 +274,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         locationRequest.setInterval(4000);
         locationRequest.setFastestInterval(1000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        requestQueue = Volley.newRequestQueue(getContext());
 
         initLocationClass();
 
@@ -373,6 +403,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
             @Override
             public void onClick(View v) {
                 discardLocation();
+                location.getAllLocations(true);
+                getLastDeviceLocation();
             }
         });
 
@@ -443,6 +475,73 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
             }
         });
 
+
+
+    }
+
+    private void getPlaceId(LatLng latLng){
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLng.latitude + "," + latLng.longitude + "&key=" + getResources().getString(R.string.google_maps_key);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    placeId = ((JSONArray) response.get("results")).getJSONObject(0).get("place_id").toString();
+                    Log.d(TAG, "getPlaceId: place id is " + placeId);
+                    getPlace(placeId);
+
+                } catch (JSONException e) {
+                    Log.d(TAG, "onResponse: error is " + e.getLocalizedMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse: error is "+ error.getLocalizedMessage());
+            }
+        });
+
+        requestQueue.add(request);
+
+
+    }
+
+    private Place getPlace(String placeID){
+        // Define a Place ID.
+        final String placeId = placeID;
+
+        final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS);
+
+// Construct a request object, passing the place ID and fields array.
+        final FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
+
+        PlacesClient placesClient = Places.createClient(getContext());
+
+        placesClient.fetchPlace(request).addOnSuccessListener(new OnSuccessListener<FetchPlaceResponse>() {
+            @Override
+            public void onSuccess(FetchPlaceResponse fetchPlaceResponse) {
+                Place thisPlace = fetchPlaceResponse.getPlace();
+                Log.i(TAG, "Place found: " + thisPlace.getLatLng());
+                if(thisPlace != null) {
+                    thePlace = thisPlace;
+                    geoLocate(thePlace);
+                    extraInfoScrollView.setVisibility(View.VISIBLE);
+                }
+            }
+
+
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (e instanceof ApiException) {
+                    final ApiException apiException = (ApiException) e;
+                    Log.d(TAG, "Place not found: " + e.getMessage());
+                    final int statusCode = apiException.getStatusCode();
+                    DialogAdapter.ADAPTER.displayErrorDialog(e.getLocalizedMessage(), "");
+                }
+            }
+        });
+
+        return thePlace;
 
     }
 
