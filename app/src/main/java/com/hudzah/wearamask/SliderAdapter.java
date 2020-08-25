@@ -11,14 +11,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
-import org.w3c.dom.Text;
-
 public class SliderAdapter extends PagerAdapter {
 
     Context context;
     LayoutInflater layoutInflater;
 
-    public int[] slideImages = {R.drawable.ic_gps_icon, R.drawable.ic_man_mask_icon, R.drawable.ic_heart_icon};
+    public int[] slideImages = {R.drawable.icon_location, R.drawable.ic_man_mask_icon, R.drawable.ic_noti_safe};
     public int[] slideHeadings = {R.string.onboarding_heading_1, R.string.onboarding_heading_2, R.string.onboarding_heading_3};
     public int[] slideParas = {R.string.onboarding_desc_1, R.string.onboarding_desc_2, R.string.onboarding_desc_3};
 
