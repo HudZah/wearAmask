@@ -243,6 +243,17 @@
 
         </LinearLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Production by HudZah"
+            android:layout_gravity="center_horizontal|bottom"
+            android:padding="20dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:fontFamily="@font/coco_regular"
+            android:textStyle="bold"/>
+
+
 
     </LinearLayout>
 

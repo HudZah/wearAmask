@@ -163,7 +163,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
     private int transitionState;
 
-    private com.hudzah.wearamask.Location location;
+    public com.hudzah.wearamask.Location location;
 
     public ArrayList<com.hudzah.wearamask.Location> locations = new ArrayList<>();
 

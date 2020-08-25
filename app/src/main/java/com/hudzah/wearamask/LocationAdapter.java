@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.LocationViewHolder> {
 
@@ -54,7 +53,6 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
 
     @Override
     public void onBindViewHolder(@NonNull LocationViewHolder holder, int position) {
-        Collections.reverse(mLocationsList);
         Location currentItem = mLocationsList.get(position);
 
         int r = Color.red(currentItem.getSelectedColor());
@@ -69,7 +67,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
 
         if((Color.rgb(r,g, b) != -13382401)){
             Log.d(TAG, "onBindViewHolder: both colors are " + Color.rgb(r, g, b) + context.getResources().getColor(R.color.colorPrimaryDark));
-            holder.mLocationRadiusTextView.setTextColor(Color.argb(200, r, g, b));
+            holder.mLocationRadiusTextView.setTextColor(Color.argb(alpha, r, g, b));
             holder.mLocationAddressTextView.setTextColor(Color.argb(alpha, r, g, b));
         }
 

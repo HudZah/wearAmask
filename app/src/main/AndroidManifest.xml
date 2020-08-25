@@ -16,8 +16,10 @@
         <activity android:name=".SignUpActivity" />
 
         <activity android:name=".LoginActivity" />
-        <activity android:name=".MapsActivity"/>
-        <activity android:name=".MainActivity">
+        <activity android:name=".MapsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

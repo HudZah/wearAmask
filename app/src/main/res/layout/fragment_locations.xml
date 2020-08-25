@@ -20,9 +20,23 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
+            android:layout_above="@id/text"
             android:padding="4dp"
 
             />
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Production by HudZah"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:padding="10dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:fontFamily="@font/coco_regular"
+            android:textStyle="bold"/>
+
 
 
     </RelativeLayout>

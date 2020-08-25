@@ -12,14 +12,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-
 
 public class LocationsFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+    private static final String TAG = "LocationsFragment";
+
+    private com.hudzah.wearamask.Location location;
 
     public LocationsFragment() {
         // Required empty public constructor
@@ -38,11 +39,11 @@ public class LocationsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
+        location = MapFragment.getInstance().location;
 
-        ArrayList<Location> locationsList = MapFragment.getInstance().locations;
         recyclerView = view.findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(getContext());
-        adapter = new LocationAdapter(locationsList);
+        adapter = new LocationAdapter(location.getLocationsArrayList());
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
