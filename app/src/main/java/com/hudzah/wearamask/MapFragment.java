@@ -254,7 +254,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                getPlaceId(latLng);
+                if(ConnectivityReceiver.isConnected()){
+                    getPlaceId(latLng);
+                }
+                else{
+                    Toast.makeText(getContext(), "No connections found, try again", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -547,17 +552,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
     public void switchFabSafeState(final int state){
 
-        if(state == Geofence.GEOFENCE_TRANSITION_EXIT){
-            fabSafe.setImageDrawable(getResources().getDrawable(R.drawable.icon_warning_red));
-            Log.d(TAG, "switchFabSafeState: not safe");
-            transitionState = state;
-        }
-        else {
-            fabSafe.setImageDrawable(getResources().getDrawable(R.drawable.ic_noti_safe));
-            Log.d(TAG, "switchFabSafeState: safe");
-            transitionState = state;
-        }
 
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (state == Geofence.GEOFENCE_TRANSITION_EXIT) {
+                    fabSafe.setImageDrawable(getResources().getDrawable(R.drawable.icon_warning_red));
+                    Log.d(TAG, "switchFabSafeState: not safe");
+                    transitionState = state;
+                } else {
+                    fabSafe.setImageDrawable(getResources().getDrawable(R.drawable.ic_noti_safe));
+                    Log.d(TAG, "switchFabSafeState: safe");
+                    transitionState = state;
+                }
+
+            }
+        });
 
     }
 
@@ -976,6 +986,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     public void onStart() {
         super.onStart();
 
+        SharedPreferences prefs = getContext().getSharedPreferences(getContext().getPackageName(), MODE_PRIVATE);
+
+        switchFabSafeState(prefs.getInt("transitionState", Geofence.GEOFENCE_TRANSITION_EXIT));
+        Log.d(TAG, "onStart: transition state is " + prefs.getInt("transitionState", Geofence.GEOFENCE_TRANSITION_EXIT));
+
         if(allPermissionsGranted()){
             if(GpsLocationReceiver.checkLocationServicesEnabled(getContext())) {
                 getLastDeviceLocation();
@@ -995,11 +1010,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         final IntentFilter intentFilter = new IntentFilter();
         IntentFilter gpsIntentFilter = new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION);
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-
-        SharedPreferences prefs = getContext().getSharedPreferences(getContext().getPackageName(), MODE_PRIVATE);
-
-        switchFabSafeState(prefs.getInt("transitionState", Geofence.GEOFENCE_TRANSITION_EXIT));
-        Log.d(TAG, "onResume: transition state is " + prefs.getInt("transitionState", Geofence.GEOFENCE_TRANSITION_EXIT));
 
         connectivityReceiver = new ConnectivityReceiver();
         gpsLocationReceiver = new GpsLocationReceiver();

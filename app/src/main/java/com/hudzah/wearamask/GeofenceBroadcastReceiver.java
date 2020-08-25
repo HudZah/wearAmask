@@ -30,6 +30,8 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
 
     private NotificationHelper notificationHelper;
 
+
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -58,6 +60,8 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
     private void checkGeofenceEvent(){
         SharedPreferences.Editor editor = mContext.getSharedPreferences(mContext.getPackageName(), MODE_PRIVATE).edit();
 
+        SharedPreferences prefs = mContext.getSharedPreferences(mContext.getPackageName(), MODE_PRIVATE);
+
         int transitionType = geofencingEvent.getGeofenceTransition();
         String address = getAddress(geofencingEvent.getTriggeringLocation().getLatitude(), geofencingEvent.getTriggeringLocation().getLongitude());
         Log.d(TAG, "checkGeofenceEvent: triggered address is " + address);
@@ -72,7 +76,8 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                 Log.d(TAG, "checkGeofenceEvent: DWELL");
                 editor.putInt("transitionState", Geofence.GEOFENCE_TRANSITION_DWELL);
                 editor.apply();
-                MapFragment.getInstance().switchFabSafeState(Geofence.GEOFENCE_TRANSITION_ENTER);
+                Log.d(TAG, "checkGeofenceEvent: app is in background is " + App.inBackground);
+                if(!prefs.getBoolean("inBackground", false)) MapFragment.getInstance().switchFabSafeState(Geofence.GEOFENCE_TRANSITION_ENTER);
                 notificationHelper.sendHighPriorityNotification(mContext.getResources().getString(R.string.notification_enter_title),
                         mContext.getResources().getString(R.string.notification_enter_text),
                         ParseUser.getCurrentUser().getUsername() + " "  + mContext.getResources().getString(R.string.notification_enter_big_text) + " " + address + ", " + mContext.getResources().getString(R.string.notification_enter_part),
@@ -83,7 +88,8 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
             case Geofence.GEOFENCE_TRANSITION_EXIT:
                 editor.putInt("transitionState", Geofence.GEOFENCE_TRANSITION_EXIT);
                 editor.apply();
-                MapFragment.getInstance().switchFabSafeState(Geofence.GEOFENCE_TRANSITION_EXIT);
+                Log.d(TAG, "checkGeofenceEvent: app is in background is " + App.inBackground);
+                if(!prefs.getBoolean("inBackground", false)) MapFragment.getInstance().switchFabSafeState(Geofence.GEOFENCE_TRANSITION_EXIT);
                 notificationHelper.sendHighPriorityNotification(mContext.getResources().getString(R.string.notification_exit_title),
                         mContext.getResources().getString(R.string.notification_exit_text),
                         mContext.getResources().getString(R.string.notification_exit_big_text),

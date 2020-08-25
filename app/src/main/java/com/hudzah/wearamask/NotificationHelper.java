@@ -49,11 +49,13 @@ public class NotificationHelper extends ContextWrapper {
 
     public void sendHighPriorityNotification(String title, String body, String bigBody, Bitmap largeIcon, Class activityName) {
 
+        manager.cancelAll();
+
         Intent intent = new Intent(this, activityName);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 267, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_mask_icon)
+                .setSmallIcon(R.drawable.wamnotis)
                 .setContentTitle(title)
                 .setContentText(body)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)

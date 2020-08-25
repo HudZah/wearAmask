@@ -185,6 +185,10 @@ public class Location {
         return address;
     }
 
+    public String getLocationName() {
+        return locationName;
+    }
+
     public void setAddress(String address) {
         this.address = address;
     }
