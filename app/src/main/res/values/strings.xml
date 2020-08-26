@@ -51,43 +51,42 @@
     <string name="location_color">Select color</string>
     <string name="location_save">Save</string>
     <string name="location_discard">Discard</string>
-    <string-array name="radius">
-        <item>15</item>
-        <item>30</item>
-        <item>50</item>
-    </string-array>
-
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="username_hint">Username</string>
+    <string name="forgot_password_heading">Forgot password?</string>
+    <string name="forgot_password_para">You can enter your account email and we will send you an email that will allow you to verify your identity. </string>
+    <string name="forgot_password_button">Send email</string>
+    <string name="forgot_password_toast">A password reset email was sent!</string>
+
     <string name="password_hint">Password</string>
     <string name="name_hint">Enter a name</string>
     <string name="login_welcome">Welcome!</string>
     <string name="login_create_account">Create an account</string>
     <string name="login_forgot_password">Forgot password</string>
-    
     <string name="sign_up_heading">Sign Up</string>
+
     <string name="sign_up_email">Email</string>
     <string name="sign_up_reenter_password">Re-enter password</string>
     <string name="sign_up_login">Login instead</string>
     <string name="sign_up_with_email">or sign up with your email</string>
     <string name="login_instead">or use your account instead</string>
-
     <string name="offline_mode_heading">You need an internet connection to add locations. Click the button to retry</string>
-    <string name="offline_mode_retry">Retry</string>
 
+    <string name="offline_mode_retry">Retry</string>
     <string name="error_username_length">Username must be more than 5 and less than 20 characters</string>
+
     <string name="error_password_length">Password must be at least 7 characters</string>
     <string name="error_email_format">Incorrect email format</string>
-
     <string name="facebook_app_id">647975436132621</string>
+
     <string name="fb_login_protocol_scheme">fb647975436132621</string>
     <string name="facebook_signup_text">Facebook Sign up</string>
-
     <string name="twitter_consumer_key">boLFXqrBCSuT7lJBSzQ3cl1Fq</string>
-    <string name="twitter_consumer_secret">zCUU683Sg3t9vQgNsRavPjohXAyvK7ZtZLdsRaFfSEtfLODZHd</string>
 
+    <string name="twitter_consumer_secret">zCUU683Sg3t9vQgNsRavPjohXAyvK7ZtZLdsRaFfSEtfLODZHd</string>
     <string name="notification_exit_title">You have left your safe region</string>
+
     <string name="notification_exit_text">Make sure you wearAmask</string>
     <string name="notification_exit_big_text">You are no longer in a safe location, make sure to wearAmask!</string>
     <string name="notification_enter_title">You have entered a safe location</string>
@@ -95,6 +94,11 @@
     <string name="notification_enter_big_text">has entered,</string>
     <string name="notification_exit_part">make sure you wearAmask!</string>
     <string name="notification_enter_part">you are now safe!</string>
+    <string-array name="radius">
+        <item>15</item>
+        <item>30</item>
+        <item>50</item>
+    </string-array>
 
 
 </resources>

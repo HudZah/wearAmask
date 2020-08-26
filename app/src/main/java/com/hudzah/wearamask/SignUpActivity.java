@@ -7,7 +7,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ScrollView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +42,7 @@ import java.util.Collection;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    ScrollView layout;
+    LinearLayout layout;
     CardView signupCardView;
     String username;
     String password;
@@ -86,7 +86,7 @@ public class SignUpActivity extends AppCompatActivity {
         androidx.appcompat.widget.Toolbar toolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        layout = (ScrollView) findViewById(R.id.layout);
+        layout = (LinearLayout) findViewById(R.id.layout);
         signupCardView = (CardView) findViewById(R.id.signupCardView);
 
         signupCardView.setOnClickListener(new View.OnClickListener() {

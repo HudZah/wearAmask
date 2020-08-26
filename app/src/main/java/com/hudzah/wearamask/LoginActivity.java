@@ -1,13 +1,14 @@
 package com.hudzah.wearamask;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ScrollView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +42,7 @@ import java.util.Collection;
 
 public class LoginActivity extends AppCompatActivity {
 
-    ScrollView layout;
+    LinearLayout layout;
     CardView cardView;
     TextInputLayout usernameInput;
     TextInputLayout passwordInput;
@@ -67,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         DialogAdapter.ADAPTER.initDialogAdapter(this);
 
         androidx.appcompat.widget.Toolbar toolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.toolbar);
-        layout = (ScrollView) findViewById(R.id.layout);
+        layout = (LinearLayout) findViewById(R.id.layout);
         cardView = (CardView) findViewById(R.id.loginCardView);
         usernameInput = (TextInputLayout) findViewById(R.id.usernameInput);
         passwordInput = (TextInputLayout) findViewById(R.id.passwordInput);
@@ -115,12 +116,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideKeyboard();
-            }
-        });
+      layout.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              hideKeyboard(v);
+          }
+      });
 
         signInFacebookButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,11 +156,12 @@ public class LoginActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void hideKeyboard(){
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        if(getCurrentFocus() != null) {
-            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+    private void hideKeyboard(View v){
+        if (v.getId() == R.id.layout) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
+
     }
 
     private void login(){
@@ -214,6 +216,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void forgotPassword(){
+        Intent intent = new Intent(this, ForgotPasswordActivity.class);
+        startActivity(intent);
     }
 
     @Override
