@@ -565,7 +565,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     }
 
     private void initLocationClass() {
-        location = new com.hudzah.wearamask.Location(0, 0, null, "", "");
+        location = new com.hudzah.wearamask.Location("",0, 0, null, "", "");
         location.setContext(getContext());
     }
 
@@ -642,6 +642,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     private void saveLocation() {
         Log.d(TAG, "saveLocation: location name is " + locationName);
         location = new com.hudzah.wearamask.Location(
+                "",
                 selectedRadius,
                 selectedColor,
                 thePlace.getLatLng(),

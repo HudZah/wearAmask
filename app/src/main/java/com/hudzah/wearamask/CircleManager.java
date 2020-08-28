@@ -140,7 +140,6 @@ public enum CircleManager {
                     public void onFailure(@NonNull Exception e) {
                         String errorMessage = geofenceHelper.getErrorString(e);
                         Log.d(TAG, "onFailure: error is " + errorMessage + " raw error message is " + e.getMessage());
-                        DialogAdapter.ADAPTER.displayErrorDialog(errorMessage, "");
                     }
                 });
     }

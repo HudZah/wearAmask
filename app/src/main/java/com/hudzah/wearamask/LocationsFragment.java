@@ -54,7 +54,9 @@ public class LocationsFragment extends Fragment {
             @Override
             public void onItemClick(int position) {
                 NavController navController = Navigation.findNavController(getActivity(), R.id.fragment);
-                navController.navigate(R.id.editLocationFragment);
+                LocationsFragmentDirections.ActionLocationsFragmentToEditLocationFragment action = LocationsFragmentDirections.actionLocationsFragmentToEditLocationFragment(location.getLocationsArrayList().get(position));
+                navController.navigate(action);
+                //navController.navigate(R.id.editLocationFragment);
             }
         });
     }

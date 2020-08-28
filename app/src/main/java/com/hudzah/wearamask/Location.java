@@ -2,6 +2,8 @@ package com.hudzah.wearamask;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -21,7 +23,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Location {
+public class Location implements Parcelable {
 
     private Context context;
     private int selectedRadius;
@@ -32,16 +34,41 @@ public class Location {
     private static final String TAG = "Location";
     String ARRAY_LIST_TAG = "locationsArrayList";
     private String locationName;
+    private String locationID;
 
     public ArrayList<com.hudzah.wearamask.Location> locationsArrayList = new ArrayList<>();
 
-    public Location(int selectedRadius, int selectedColor, LatLng latLng, String address, String locationName) {
+    public Location(String locationID, int selectedRadius, int selectedColor, LatLng latLng, String address, String locationName) {
         this.selectedRadius = selectedRadius;
         this.selectedColor = selectedColor;
         this.latLng = latLng;
         this.address = address;
         this.locationName = locationName;
+        this.locationID = locationID;
     }
+
+    protected Location(Parcel in) {
+        selectedRadius = in.readInt();
+        selectedColor = in.readInt();
+        latLng = in.readParcelable(LatLng.class.getClassLoader());
+        address = in.readString();
+        saved = in.readByte() != 0;
+        ARRAY_LIST_TAG = in.readString();
+        locationName = in.readString();
+        locationsArrayList = in.createTypedArrayList(Location.CREATOR);
+    }
+
+    public static final Creator<Location> CREATOR = new Creator<Location>() {
+        @Override
+        public Location createFromParcel(Parcel in) {
+            return new Location(in);
+        }
+
+        @Override
+        public Location[] newArray(int size) {
+            return new Location[size];
+        }
+    };
 
     public void saveLocationToParse(Place place){
         ParseObject object = new ParseObject("Locations");
@@ -91,7 +118,7 @@ public class Location {
                     for(ParseObject object : objects){
                         ParseGeoPoint geoPoint = object.getParseGeoPoint("location");
                         Log.d(TAG, "done: stuck in here?");
-                        Location loc = new Location(Integer.parseInt(String.valueOf(object.getNumber("radius"))), Integer.parseInt(String.valueOf(object.getString("color"))), new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude()), object.getString("address"), object.getString("name"));
+                        Location loc = new Location(object.getObjectId() ,Integer.parseInt(String.valueOf(object.getNumber("radius"))), Integer.parseInt(String.valueOf(object.getString("color"))), new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude()), object.getString("address"), object.getString("name"));
                         locationsArrayList.add(loc);
                     }
 
@@ -195,5 +222,26 @@ public class Location {
 
     public ArrayList<Location> getLocationsArrayList() {
         return locationsArrayList;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public String getLocationID() {
+        return locationID;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(selectedRadius);
+        dest.writeInt(selectedColor);
+        dest.writeParcelable(latLng, flags);
+        dest.writeString(address);
+        dest.writeByte((byte) (saved ? 1 : 0));
+        dest.writeString(ARRAY_LIST_TAG);
+        dest.writeString(locationName);
+        dest.writeTypedList(locationsArrayList);
     }
 }

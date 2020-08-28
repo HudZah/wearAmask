@@ -4,6 +4,7 @@ package com.hudzah.wearamask;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 
@@ -42,6 +51,9 @@ public class EditLocationFragment extends Fragment {
 
     Button saveButton;
 
+    Location location;
+
+    private static final String TAG = "EditLocationFragment";
 
     public EditLocationFragment() {
         // Required empty public constructor
@@ -59,6 +71,7 @@ public class EditLocationFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
         layout = (RelativeLayout) view.findViewById(R.id.layout);
         selectColorTextView = (FloatingActionButton) view.findViewById(R.id.selectColorTextView);
 
@@ -69,6 +82,14 @@ public class EditLocationFragment extends Fragment {
         locationNameInput = view.findViewById(R.id.locationNameInput);
 
         saveButton = (Button) view.findViewById(R.id.saveButton);
+
+        if(getArguments() != null){
+            EditLocationFragmentArgs args = EditLocationFragmentArgs.fromBundle(getArguments());
+            Log.d(TAG, "onViewCreated: args "+ args.getLocation().toString());
+            location = args.getLocation();
+            initUI();
+        }
+
 
         selectColorTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +104,67 @@ public class EditLocationFragment extends Fragment {
                 hideKeyboard(v);
             }
         });
+
+        radiusSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                radiusTextView.setText("Radius is " + progress + "m");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!locationNameInput.getEditText().getText().equals("")){
+                    updateLocationToParse();
+                }
+            }
+        });
+    }
+
+    private void updateLocationToParse() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Locations");
+        query.whereEqualTo("username", ParseUser.getCurrentUser().getUsername());
+        query.whereEqualTo("objectId", location.getLocationID());
+
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                object.put("name", locationNameInput.getEditText().getText().toString());
+                object.put("radius", radiusSeekBar.getProgress());
+                object.put("color", String.valueOf(selectedColor));
+                DialogAdapter.ADAPTER.loadingDialog();
+                object.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if(e == null){
+                            DialogAdapter.ADAPTER.dismissLoadingDialog();
+                            NavController navController = Navigation.findNavController(getActivity(), R.id.fragment);
+                            navController.navigate(R.id.mapFragment);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    private void initUI(){
+        locationNameInput.getEditText().setText(location.getLocationName());
+        if(location.getSelectedColor() != selectedColor) {
+            selectColorTextView.setBackgroundTintList(ColorStateList.valueOf(location.getSelectedColor()));
+        }
+        radiusSeekBar.setProgress(location.getSelectedRadius());
+        radiusTextView.setText("Radius is " + location.getSelectedRadius() + "m");
     }
 
     private void hideKeyboard(View v){
