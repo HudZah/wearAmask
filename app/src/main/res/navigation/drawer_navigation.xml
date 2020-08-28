@@ -14,10 +14,38 @@
         android:id="@id/locationsFragment"
         android:name="com.hudzah.wearamask.LocationsFragment"
         android:label="fragment_locations"
-        tools:layout="@layout/fragment_locations" />
+        tools:layout="@layout/fragment_locations" >
+        <action
+            android:id="@+id/action_locationsFragment_to_editLocationFragment"
+            app:destination="@id/editLocationFragment" />
+    </fragment>
     <fragment
         android:id="@id/settingsFragment"
         android:name="com.hudzah.wearamask.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="com.hudzah.wearamask.DashboardFragment"
+        android:label="fragment_dashboard"
+        tools:layout="@layout/fragment_dashboard" />
+    <fragment
+        android:id="@+id/contactFragment"
+        android:name="com.hudzah.wearamask.ContactFragment"
+        android:label="fragment_contact"
+        tools:layout="@layout/fragment_contact" />
+    <fragment
+        android:id="@+id/precautionsFragment"
+        android:name="com.hudzah.wearamask.PrecautionsFragment"
+        android:label="fragment_precautions"
+        tools:layout="@layout/fragment_precautions" />
+    <fragment
+        android:id="@+id/editLocationFragment"
+        android:name="com.hudzah.wearamask.EditLocationFragment"
+        android:label="fragment_edit_location"
+        tools:layout="@layout/fragment_edit_location" >
+        <argument
+            android:name="location"
+            app:argType="com.hudzah.wearamask.Location" />
+    </fragment>
 </navigation>

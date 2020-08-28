@@ -5,6 +5,10 @@
     <string name="back4app_client_key">AKOrCT90pekh4FRnw5C3mVKZicYczy1TEMBU2WQp</string>
 
     <string name="drawer_title_locations">Locations</string>
+    <string name="drawer_title_covid19_dashboard">COVID-19 Dashboard</string>
+    <string name="drawer_title_covid19_precautions">Precautions</string>
+    <string name="drawer_title_rate">Rate us</string>
+    <string name="drawer_title_contact">Contact us</string>
     <string name="drawer_title_settings">Settings</string>
     <string name="drawer_title_logout">Log out</string>
 
@@ -86,6 +90,23 @@
 
     <string name="twitter_consumer_secret">zCUU683Sg3t9vQgNsRavPjohXAyvK7ZtZLdsRaFfSEtfLODZHd</string>
     <string name="notification_exit_title">You have left your safe region</string>
+
+    <string name="edit_location_header">Edit location</string>
+    <string name="edit_location_edit_text_hint">Location name</string>
+
+    <string name="precautions_title">Taking \nPrecautions</string>
+    <string name="precautions_1_heading">wearAmask</string>
+    <string name="precautions_1_para">Masks can help prevent the spread of the virus.</string>
+    <string name="precautions_1_link">Learn more about masks</string>
+
+    <string name="precautions_2_heading">Social distance</string>
+    <string name="precautions_2_para">Maintain a safe distance from anyone who is coughing or sneezing.</string>
+    <string name="precautions_2_link">Learn more on social distancing</string>
+
+    <string name="precautions_3_heading">Wash hands</string>
+    <string name="precautions_3_para">Clean your hands often. Use soap and water, or an alcohol-based hand rub.</string>
+    <string name="precautions_3_link">Learn more on washing hands</string>
+
 
     <string name="notification_exit_text">Make sure you wearAmask</string>
     <string name="notification_exit_big_text">You are no longer in a safe location, make sure to wearAmask!</string>

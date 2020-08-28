@@ -1,24 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
 
         <item
             android:id="@+id/locationsFragment"
             android:icon="@drawable/ic_location_on_black_24dp"
-            android:title="@string/drawer_title_locations"/>
+            android:title="@string/drawer_title_locations" />
+
+<!--        <item-->
+<!--            android:id="@+id/dashboardFragment"-->
+<!--            android:icon="@drawable/ic_dashboard_black_24dp"-->
+<!--            android:title="@string/drawer_title_covid19_dashboard" />-->
+
+        <item
+            android:id="@+id/precautionsFragment"
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:title="@string/drawer_title_covid19_precautions" />
 
         <item
             android:id="@+id/settingsFragment"
             android:icon="@drawable/ic_settings_black_24dp"
-            android:title="@string/drawer_title_settings"/>
-
-        <item
-            android:id="@+id/logout"
-            android:icon="@drawable/ic_exit_to_app_black_24dp"
-            android:title="@string/drawer_title_logout"/>
+            android:title="@string/drawer_title_settings" />
 
 
     </group>
+
+    <item android:title="Other">
+
+        <menu>
+
+            <item
+                android:id="@+id/rateUs"
+                android:icon="@drawable/ic_star_black_24dp"
+                android:title="@string/drawer_title_rate" />
+
+            <item
+                android:id="@+id/contactFragment"
+                android:icon="@drawable/ic_help_black_24dp"
+                android:title="@string/drawer_title_contact" />
+
+
+            <item
+                android:id="@+id/logout"
+                android:icon="@drawable/ic_exit_to_app_black_24dp"
+                android:title="@string/drawer_title_logout" />
+        </menu>
+
+    </item>
 
 </menu>

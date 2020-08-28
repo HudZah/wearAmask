@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -59,6 +60,8 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
 
         navView.setNavigationItemSelectedListener(this);
 
+        TextView tv =  navView.getHeaderView(0).findViewById(R.id.userTextView);
+        tv.setText(ParseUser.getCurrentUser().getUsername());
 
     }
 
@@ -93,6 +96,18 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
 
             case R.id.settingsFragment:
                 navController.navigate(R.id.settingsFragment);
+                break;
+
+            case R.id.dashboardFragment:
+                navController.navigate(R.id.dashboardFragment);
+                break;
+
+            case R.id.contactFragment:
+                navController.navigate(R.id.contactFragment);
+                break;
+
+            case R.id.precautionsFragment:
+                navController.navigate(R.id.precautionsFragment);
                 break;
 
             case R.id.logout:

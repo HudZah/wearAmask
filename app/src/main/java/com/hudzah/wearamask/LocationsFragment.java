@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class LocationsFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private LocationAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private static final String TAG = "LocationsFragment";
 
@@ -47,5 +49,13 @@ public class LocationsFragment extends Fragment {
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+
+        adapter.setOnItemClickListener(new LocationAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                NavController navController = Navigation.findNavController(getActivity(), R.id.fragment);
+                navController.navigate(R.id.editLocationFragment);
+            }
+        });
     }
 }

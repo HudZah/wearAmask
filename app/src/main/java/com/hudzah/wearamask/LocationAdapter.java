@@ -20,6 +20,16 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
     private static final String TAG = "LocationAdapter";
     public static Context context;
 
+    private OnItemClickListener mListener;
+
+    public interface OnItemClickListener{
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        mListener = listener;
+    }
+
     public static class LocationViewHolder extends RecyclerView.ViewHolder {
 
 
@@ -28,13 +38,25 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         public TextView mLocationAddressTextView;
         public TextView mLocationRadiusTextView;
 
-        public LocationViewHolder(@NonNull View itemView) {
+        public LocationViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             mLocationColorImageView = (ImageView) itemView.findViewById(R.id.locationColorImageView);
             mLocationNameTextView = (TextView) itemView.findViewById(R.id.locationNameTextView);
             mLocationAddressTextView = (TextView) itemView.findViewById(R.id.locationAddressTextView);
             mLocationRadiusTextView = (TextView) itemView.findViewById(R.id.locationRadiusTextView);
             LocationAdapter.context = itemView.getContext();
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener != null){
+                        int position = getAdapterPosition();
+                        if(position != RecyclerView.NO_POSITION){
+                            listener.onItemClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 
@@ -47,7 +69,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
     @Override
     public LocationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_location_item, parent, false);
-        LocationViewHolder lvh = new LocationViewHolder(v);
+        LocationViewHolder lvh = new LocationViewHolder(v, mListener);
         return  lvh;
     }
 

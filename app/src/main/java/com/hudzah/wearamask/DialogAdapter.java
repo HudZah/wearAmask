@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 public enum DialogAdapter {
     ADAPTER;
@@ -149,9 +151,8 @@ public enum DialogAdapter {
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse("https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public"); // missing 'http://' will cause crashed
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                activity.startActivity(intent);
+                NavController navController = Navigation.findNavController(activity, R.id.fragment);
+                navController.navigate(R.id.precautionsFragment);
                 dismissSafeAndWarningDialog();
 
             }

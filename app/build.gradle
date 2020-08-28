@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: "androidx.navigation.safeargs"
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
@@ -46,6 +48,7 @@ dependencies {
     def nav_version = "2.3.0-alpha06"
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
+
     implementation 'com.google.android.material:material:1.0.0-alpha3'
 
     implementation 'com.google.android.libraries.places:places:2.3.0'
