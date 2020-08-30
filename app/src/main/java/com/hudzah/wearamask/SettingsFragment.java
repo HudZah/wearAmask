@@ -1,31 +1,91 @@
 package com.hudzah.wearamask;
 
 
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
+import androidx.preference.SwitchPreference;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import com.parse.ParseUser;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+    Preference username;
+    Preference email;
+    Preference locations;
+    Preference appVersion;
 
-    public SettingsFragment() {
-        // Required empty public constructor
+    String version;
+    PackageInfo pInfo;
+
+    SwitchPreference darkModeSwitch;
+
+    Location location;
+
+    @Override
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        setPreferencesFromResource(R.xml.settings_preferences, rootKey);
+
+        username = (Preference) findPreference("username");
+        email = (Preference) findPreference("email");
+        locations = (Preference) findPreference("locations");
+        appVersion = (Preference) findPreference("version");
+
+        darkModeSwitch = (SwitchPreference) findPreference("enable_dark_mode");
+
+        location = MapFragment.getInstance().location;
+
+        try {
+            pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
+            version = pInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        username.setSummary(ParseUser.getCurrentUser().getUsername());
+        email.setSummary(ParseUser.getCurrentUser().getEmail());
+        locations.setSummary(location.getLocationsArrayList().size() + " locations");
+        appVersion.setSummary(version);
     }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals("enable_dark_mode")) {
+            boolean darkMode = sharedPreferences.getBoolean("enable_dark_mode", false);
+            //Do whatever you want here. This is an example.
+            if (darkMode) {
+                // TODO: 8/31/2020 show dark mode
+                Toast.makeText(getContext(), "dark mode enabled", Toast.LENGTH_SHORT).show();
+
+            } else {
+
+            }
+        }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        boolean darkMode = preferences.getBoolean("enable_dark_mode", false);
+
+        if (darkMode) {
+            Toast.makeText(getContext(), "dark mode enabled", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), "dark mode disabled", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

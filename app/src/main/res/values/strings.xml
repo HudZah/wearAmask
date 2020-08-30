@@ -1,5 +1,7 @@
 <resources>
 
+    <string name="contact_about">wearAmask, your personal mask reminding app.\n\nUsing geofencing technology, we send a high priority notification whenver you leave/enter your location, even whilst the app is in the background.</string>
+
     <string name="back4app_server_url">https://parseapi.back4app.com/</string>
     <string name="back4app_app_id">hpnHqEyNvMNrQmlR4vWOtaqZjJrFk393awCNaC3e</string>
     <string name="back4app_client_key">AKOrCT90pekh4FRnw5C3mVKZicYczy1TEMBU2WQp</string>

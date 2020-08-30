@@ -1,0 +1,51 @@
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        android:layout="@layout/fragment_settings"/>
+
+    <PreferenceCategory
+        app:key="account"
+        app:title="Account">
+
+        <Preference
+            android:summary="HudZah"
+            app:key="username"
+
+            app:title="Username" />
+
+        <Preference
+            android:summary="chiefhudhafya@gmail.com"
+            app:key="email"
+            app:title="Email" />
+
+        <Preference
+            android:summary="59 locations"
+            app:key="locations"
+            app:title="Locations" />
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="theme"
+        app:title="Theme">
+
+        <SwitchPreference
+            app:key="enable_dark_mode"
+            app:title="Dark Mode"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="details"
+        app:title="Details">
+
+        <Preference
+            android:summary="V1.0"
+            app:key="version"
+            app:title="App Version" />
+
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>
