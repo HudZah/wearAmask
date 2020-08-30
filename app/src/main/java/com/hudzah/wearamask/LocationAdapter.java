@@ -22,12 +22,22 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
 
     private OnItemClickListener mListener;
 
+    private OnLongClickListener mLongClickListener;
+
     public interface OnItemClickListener{
         void onItemClick(int position);
     }
 
+    public interface OnLongClickListener{
+        void onLongClick(int position);
+    }
+
     public void setOnItemClickListener(OnItemClickListener listener){
         mListener = listener;
+    }
+
+    public void setOnLongClickListener(OnLongClickListener longClickListener){
+        mLongClickListener = longClickListener;
     }
 
     public static class LocationViewHolder extends RecyclerView.ViewHolder {
@@ -38,7 +48,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         public TextView mLocationAddressTextView;
         public TextView mLocationRadiusTextView;
 
-        public LocationViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
+        public LocationViewHolder(@NonNull View itemView, final OnItemClickListener listener, final OnLongClickListener longClickListener) {
             super(itemView);
             mLocationColorImageView = (ImageView) itemView.findViewById(R.id.locationColorImageView);
             mLocationNameTextView = (TextView) itemView.findViewById(R.id.locationNameTextView);
@@ -57,6 +67,20 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
                     }
                 }
             });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if(longClickListener != null){
+                        int position = getAdapterPosition();
+                        if(position != RecyclerView.NO_POSITION){
+                            longClickListener.onLongClick(position);
+                        }
+                    }
+
+                    return false;
+                }
+            });
         }
     }
 
@@ -69,7 +93,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
     @Override
     public LocationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_location_item, parent, false);
-        LocationViewHolder lvh = new LocationViewHolder(v, mListener);
+        LocationViewHolder lvh = new LocationViewHolder(v, mListener, mLongClickListener);
         return  lvh;
     }
 
@@ -94,6 +118,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         }
 
     }
+
 
 
     @Override

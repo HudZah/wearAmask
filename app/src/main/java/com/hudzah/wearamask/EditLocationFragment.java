@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -83,9 +84,9 @@ public class EditLocationFragment extends Fragment {
 
         saveButton = (Button) view.findViewById(R.id.saveButton);
 
-        if(getArguments() != null){
+        if (getArguments() != null) {
             EditLocationFragmentArgs args = EditLocationFragmentArgs.fromBundle(getArguments());
-            Log.d(TAG, "onViewCreated: args "+ args.getLocation().toString());
+            Log.d(TAG, "onViewCreated: args " + args.getLocation().toString());
             location = args.getLocation();
             initUI();
         }
@@ -125,8 +126,13 @@ public class EditLocationFragment extends Fragment {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!locationNameInput.getEditText().getText().equals("")){
-                    updateLocationToParse();
+                if (!locationNameInput.getEditText().getText().equals("")) {
+                    if (ConnectivityReceiver.isConnected()) {
+                        updateLocationToParse();
+                    }
+                    else{
+                        Toast.makeText(getContext(), "Connection required!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -147,35 +153,38 @@ public class EditLocationFragment extends Fragment {
                 object.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-                        if(e == null){
-                            DialogAdapter.ADAPTER.dismissLoadingDialog();
+                        if (e == null) {
                             NavController navController = Navigation.findNavController(getActivity(), R.id.fragment);
                             navController.navigate(R.id.mapFragment);
                         }
+
+                        DialogAdapter.ADAPTER.dismissLoadingDialog();
+
                     }
                 });
             }
         });
     }
 
-    private void initUI(){
+    private void initUI() {
         locationNameInput.getEditText().setText(location.getLocationName());
-        if(location.getSelectedColor() != selectedColor) {
+        if (location.getSelectedColor() != selectedColor) {
             selectColorTextView.setBackgroundTintList(ColorStateList.valueOf(location.getSelectedColor()));
+            selectedColor = location.getSelectedColor();
         }
         radiusSeekBar.setProgress(location.getSelectedRadius());
         radiusTextView.setText("Radius is " + location.getSelectedRadius() + "m");
     }
 
-    private void hideKeyboard(View v){
+    private void hideKeyboard(View v) {
         if (v.getId() == R.id.layout) {
-            InputMethodManager imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
         }
 
     }
 
-    private void showColorPicker(){
+    private void showColorPicker() {
         AmbilWarnaDialog dialog = new AmbilWarnaDialog(getContext(), getResources().getColor(R.color.colorPrimaryDark), new AmbilWarnaDialog.OnAmbilWarnaListener() {
             @Override
             public void onCancel(AmbilWarnaDialog dialog) {
