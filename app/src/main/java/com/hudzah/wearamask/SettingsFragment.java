@@ -1,6 +1,7 @@
 package com.hudzah.wearamask;
 
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -8,11 +9,15 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
 
+import com.parse.LogOutCallback;
+import com.parse.ParseException;
 import com.parse.ParseUser;
 
 
@@ -25,6 +30,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     Preference email;
     Preference locations;
     Preference appVersion;
+    Preference logout;
 
     String version;
     PackageInfo pInfo;
@@ -41,6 +47,40 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         email = (Preference) findPreference("email");
         locations = (Preference) findPreference("locations");
         appVersion = (Preference) findPreference("version");
+        logout = (Preference) findPreference("logout");
+
+        locations.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                NavController navController = Navigation.findNavController(getActivity(), R.id.fragment);
+                navController.navigate(R.id.locationsFragment);
+
+                return false;
+            }
+        });
+
+        logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+
+                if(ConnectivityReceiver.isConnected()){
+                    ParseUser.logOutInBackground(new LogOutCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if(e == null){
+                                Intent intent = new Intent(getContext(), LoginActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            }
+                            else{
+                                DialogAdapter.ADAPTER.displayErrorDialog(e.getMessage(), "");
+                            }
+                        }
+                    });
+                }
+                return false;
+            }
+        });
 
         darkModeSwitch = (SwitchPreference) findPreference("enable_dark_mode");
 
