@@ -518,6 +518,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
                 if (thisPlace != null) {
                     thePlace = thisPlace;
                     geoLocate(thePlace);
+                    autocompleteFragment.setText(thisPlace.getAddress());
                     extraInfoScrollView.setVisibility(View.VISIBLE);
                 }
             }
@@ -665,6 +666,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         radiusSeekBar.setProgress(30);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         autocompleteFragment.setText("");
+        autocompleteFragment.setHint("Search");
     }
 
     private void showColorPicker() {
@@ -744,6 +746,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         } else {
             notLoggedInLayout.setVisibility(View.VISIBLE);
             loggedInLayout.setVisibility(View.INVISIBLE);
+
         }
     }
 

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,7 +40,7 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
         setupNavigation();
     }
 
-    private void setupNavigation(){
+    private void setupNavigation() {
 
 
         toolbar = findViewById(R.id.toolbar);
@@ -60,8 +61,8 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
 
         navView.setNavigationItemSelectedListener(this);
 
-        TextView tv =  navView.getHeaderView(0).findViewById(R.id.userTextView);
-        if(ParseUser.getCurrentUser() != null) {
+        TextView tv = navView.getHeaderView(0).findViewById(R.id.userTextView);
+        if (ParseUser.getCurrentUser() != null) {
             tv.setText(ParseUser.getCurrentUser().getUsername());
         }
     }
@@ -89,12 +90,19 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
 
         int id = menuItem.getItemId();
 
+        if(ParseUser.getCurrentUser() == null) {
+            if (id == R.id.locationsFragment || id == R.id.settingsFragment || id == R.id.dashboardFragment) {
+                Toast.makeText(this, "You need to be logged in first", Toast.LENGTH_SHORT).show();
+                menuItem.setChecked(false);
+                return false;
+            }
+        }
+
         switch (id) {
 
             case R.id.locationsFragment:
                 navController.navigate(R.id.locationsFragment);
                 break;
-
             case R.id.settingsFragment:
                 navController.navigate(R.id.settingsFragment);
                 break;
@@ -119,7 +127,6 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -127,16 +134,15 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
         Log.d(TAG, "onRequestPermissionsResult: call fragment onRequestPermissionsResult");
     }
 
-    private void parseLogout(){
+    private void parseLogout() {
         ParseUser.logOutInBackground(new LogOutCallback() {
             @Override
             public void done(ParseException e) {
-                if(e == null){
+                if (e == null) {
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-                }
-                else{
+                } else {
                     DialogAdapter.ADAPTER.displayErrorDialog(e.getMessage(), "");
                 }
             }
