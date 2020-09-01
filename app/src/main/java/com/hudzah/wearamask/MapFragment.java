@@ -751,7 +751,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         } else {
             notLoggedInLayout.setVisibility(View.VISIBLE);
             loggedInLayout.setVisibility(View.INVISIBLE);
-
+            if(allPermissionsGranted()) {
+                CoachMarks.Manager.init(getActivity());
+                CoachMarks.Manager.showLocationCoachMarks();
+            }
         }
     }
 

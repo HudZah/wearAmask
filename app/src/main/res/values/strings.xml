@@ -109,6 +109,8 @@
     <string name="precautions_3_para">Clean your hands often. Use soap and water, or an alcohol-based hand rub.</string>
     <string name="precautions_3_link">Learn more on washing hands</string>
 
+    <string name="coach_marks_1">Hold down on the screen to\nadd a new location at that position</string>
+    <string name="coach_marks_2">Or, you can add a specific location\nby searching for it</string>
 
     <string name="notification_exit_text">Make sure you wearAmask</string>
     <string name="notification_exit_big_text">You are no longer in a safe location, make sure to wearAmask!</string>

@@ -3,6 +3,8 @@ package com.hudzah.wearamask;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +51,7 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+
         drawerLayout = findViewById(R.id.drawerLayout);
 
         navView = findViewById(R.id.navView);
@@ -70,6 +73,24 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onSupportNavigateUp() {
         return NavigationUI.navigateUp(Navigation.findNavController(this, R.id.fragment), drawerLayout);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.help){
+            CoachMarks.Manager.init(this);
+            CoachMarks.Manager.showLocationCoachMarks();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
