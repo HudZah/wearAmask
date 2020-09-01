@@ -458,11 +458,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
             public void onClick(View v) {
 
                 if (transitionState > 0) {
-                    if (transitionState == Geofence.GEOFENCE_TRANSITION_ENTER) {
-                        // TODO: 8/20/2020 show safe dialog
+                    if (transitionState == Geofence.GEOFENCE_TRANSITION_ENTER || transitionState == Geofence.GEOFENCE_TRANSITION_DWELL) {
                         DialogAdapter.ADAPTER.displaySafeDialog();
                     } else if (transitionState == Geofence.GEOFENCE_TRANSITION_EXIT) {
-                        // TODO: 8/20/2020 show not safe dialog
                         DialogAdapter.ADAPTER.displayWarningDialog();
 
                     }
@@ -549,11 +547,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
                 if (state == Geofence.GEOFENCE_TRANSITION_EXIT) {
                     fabSafe.setImageDrawable(getResources().getDrawable(R.drawable.icon_warning_red));
-                    Log.d(TAG, "switchFabSafeState: not safe");
+                    Log.d(TAG, "switchFabSafeState: not safe, state is " + state);
                     transitionState = state;
                 } else {
                     fabSafe.setImageDrawable(getResources().getDrawable(R.drawable.ic_noti_safe));
-                    Log.d(TAG, "switchFabSafeState: safe");
+                    Log.d(TAG, "switchFabSafeState: safe, state is " + state);
                     transitionState = state;
                 }
 

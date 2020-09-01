@@ -61,8 +61,9 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
         navView.setNavigationItemSelectedListener(this);
 
         TextView tv =  navView.getHeaderView(0).findViewById(R.id.userTextView);
-        tv.setText(ParseUser.getCurrentUser().getUsername());
-
+        if(ParseUser.getCurrentUser() != null) {
+            tv.setText(ParseUser.getCurrentUser().getUsername());
+        }
     }
 
     @Override
