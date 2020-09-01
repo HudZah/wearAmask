@@ -16,7 +16,7 @@ public class SliderAdapter extends PagerAdapter {
     Context context;
     LayoutInflater layoutInflater;
 
-    public int[] slideImages = {R.drawable.icon_location, R.drawable.ic_man_mask_icon, R.drawable.ic_noti_safe};
+    public int[] slideImages = {R.drawable.ic_locationhdpi, R.drawable.ic_man_mask_icon, R.drawable.ic_safehdpi};
     public int[] slideHeadings = {R.string.onboarding_heading_1, R.string.onboarding_heading_2, R.string.onboarding_heading_3};
     public int[] slideParas = {R.string.onboarding_desc_1, R.string.onboarding_desc_2, R.string.onboarding_desc_3};
 

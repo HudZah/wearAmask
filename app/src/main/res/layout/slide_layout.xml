@@ -11,7 +11,8 @@
         android:layout_height="150dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="70dp"
-        android:background="@drawable/ic_gps_icon"
+
+        android:background="@drawable/ic_locationhdpi"
         />
 
     <TextView

@@ -251,10 +251,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                if (ConnectivityReceiver.isConnected()) {
-                    getPlaceId(latLng);
-                } else {
-                    Toast.makeText(getContext(), "No connections found, try again", Toast.LENGTH_SHORT).show();
+                if(ParseUser.getCurrentUser() != null) {
+                    if (ConnectivityReceiver.isConnected()) {
+                        getPlaceId(latLng);
+                    } else {
+                        Toast.makeText(getContext(), "No connections found, try again", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else{
+                    Toast.makeText(getContext(), "You must be logged in to add a location", Toast.LENGTH_SHORT).show();
                 }
 
             }
