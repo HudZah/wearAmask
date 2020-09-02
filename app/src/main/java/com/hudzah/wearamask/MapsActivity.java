@@ -1,6 +1,8 @@
 package com.hudzah.wearamask;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -141,6 +143,15 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
             case R.id.precautionsFragment:
                 navController.navigate(R.id.precautionsFragment);
                 break;
+
+            case R.id.rateUs:
+                try{
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("market://details?id=" + getPackageName())));
+                } catch (ActivityNotFoundException e){
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("http://play.google.com/store/apps/details?id=" + getPackageName())));
+                }
 
             case R.id.logout:
                 parseLogout();
