@@ -17,7 +17,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             app:fabCustomSize="70dp"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/fabBg"
             app:borderWidth="0dp"
             android:src="@drawable/wamicon"
             android:id="@+id/icon"

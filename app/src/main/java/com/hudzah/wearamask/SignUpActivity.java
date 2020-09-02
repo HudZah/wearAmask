@@ -66,6 +66,8 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        DarkModeHandler.DARK_MODE_HANDLER.checkDarkMode(this);
+
         DialogAdapter.ADAPTER.initDialogAdapter(this);
 
         usernameInput = (TextInputLayout) findViewById(R.id.usernameInput);

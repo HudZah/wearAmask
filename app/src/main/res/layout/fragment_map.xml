@@ -11,6 +11,7 @@
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         >
 
     </com.google.android.gms.maps.MapView>
@@ -61,7 +62,7 @@
                 android:id="@+id/fabSafe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/fabBg"
                 app:fabSize= "mini"
                 android:clickable="true"
                 android:src="@drawable/icon_warning_red"
@@ -76,7 +77,7 @@
                     android:id="@+id/recenterLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/white"
+                    android:backgroundTint="@color/fabBg"
                     app:fabSize= "normal"
                     android:src="@drawable/ic_gps_fixed_black_24dp"
                     android:clickable="true"
@@ -203,7 +204,7 @@
                     android:id="@+id/welcomeTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/dark_gray"
+                    android:textColor="@color/welcomeTextColor"
                     android:layout_gravity="left"
                     android:textSize="24sp"
                     android:fontFamily="sans-serif-medium"
@@ -221,6 +222,7 @@
                     <fragment android:id="@+id/autocomplete_fragment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+
                         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
                         />
 

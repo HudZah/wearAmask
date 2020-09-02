@@ -65,6 +65,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        DarkModeHandler.DARK_MODE_HANDLER.checkDarkMode(this);
+
         DialogAdapter.ADAPTER.initDialogAdapter(this);
 
         androidx.appcompat.widget.Toolbar toolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.toolbar);

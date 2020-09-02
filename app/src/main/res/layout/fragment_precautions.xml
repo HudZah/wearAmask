@@ -48,10 +48,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginRight="20dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                app:cardUseCompatPadding="true"
                 app:cardCornerRadius="10dp">
 
                 <RelativeLayout
@@ -117,10 +116,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="5dp"
-                app:cardUseCompatPadding="true"
+                android:layout_marginTop="5dp"
                 app:cardCornerRadius="10dp">
 
                 <RelativeLayout
@@ -186,11 +184,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="5dp"
-                app:cardUseCompatPadding="true"
-
+                android:layout_marginTop="5dp"
                 app:cardCornerRadius="10dp">
 
                 <RelativeLayout

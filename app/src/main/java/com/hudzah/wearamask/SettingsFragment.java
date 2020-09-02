@@ -6,8 +6,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -24,7 +26,7 @@ import com.parse.ParseUser;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsFragment extends PreferenceFragmentCompat {
 
     Preference username;
     Preference email;
@@ -36,6 +38,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     PackageInfo pInfo;
 
     SwitchPreference darkModeSwitch;
+
+    private static final String TAG = "SettingsFragment";
 
     Location location;
 
@@ -84,6 +88,22 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
         darkModeSwitch = (SwitchPreference) findPreference("enable_dark_mode");
 
+        darkModeSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                Log.d(TAG, "onPreferenceChange: changed with " + newValue.toString());
+                if((Boolean) newValue){
+                    Toast.makeText(getContext(), "enabled", Toast.LENGTH_SHORT).show();
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                }
+                else{
+                    Toast.makeText(getContext(), "disabled", Toast.LENGTH_SHORT).show();
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                }
+                return true;
+            }
+        });
+
         location = MapFragment.getInstance().location;
 
         try {
@@ -100,20 +120,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals("enable_dark_mode")) {
-            boolean darkMode = sharedPreferences.getBoolean("enable_dark_mode", false);
-            //Do whatever you want here. This is an example.
-            if (darkMode) {
-                // TODO: 8/31/2020 show dark mode
-                Toast.makeText(getContext(), "dark mode enabled", Toast.LENGTH_SHORT).show();
 
-            } else {
-
-            }
-        }
-    }
 
     @Override
     public void onResume() {
@@ -122,10 +129,5 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         boolean darkMode = preferences.getBoolean("enable_dark_mode", false);
 
-        if (darkMode) {
-            Toast.makeText(getContext(), "dark mode enabled", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getContext(), "dark mode disabled", Toast.LENGTH_SHORT).show();
-        }
     }
 }

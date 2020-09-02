@@ -37,6 +37,8 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        DarkModeHandler.DARK_MODE_HANDLER.checkDarkMode(this);
+
         DialogAdapter.ADAPTER.initDialogAdapter(this);
 
         setupNavigation();

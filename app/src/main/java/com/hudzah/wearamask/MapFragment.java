@@ -39,6 +39,7 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.Request;
@@ -475,8 +476,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
             }
         });
 
+        offlineModeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                offlineModeLayout.setAlpha(0.7f);
+                offlineModeLayout.animate().alpha(0f).translationYBy(70).setDuration(180);
+                //offlineModeLayout.setVisibility(View.GONE);
+
+            }
+        });
 
     }
+
 
     private void getPlaceId(LatLng latLng) {
         String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLng.latitude + "," + latLng.longitude + "&key=" + getResources().getString(R.string.google_maps_key);
@@ -547,24 +558,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
     public void switchFabSafeState(final int state) {
 
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                if (state == Geofence.GEOFENCE_TRANSITION_EXIT) {
-                    fabSafe.setImageDrawable(getResources().getDrawable(R.drawable.icon_warning_red));
-                    Log.d(TAG, "switchFabSafeState: not safe, state is " + state);
-                    transitionState = state;
-                } else {
-                    fabSafe.setImageDrawable(getResources().getDrawable(R.drawable.ic_noti_safe));
-                    Log.d(TAG, "switchFabSafeState: safe, state is " + state);
-                    transitionState = state;
-                }
-
-            }
-        });
-
-
+        if (state == Geofence.GEOFENCE_TRANSITION_EXIT) {
+            fabSafe.setImageDrawable(getResources().getDrawable(R.drawable.icon_warning_red));
+            Log.d(TAG, "switchFabSafeState: not safe, state is " + state);
+            transitionState = state;
+        } else {
+            fabSafe.setImageDrawable(getResources().getDrawable(R.drawable.ic_noti_safe));
+            Log.d(TAG, "switchFabSafeState: safe, state is " + state);
+            transitionState = state;
+        }
 
     }
 
@@ -579,8 +581,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
         // Specify the types of place data to return.
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS));
-
         // Set up a PlaceSelectionListener to handle the response.
+        autocompleteFragment.setHint("Search");
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(@NonNull Place place) {
@@ -770,9 +772,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         try {
             // Customise the styling of the base map using a JSON object defined
             // in a raw resource file.
-            boolean success = googleMap.setMapStyle(
-                    MapStyleOptions.loadRawResourceStyle(
-                            getContext(), R.raw.light_map_style));
+            boolean success;
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+            boolean darkModeEnabled = preferences.getBoolean("enable_dark_mode", false);
+            if(darkModeEnabled){
+                success = googleMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                getContext(), R.raw.dark_map_style));
+            } else {
+
+                success = googleMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                getContext(), R.raw.light_map_style));
+            }
 
             if (!success) {
                 Log.e(TAG, "Style parsing failed.");
