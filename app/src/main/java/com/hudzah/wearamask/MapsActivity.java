@@ -127,6 +127,7 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
 
             case R.id.locationsFragment:
                 navController.navigate(R.id.locationsFragment);
+
                 break;
             case R.id.settingsFragment:
                 navController.navigate(R.id.settingsFragment);

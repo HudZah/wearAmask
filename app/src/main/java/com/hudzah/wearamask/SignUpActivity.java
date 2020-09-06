@@ -53,7 +53,6 @@ public class SignUpActivity extends AppCompatActivity {
     TextInputLayout emailInput;
     FloatingActionButton signInGoogleButton;
     GoogleSignInClient mGoogleSignInClient;
-    PasswordGenerator passwordGenerator;
     private int RC_SIGN_IN = 0;
     private static final String TAG = "SignUpActivity";
     FloatingActionButton signInFacebookButton;
@@ -79,11 +78,6 @@ public class SignUpActivity extends AppCompatActivity {
         errorDialog = new Dialog(this);
         registerButton = (TextView) findViewById(R.id.registerButton);
 
-        passwordGenerator = new PasswordGenerator.PasswordGeneratorBuilder()
-                .useDigits(true)
-                .useLower(true)
-                .useUpper(true)
-                .build();
 
         androidx.appcompat.widget.Toolbar toolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -181,7 +175,6 @@ public class SignUpActivity extends AppCompatActivity {
                 }
                 if (user == null) {
                     ParseUser.logOut();
-                    Toast.makeText(SignUpActivity.this, "The user cancelled the Facebook login.", Toast.LENGTH_LONG).show();
                     Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
                 } else if (user.isNew()) {
                     Toast.makeText(SignUpActivity.this, "User signed up and logged in through Facebook.", Toast.LENGTH_LONG).show();
@@ -217,7 +210,6 @@ public class SignUpActivity extends AppCompatActivity {
                 if (user == null) {
 
                     ParseUser.logOut();
-                    Toast.makeText(SignUpActivity.this, "The user cancelled the Twitter login.", Toast.LENGTH_LONG).show();
                     Log.d("MyApp", "Uh oh. The user cancelled the Twitter login.");
                 } else if (user.isNew()) {
 
@@ -307,7 +299,6 @@ public class SignUpActivity extends AppCompatActivity {
             Toast.makeText(this, account.getDisplayName(), Toast.LENGTH_SHORT).show();
             username = account.getDisplayName();
             email = account.getEmail();
-            password = passwordGenerator.generate(12);
             Log.d(TAG, "handleGoogleSignInResult: Password is " + password);
 
             saveToParse("google");

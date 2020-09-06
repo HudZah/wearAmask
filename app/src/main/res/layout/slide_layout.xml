@@ -24,7 +24,7 @@
         android:layout_below="@id/slideImageView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
-        android:textColor="@color/black"
+        android:textColor="@color/dark_blue"
         android:textSize="28sp"
         android:textStyle="bold"
        />

@@ -152,6 +152,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
     private static MapFragment instance;
 
+    private View view = null;
+
     private CardView offlineModeLayout;
 
     ParseGeoPoint lastKnownLocationGeoPoint;
@@ -159,6 +161,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     private String locationName = "";
 
     private View layout;
+
+    private View initialView;
 
     String placeId = "";
 
@@ -207,23 +211,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         super.onActivityCreated(savedInstanceState);
 
         DialogAdapter.ADAPTER.initDialogAdapter(getActivity());
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (allPermissionsGranted()) {
+        Log.d(TAG, "onActivityCreated: view is " + initialView);
+        if(initialView == null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (allPermissionsGranted()) {
+                    mapView.onCreate(savedInstanceState);
+                    mapView.onResume();
+                    mapView.getMapAsync(this);
+                } else {
+                    if (Build.VERSION.SDK_INT >= 29) {
+                        requestPermissions(PERMISSIONS_API_29, PERMISSION_REQUEST_CODE);
+                    }
+                    requestPermissions(PERMISSIONS, PERMISSION_REQUEST_CODE);
+                }
+            } else {
                 mapView.onCreate(savedInstanceState);
                 mapView.onResume();
                 mapView.getMapAsync(this);
-            } else {
-                if (Build.VERSION.SDK_INT >= 29) {
-                    requestPermissions(PERMISSIONS_API_29, PERMISSION_REQUEST_CODE);
-                }
-                requestPermissions(PERMISSIONS, PERMISSION_REQUEST_CODE);
-            }
-        } else {
-            mapView.onCreate(savedInstanceState);
-            mapView.onResume();
-            mapView.getMapAsync(this);
 
+            }
         }
 
 
@@ -233,8 +239,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        initialView = view;
+        if(view == null){
+            view =  inflater.inflate(R.layout.fragment_map, container, false);
+        }
 
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        return view;
     }
 
     @Override
@@ -748,7 +758,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         if (ParseUser.getCurrentUser() != null) {
             notLoggedInLayout.setVisibility(View.INVISIBLE);
             loggedInLayout.setVisibility(View.VISIBLE);
-            welcomeTextView.append(" " + ParseUser.getCurrentUser().getUsername());
+            welcomeTextView.setText(getResources().getString(R.string.login_welcome) + " " + ParseUser.getCurrentUser().getUsername());
 
         } else {
             notLoggedInLayout.setVisibility(View.VISIBLE);
@@ -999,14 +1009,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         switchFabSafeState(prefs.getInt("transitionState", Geofence.GEOFENCE_TRANSITION_EXIT));
         Log.d(TAG, "onStart: transition state is " + prefs.getInt("transitionState", Geofence.GEOFENCE_TRANSITION_EXIT));
 
-        if (allPermissionsGranted()) {
-            if (GpsLocationReceiver.checkLocationServicesEnabled(getContext())) {
-                getLastDeviceLocation();
-                //checkSettingsAndStartLocationUpdates();
-            } else {
-                DialogAdapter.ADAPTER.displayErrorDialog(getContext().getResources().getString(R.string.dialog_enable_location_prompt), getContext().getResources().getString(R.string.dialog_enable_location_button));
-            }
+        if(initialView == null) {
 
+            if (allPermissionsGranted()) {
+                if (GpsLocationReceiver.checkLocationServicesEnabled(getContext())) {
+                    getLastDeviceLocation();
+                    //checkSettingsAndStartLocationUpdates();
+                } else {
+                    DialogAdapter.ADAPTER.displayErrorDialog(getContext().getResources().getString(R.string.dialog_enable_location_prompt), getContext().getResources().getString(R.string.dialog_enable_location_button));
+                }
+
+            }
         }
     }
 

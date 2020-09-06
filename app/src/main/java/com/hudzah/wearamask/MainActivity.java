@@ -1,8 +1,5 @@
 package com.hudzah.wearamask;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,14 +10,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
-
-import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,25 +43,26 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        ParseInstallation.getCurrentInstallation().saveInBackground();
         sharedPreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        // TODO: 8/6/2020 FIX GOOGLE SIGN IN
 
-        firstTime = sharedPreferences.getBoolean("firstTime", true);
         if(!firstTime){
             if(ParseUser.getCurrentUser() != null){
                 goToMaps();
             }
 
             else{
-                Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+                this.overridePendingTransition(0, 0);
+
             }
         }
+
+        ParseInstallation.getCurrentInstallation().saveInBackground();
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        // TODO: 8/6/2020 FIX GOOGLE SIGN IN
+
 
         sliderViewPager = (ViewPager) findViewById(R.id.slideViewPager);
         dotsLayout = (LinearLayout) findViewById(R.id.dotsLayout);
@@ -181,5 +179,6 @@ public class MainActivity extends AppCompatActivity {
         Intent mapIntent = new Intent(this, MapsActivity.class);
         mapIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(mapIntent);
+        this.overridePendingTransition(0, 0);
     }
 }

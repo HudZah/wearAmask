@@ -250,8 +250,6 @@ public class LoginActivity extends AppCompatActivity {
                 if (user == null) {
 
                     ParseUser.logOut();
-                    Toast.makeText(LoginActivity.this, "The user cancelled the Facebook login.", Toast.LENGTH_LONG).show();
-                    Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
                 } else if (user.isNew()) {
                     Toast.makeText(LoginActivity.this, "User signed up and logged in through Facebook.", Toast.LENGTH_LONG).show();
                     Log.d("MyApp", "User signed up and logged in through Facebook!");
@@ -286,7 +284,6 @@ public class LoginActivity extends AppCompatActivity {
                 if (user == null) {
 
                     ParseUser.logOut();
-                    Toast.makeText(LoginActivity.this, "The user cancelled the Twitter login.", Toast.LENGTH_LONG).show();
                     Log.d("MyApp", "Uh oh. The user cancelled the Twitter login.");
                 } else if (user.isNew()) {
 
