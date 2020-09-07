@@ -89,16 +89,23 @@ public class Location implements Parcelable {
                     Log.d(TAG, "done: saved fine");
                     Toast.makeText(context, "Saved successfully!", Toast.LENGTH_SHORT).show();
                     saveLocationsToSharedPreferences();
+                    Log.d(TAG, "done: saved is " + saved);
+                    MapFragment.getInstance().discardLocation();
+                    DialogAdapter.ADAPTER.dismissLoadingDialog();
+                    getAllLocations(true); // make geofences null and get again
+                    MapFragment.getInstance().getLastDeviceLocation();
                 }
                 else{
                     saved = false;
                     Log.d(TAG, "done: failed to save " + e.getMessage());
+                    Log.d(TAG, "done: saved is " + saved);
+                    MapFragment.getInstance().discardLocation();
+                    DialogAdapter.ADAPTER.dismissLoadingDialog();
+                    getAllLocations(true);
+                    MapFragment.getInstance().getLastDeviceLocation();
                 }
 
-                MapFragment.getInstance().discardLocation();
-                DialogAdapter.ADAPTER.dismissLoadingDialog();
-                getAllLocations(true);
-                MapFragment.getInstance().getLastDeviceLocation();
+
 
 
             }

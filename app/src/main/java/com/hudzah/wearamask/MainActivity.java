@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
 
+    private ConstraintLayout layout;
+
     private static final String TAG = "MainActivity";
 
     @Override
@@ -45,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         sharedPreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
 
+        layout = (ConstraintLayout) findViewById(R.id.layout);
+
+        firstTime = sharedPreferences.getBoolean("firstTime", true);
+        Log.d(TAG, "onCreate: firstTime is " + firstTime);
         if(!firstTime){
             if(ParseUser.getCurrentUser() != null){
                 goToMaps();
@@ -58,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
+
 
         ParseInstallation.getCurrentInstallation().saveInBackground();
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);

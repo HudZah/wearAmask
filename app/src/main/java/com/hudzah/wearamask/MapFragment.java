@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -37,7 +36,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
@@ -93,6 +91,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
 import yuku.ambilwarna.AmbilWarnaDialog;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -101,7 +101,7 @@ import static android.content.Context.MODE_PRIVATE;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapFragment extends Fragment implements OnMapReadyCallback, ConnectivityReceiver.ConnectivityReceiverListener, GpsLocationReceiver.GpsLocationReceiverListener {
+public class MapFragment extends Fragment implements OnMapReadyCallback, ConnectivityReceiver.ConnectivityReceiverListener, GpsLocationReceiver.GpsLocationReceiverListener, EasyPermissions.PermissionCallbacks {
 
     private GoogleMap googleMap;
     private MapView mapView;
@@ -124,14 +124,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     private Button loginButton;
 
     private TextView welcomeTextView;
-
-    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-    private static final int PLACES_CODE = 101;
-    private Boolean mLocationsPermissionsGranted = false;
-    private static final int PERMISSION_REQUEST_CODE = 1234;
-    String[] PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-    String[] PERMISSIONS_API_29 = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION};
     private FusedLocationProviderClient mFusedLocationClient;
 
     private SeekBar radiusSeekBar;
@@ -179,6 +171,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     ConnectivityReceiver connectivityReceiver;
     GpsLocationReceiver gpsLocationReceiver;
 
+    String[] permissions;
+
+
     public FloatingActionButton fabSafe;
 
     LocationRequest locationRequest;
@@ -218,11 +213,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
                     mapView.onCreate(savedInstanceState);
                     mapView.onResume();
                     mapView.getMapAsync(this);
-                } else {
-                    if (Build.VERSION.SDK_INT >= 29) {
-                        requestPermissions(PERMISSIONS_API_29, PERMISSION_REQUEST_CODE);
-                    }
-                    requestPermissions(PERMISSIONS, PERMISSION_REQUEST_CODE);
                 }
             } else {
                 mapView.onCreate(savedInstanceState);
@@ -721,7 +711,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         Log.d(TAG, "getDeviceLocation: get device location");
 
         try {
-            if (allPermissionsGranted()) {
+            if(allPermissionsGranted()) {
 
                 Task location = mFusedLocationClient.getLastLocation();
                 location.addOnCompleteListener(new OnCompleteListener() {
@@ -744,6 +734,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
                     }
                 });
             }
+
         } catch (SecurityException e) {
             Log.e(TAG, "getDeviceLocation: SecurityException " + e.getMessage());
         }
@@ -839,7 +830,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         // retrives all locations and draws them
         if (ParseUser.getCurrentUser() != null && locations.isEmpty()) {
             Log.d(TAG, "showOnlineMode: get all locations");
-            location.getAllLocations(true);
+            if(allPermissionsGranted()) {
+                location.getAllLocations(true);
+            }
         } else if (locations.size() > 0) {
             location.locationsArrayList = locations;
             location.drawAllLocations();
@@ -905,24 +898,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     }
 
     private boolean allPermissionsGranted() {
-
-        for (String permission : PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(getContext(), permission) != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
-        }
-
         if (Build.VERSION.SDK_INT >= 29) {
-            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
+            permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_BACKGROUND_LOCATION};
+            if(EasyPermissions.hasPermissions(getContext(), permissions)){
+                return true;
+            }else{
+                EasyPermissions.requestPermissions(getActivity(), "Background location permissions are required for wearAmask to work.",
+                                                    10001, permissions);
+                return false;
+            }
+        }
+        else {
+            permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
+            if(EasyPermissions.hasPermissions(getContext(), permissions)){
+                return true;
+            }else{
+                EasyPermissions.requestPermissions(getActivity(), "Background location permissions are required for wearAmask to work.",
+                        10002, permissions);
                 return false;
             }
         }
 
-
-        Log.d(TAG, "allPermissionsGranted: all permissions granted!");
-        return true;
     }
+
 
     private void hideSoftKeyboard() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -977,27 +975,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        Log.d(TAG, "onRequestPermissionsResult: code is " + requestCode);
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            Log.d(TAG, "onRequestPermissionsResult: matching request code");
-            if (allPermissionsGranted()) {
-                Intent intent = new Intent(getContext(), MapsActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            } else {
-
-                Toast.makeText(getContext(), "Permissions not granted by the user.", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Log.d(TAG, "onRequestPermissionsResult: not matching request code");
-        }
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        
+        if(requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE){
+            if(allPermissionsGranted()){
+                Log.d(TAG, "onActivityResult: Permissions granted after opened settings");
+            }
+        }
     }
 
     @Override
@@ -1010,16 +995,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
         Log.d(TAG, "onStart: transition state is " + prefs.getInt("transitionState", Geofence.GEOFENCE_TRANSITION_EXIT));
 
         if(initialView == null) {
-
-            if (allPermissionsGranted()) {
+            if(allPermissionsGranted()) {
                 if (GpsLocationReceiver.checkLocationServicesEnabled(getContext())) {
                     getLastDeviceLocation();
                     //checkSettingsAndStartLocationUpdates();
                 } else {
                     DialogAdapter.ADAPTER.displayErrorDialog(getContext().getResources().getString(R.string.dialog_enable_location_prompt), getContext().getResources().getString(R.string.dialog_enable_location_button));
                 }
-
             }
+
+
         }
     }
 
@@ -1110,5 +1095,33 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
         }
     }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        Log.d(TAG, "onPermissionsGranted: permissions granted");
+        Intent intent = new Intent(getContext(), MapsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        getActivity().overridePendingTransition(0, 0);
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        Log.d(TAG, "onPermissionsDenied: permissions denied");
+        if(EasyPermissions.somePermissionPermanentlyDenied(this, perms)){
+            new AppSettingsDialog.Builder(this).build().show();
+        }
+    }
+
+    
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+    
+    
 }
 

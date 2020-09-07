@@ -78,7 +78,9 @@ public enum CircleManager {
     }
 
     public void drawManyCirclesOnMap(ArrayList<Location> locations){
-        googleMap.clear();
+        if(googleMap != null) {
+            googleMap.clear();
+        }
         Log.d(TAG, "drawManyCirclesOnMap: geofences are " + geofences);
         for(Location location : locations){
             int red = Color.red(location.getSelectedColor());

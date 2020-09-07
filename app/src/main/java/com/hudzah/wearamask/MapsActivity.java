@@ -25,7 +25,11 @@ import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
-public class MapsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+import java.util.List;
+
+import pub.devrel.easypermissions.EasyPermissions;
+
+public class MapsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, EasyPermissions.PermissionCallbacks {
 
     public Toolbar toolbar;
     private DrawerLayout drawerLayout;
@@ -167,6 +171,8 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         Log.d(TAG, "onRequestPermissionsResult: call fragment onRequestPermissionsResult");
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+
     }
 
     private void parseLogout() {
@@ -207,5 +213,16 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        MapFragment.getInstance().onPermissionsGranted(requestCode, perms);
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        MapFragment.getInstance().onPermissionsDenied(requestCode, perms);
     }
 }
