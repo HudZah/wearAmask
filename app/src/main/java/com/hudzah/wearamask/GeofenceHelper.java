@@ -28,7 +28,7 @@ public class GeofenceHelper extends ContextWrapper {
 
         return new GeofencingRequest.Builder()
                 .addGeofences(geofences)
-                .setInitialTrigger(0) // Dont set as both, rather change dynamically
+                .setInitialTrigger(Geofence.GEOFENCE_TRANSITION_DWELL) // Dont set as both, rather change dynamically
                 .build();
     }
 

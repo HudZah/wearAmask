@@ -105,6 +105,7 @@ public enum CircleManager {
         }
 
         if(geofences.isEmpty()) {
+            Log.d(TAG, "drawManyCirclesOnMap: geofences empty, recall all geofences");
             for (Location location : locations) {
                 addGeofence(location.getLatLng(), location.getSelectedRadius());
             }
@@ -148,5 +149,10 @@ public enum CircleManager {
 
     public void clearAllCircles(){
         googleMap.clear();
+    }
+
+    public void clearGeofences(){
+        Log.d(TAG, "clearGeofences: geofences cleared");
+        geofences.clear();
     }
 }
