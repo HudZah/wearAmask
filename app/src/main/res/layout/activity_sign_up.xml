@@ -103,14 +103,15 @@
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/signInGoogleButton"
                         android:layout_width="70dp"
-                        android:src="@drawable/google_icon"
+                        android:layout_height="70dp"
                         android:backgroundTint="@color/fabBg"
-                        app:fabCustomSize="70dp"
+                        android:foreground="@drawable/ripple_circle"
+                        android:src="@drawable/google_icon"
+                        android:visibility="gone"
                         app:borderWidth="0dp"
                         app:elevation="4dp"
-                        app:maxImageSize="32dp"
-                        android:foreground="@drawable/ripple_circle"
-                        android:layout_height="70dp" />
+                        app:fabCustomSize="70dp"
+                        app:maxImageSize="32dp" />
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/signInFacebookButton"

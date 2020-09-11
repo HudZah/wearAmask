@@ -213,8 +213,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginWithGoogle(){
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+//        Map<String, String> authData = new HashMap<String, String>();
+//        authData.put("access_token", tokenString);
+//        authData.put("id", user);
+//        ParseUser.logInWithInBackground("google", authData){
+//
+//        }
     }
 
     private void forgotPassword(){

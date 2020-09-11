@@ -159,8 +159,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void googleSignUp(){
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+
     }
 
     private void facebookSignUp() {

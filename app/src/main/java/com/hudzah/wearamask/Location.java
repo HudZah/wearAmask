@@ -133,7 +133,6 @@ public class Location implements Parcelable {
                     MapFragment.getInstance().locations = locationsArrayList;
                     saveLocationsToSharedPreferences();
                     if(drawLocations) {
-                        // TODO: 9/7/2020 clear geofences first 
                         Log.d(TAG, "done: or here?");
                         drawAllLocations();
                     }
