@@ -23,7 +23,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
 
     private static final String TAG = "GeofenceBroadcastReceiv";
 
-    private List<Geofence> geofenceList;
+    public List<Geofence> geofenceList;
     private GeofencingEvent geofencingEvent;
 
     private Context mContext;
@@ -119,4 +119,6 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
 
 
     }
+
+
 }

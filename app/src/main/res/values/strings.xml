@@ -119,6 +119,9 @@
     <string name="notification_enter_big_text">has entered,</string>
     <string name="notification_exit_part">make sure you wearAmask!</string>
     <string name="notification_enter_part">you are now safe!</string>
+    <string name="notification_location_off_title">Location services turned off</string>
+    <string name="notification_location_off_text">wearAmask requires your location to be on for it to continue working</string>
+    <string name="notification_location_off_big_text">wearAmask requires your location to be on for it to continue working</string>
     <string-array name="radius">
         <item>15</item>
         <item>30</item>

@@ -1079,6 +1079,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
     @Override
     public void onLocationProviderChanged(boolean isLocationOn) {
+
+
         Log.d(TAG, "onLocationProviderChanged: location is " + isLocationOn);
         if (isLocationOn) {
             DialogAdapter.ADAPTER.dismissErrorDialog();
@@ -1091,6 +1093,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
                 }
             }, 1000);
         } else {
+
+
             DialogAdapter.ADAPTER.displayErrorDialog(getResources().getString(R.string.dialog_enable_location_prompt), getResources().getString(R.string.dialog_enable_location_button));
 
         }

@@ -3,6 +3,7 @@ package com.hudzah.wearamask;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.location.LocationManager;
 import android.os.Build;
 import android.provider.Settings;
@@ -19,6 +20,17 @@ public class GpsLocationReceiver extends BroadcastReceiver {
         if (intent.getAction().matches("android.location.PROVIDERS_CHANGED")) {
             Log.d(TAG, "onReceive: is location, " + checkLocationServicesEnabled(context));
             boolean isLocationOn = checkLocationServicesEnabled(context);
+            NotificationHelper notificationHelper = new NotificationHelper(context);
+
+
+            if(!isLocationOn){
+                notificationHelper.sendHighPriorityNotification(context.getResources().getString(R.string.notification_location_off_title),
+                        context.getResources().getString(R.string.notification_location_off_text),
+                        context.getResources().getString(R.string.notification_location_off_big_text),
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_location_off_image),
+                        MainActivity.class);
+
+            }
 
             if(gpsLocationReceiverListener != null){
                 gpsLocationReceiverListener.onLocationProviderChanged(isLocationOn);

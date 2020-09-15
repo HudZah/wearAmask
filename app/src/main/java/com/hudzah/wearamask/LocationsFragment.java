@@ -35,6 +35,8 @@ public class LocationsFragment extends Fragment {
 
     private com.hudzah.wearamask.Location location;
 
+    GeofenceBroadcastReceiver geofenceBroadcastReceiver;
+
     public LocationsFragment() {
         // Required empty public constructor
     }
@@ -60,6 +62,8 @@ public class LocationsFragment extends Fragment {
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+
+        geofenceBroadcastReceiver = new GeofenceBroadcastReceiver();
 
         adapter.setOnItemClickListener(new LocationAdapter.OnItemClickListener() {
             @Override
@@ -104,6 +108,7 @@ public class LocationsFragment extends Fragment {
 
     private void deleteItem(int position){
         if(ConnectivityReceiver.isConnected()) {
+            DialogAdapter.ADAPTER.loadingDialog();
             ParseQuery<ParseObject> query = ParseQuery.getQuery("Locations");
             query.whereEqualTo("username", ParseUser.getCurrentUser().getUsername());
             query.whereEqualTo("objectId", location.getLocationsArrayList().get(position).getLocationID());
@@ -115,7 +120,9 @@ public class LocationsFragment extends Fragment {
                             @Override
                             public void done(ParseException e) {
                                 if (e == null) {
+                                    DialogAdapter.ADAPTER.dismissLoadingDialog();
                                     Toast.makeText(getContext(), "Deleted Successfully!", Toast.LENGTH_SHORT).show();
+                                    CircleManager.Manager.clearGeofences();
                                 }
                             }
                         });
