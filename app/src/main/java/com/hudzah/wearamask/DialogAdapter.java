@@ -21,6 +21,7 @@ public enum DialogAdapter {
 
     private Activity activity;
     private AlertDialog dialog;
+    private AlertDialog errorDialog;
     LayoutInflater inflater;
 
     String name = "";
@@ -31,6 +32,8 @@ public enum DialogAdapter {
     public void initDialogAdapter(Activity myActivity){
         activity = myActivity;
         inflater = activity.getLayoutInflater();
+
+
     }
 
     public void loadingDialog(){
@@ -68,30 +71,41 @@ public enum DialogAdapter {
     }
 
     public void dismissLocationDialog(){
+        Log.d("Tag", "dismissLocationDialog: dismiss location dialog");
         dialog.dismiss();
     }
 
     public void displayErrorDialog(final String error, final String buttonText){
 
+
+        if(errorDialog != null && errorDialog.isShowing()){
+            Log.d("Tag", "displayErrorDialog: already showing");
+            return;
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
-
         builder.setView(inflater.inflate(R.layout.dialog_error, null));
-
-        dialog = builder.create();
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
-        TextView errorTextView = (TextView) dialog.findViewById(R.id.errorTextView);
+        errorDialog = builder.create();
+        errorDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        errorDialog.show();
+        Log.d("Tag", "displayErrorDialog: dialog id at start, " + errorDialog.toString());
+        TextView errorTextView = (TextView) errorDialog.findViewById(R.id.errorTextView);
         errorTextView.setText(error);
 
-        Button actionButton = (Button) dialog.findViewById(R.id.actionButton);
-        ImageView closeDialogButton = (ImageView) dialog.findViewById(R.id.closeDialogButton);
+        Button actionButton = (Button) errorDialog.findViewById(R.id.actionButton);
+        ImageView closeDialogButton = (ImageView) errorDialog.findViewById(R.id.closeDialogButton);
         if(!buttonText.equals("")) actionButton.setText(buttonText);
 
         closeDialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismissErrorDialog();
+                Log.d("Tag", "onClick: close error dialog, " + errorDialog.toString());
+                try {
+                    dismissErrorDialog();
+                } catch (Exception e){
+                    Log.d("Tag", "onClick: error is + " + e.getMessage());
+                }
             }
         });
 
@@ -113,7 +127,7 @@ public enum DialogAdapter {
     }
 
     public void dismissErrorDialog(){
-        dialog.dismiss();
+        errorDialog.cancel();
     }
 
     public void displaySafeDialog(){

@@ -15,6 +15,8 @@ public class GpsLocationReceiver extends BroadcastReceiver {
 
     private static final String TAG = "GpsLocationReceiver";
 
+    private boolean shown = false;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().matches("android.location.PROVIDERS_CHANGED")) {
@@ -23,13 +25,13 @@ public class GpsLocationReceiver extends BroadcastReceiver {
             NotificationHelper notificationHelper = new NotificationHelper(context);
 
 
-            if(!isLocationOn){
+            if(!isLocationOn && !shown){
                 notificationHelper.sendHighPriorityNotification(context.getResources().getString(R.string.notification_location_off_title),
                         context.getResources().getString(R.string.notification_location_off_text),
                         context.getResources().getString(R.string.notification_location_off_big_text),
                         BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_location_off_image),
                         MainActivity.class);
-
+                        shown = true;
             }
 
             if(gpsLocationReceiverListener != null){

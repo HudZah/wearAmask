@@ -1094,7 +1094,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
             }, 1000);
         } else {
 
-
+            // TODO: 9/16/2020 show once 
             DialogAdapter.ADAPTER.displayErrorDialog(getResources().getString(R.string.dialog_enable_location_prompt), getResources().getString(R.string.dialog_enable_location_button));
 
         }
