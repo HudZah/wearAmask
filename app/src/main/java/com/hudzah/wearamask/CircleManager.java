@@ -128,8 +128,10 @@ public enum CircleManager {
     }
 
     private void callGeofencingClient(){
+        Log.d(TAG, "callGeofencingClient: geofences in client are, " + geofences);
         geofencingRequest = geofenceHelper.getGeofencingRequest(geofences);
         pendingIntent = geofenceHelper.getPendingIntent();
+        geofencingClient.removeGeofences(pendingIntent); // Added this, test and see
 
         geofencingClient.addGeofences(geofencingRequest, pendingIntent)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

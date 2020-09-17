@@ -27,6 +27,8 @@ public class GeofenceHelper extends ContextWrapper {
 
     public GeofencingRequest getGeofencingRequest(List<Geofence> geofences){
 
+        Log.d(TAG, "getGeofencingRequest: Geofences builder wih the geofences list of, " + geofences.toString());
+
         return new GeofencingRequest.Builder()
                 .addGeofences(geofences)
                 .setInitialTrigger(Geofence.GEOFENCE_TRANSITION_DWELL) // Dont set as both, rather change dynamically
@@ -50,6 +52,7 @@ public class GeofenceHelper extends ContextWrapper {
             return pendingIntent;
         }
 
+        Log.d(TAG, "getPendingIntent: pending intent called");
         Intent intent = new Intent(this, GeofenceBroadcastReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 

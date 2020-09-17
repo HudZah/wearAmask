@@ -176,6 +176,7 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void parseLogout() {
+        DialogAdapter.ADAPTER.loadingDialog();
         ParseUser.logOutInBackground(new LogOutCallback() {
             @Override
             public void done(ParseException e) {
@@ -186,6 +187,8 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
                 } else {
                     DialogAdapter.ADAPTER.displayErrorDialog(e.getMessage(), "");
                 }
+
+                DialogAdapter.ADAPTER.dismissLoadingDialog();
             }
         });
     }
