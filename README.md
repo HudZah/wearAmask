@@ -12,3 +12,6 @@ This notification will remind you to take your mask before you can even remind y
 Using Geofencing technology, wearAmask is able to tell when you leave a location radius using your location settings, WiFi and bluetooth services to accurately determine when you leave/enter a location.
 
 You can view all your locations in a single list in your "Locations" tab, allowing you to edit or delete a location.
+
+# Other
+Please note that this app is still in an alpha stage and is my second large android app since I started learning android developement at the start of this year :)
