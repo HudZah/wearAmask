@@ -1,0 +1,129 @@
+<resources>
+
+    <string name="contact_about">wearAmask, your personal mask reminding app.\n\nUsing geofencing technology, we send a high priority notification whenver you leave/enter your location, even whilst the app is in the background.</string>
+
+    <string name="back4app_server_url">https://parseapi.back4app.com/</string>
+    <string name="back4app_app_id">hpnHqEyNvMNrQmlR4vWOtaqZjJrFk393awCNaC3e</string>
+    <string name="back4app_client_key">AKOrCT90pekh4FRnw5C3mVKZicYczy1TEMBU2WQp</string>
+
+    <string name="drawer_title_locations">Locations</string>
+    <string name="drawer_title_covid19_dashboard">COVID-19 Dashboard</string>
+    <string name="drawer_title_covid19_precautions">Precautions</string>
+    <string name="drawer_title_rate">Rate us</string>
+    <string name="drawer_title_contact">Contact us</string>
+    <string name="drawer_title_settings">Settings</string>
+    <string name="drawer_title_logout">Log out</string>
+
+    <string name="google_maps_key">AIzaSyDZW0woPTJhu41Q_R3KZSQ9-2_mxhfDjac</string>
+
+    <string name="dialog_error_occured">An Error Has Occurred</string>
+    <string name="dialog_close">Close</string>
+    <string name="dialog_enable_location_button">Enable</string>
+    <string name="dialog_enable_location_prompt">Your location is turned off, to continue using wearAmask, please turn it on.</string>
+    <string name="dialog_enter_a_name">Name Your Location</string>
+    <string name="dialog_enter_name_para">And finally, select a good and easy to remember name for this location.</string>
+    <string name="dialog_enter_name_leave_blank">Leave blank</string>
+    <string name="dialog_safe_header">You Are Safe!</string>
+    <string name="dialog_safe_para">You have entered a secure location, stay safe!</string>
+    <string name="dialog_warning_header">Stay Safe!</string>
+    <string name="dialog_warning_button_guidelines">View Guidelines</string>
+    <string name="dialog_warning_para">You are currently not in a safe zone.\nMake sure you wearAmask and follow proper guidelines to keep yourself safe!</string>
+
+    <string name="connectivity_online">You are now online</string>
+    <string name="connectivity_offline">You are now in offline mode</string>
+
+    <string name="app_name">wearAmask</string>
+    <string name="onboarding_heading_1">Location Based</string>
+    <string name="onboarding_heading_2">Mask Reminder</string>
+    <string name="onboarding_heading_3">Save Lives</string>
+
+    <string name="onboarding_desc_1">We allow for you to select a location, and upon leaving it, we send you a reminder to wear your mask</string>
+    <string name="onboarding_desc_2">We remind you to take and wear your mask in case you ever forget it</string>
+    <string name="onboarding_desc_3">Wearing a mask helps save lives and protects you and others around you</string>
+
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_back">Back</string>
+    <string name="onboarding_finish">Finish</string>
+    <string name="onboarding_skip">Skip</string>
+    <string name="title_activity_maps">Map</string>
+
+    <string name="bottom_sheet_to_start">To get started, you need to login to your account</string>
+    <string name="bottom_sheet_login">Login</string>
+    <string name="bottom_sheet_register">Or else, create an account</string>
+    <string name="bottom_sheet_welcome">Welcome, </string>
+    <string name="bottom_sheet_add_location_hint">Enter Address, City or Zip Code</string>
+
+    <string name="location_radius">Select radius (m)</string>
+    <string name="location_color">Select color</string>
+    <string name="location_save">Save</string>
+    <string name="location_discard">Discard</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="username_hint">Username</string>
+    <string name="forgot_password_heading">Forgot password?</string>
+    <string name="forgot_password_para">You can enter your account email and we will send you an email that will allow you to verify your identity. </string>
+    <string name="forgot_password_button">Send email</string>
+    <string name="forgot_password_toast">A password reset email was sent!</string>
+
+    <string name="password_hint">Password</string>
+    <string name="name_hint">Enter a name</string>
+    <string name="login_welcome">Welcome!</string>
+    <string name="login_create_account">Create an account</string>
+    <string name="login_forgot_password">Forgot password</string>
+    <string name="sign_up_heading">Sign Up</string>
+
+    <string name="sign_up_email">Email</string>
+    <string name="sign_up_reenter_password">Re-enter password</string>
+    <string name="sign_up_login">Login instead</string>
+    <string name="sign_up_with_email">or sign up with your email</string>
+    <string name="login_instead">or use your account instead</string>
+    <string name="offline_mode_heading">You need an internet connection to add locations. Click the button to retry</string>
+
+    <string name="offline_mode_retry">Retry</string>
+    <string name="error_username_length">Username must be more than 5 and less than 20 characters</string>
+
+    <string name="error_password_length">Password must be at least 7 characters</string>
+    <string name="error_email_format">Incorrect email format</string>
+    <string name="facebook_app_id">647975436132621</string>
+
+    <string name="fb_login_protocol_scheme">fb647975436132621</string>
+    <string name="facebook_signup_text">Facebook Sign up</string>
+    <string name="twitter_consumer_key">boLFXqrBCSuT7lJBSzQ3cl1Fq</string>
+
+    <string name="twitter_consumer_secret">zCUU683Sg3t9vQgNsRavPjohXAyvK7ZtZLdsRaFfSEtfLODZHd</string>
+    <string name="notification_exit_title">You have left your safe region</string>
+
+    <string name="edit_location_header">Edit location</string>
+    <string name="edit_location_edit_text_hint">Location name</string>
+
+    <string name="precautions_title">Taking \nPrecautions</string>
+    <string name="precautions_1_heading">wearAmask</string>
+    <string name="precautions_1_para">Masks can help prevent the spread of the virus.</string>
+    <string name="precautions_1_link">Learn more about masks</string>
+
+    <string name="precautions_2_heading">Social distance</string>
+    <string name="precautions_2_para">Maintain a safe distance from anyone who is coughing or sneezing.</string>
+    <string name="precautions_2_link">Learn more on social distancing</string>
+
+    <string name="precautions_3_heading">Wash hands</string>
+    <string name="precautions_3_para">Clean your hands often. Use soap and water, or an alcohol-based hand rub.</string>
+    <string name="precautions_3_link">Learn more on washing hands</string>
+
+    <string name="coach_marks_1">Hold down on the screen to\nadd a new location at that position</string>
+    <string name="coach_marks_2">Or, you can add a specific location\nby searching for it</string>
+
+    <string name="notification_exit_text">Make sure you wearAmask</string>
+    <string name="notification_exit_big_text">You are no longer in a safe location, make sure to wearAmask!</string>
+    <string name="notification_enter_title">You have entered a safe location</string>
+    <string name="notification_enter_text">You are now safe!</string>
+    <string name="notification_enter_big_text">has entered,</string>
+    <string name="notification_exit_part">make sure you wearAmask!</string>
+    <string name="notification_enter_part">you are now safe!</string>
+    <string-array name="radius">
+        <item>15</item>
+        <item>30</item>
+        <item>50</item>
+    </string-array>
+
+
+</resources>
