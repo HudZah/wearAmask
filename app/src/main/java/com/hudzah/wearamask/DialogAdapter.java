@@ -127,7 +127,9 @@ public enum DialogAdapter {
     }
 
     public void dismissErrorDialog(){
-        errorDialog.cancel();
+        if(errorDialog != null) {
+            errorDialog.cancel();
+        }
     }
 
     public void displaySafeDialog(){
