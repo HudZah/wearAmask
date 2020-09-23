@@ -490,7 +490,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
 
 
     private void getPlaceId(LatLng latLng) {
-        String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLng.latitude + "," + latLng.longitude + "&key=" + getResources().getString(R.string.google_maps_key);
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLng.latitude + "," + latLng.longitude + "&key=" + getResources().getString(R.string.places_api_key);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {

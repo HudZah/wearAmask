@@ -15,6 +15,7 @@
     <string name="drawer_title_logout">Log out</string>
 
     <string name="google_maps_key">AIzaSyDZW0woPTJhu41Q_R3KZSQ9-2_mxhfDjac</string>
+    <string name="places_api_key">AIzaSyAgICV8FcIuYbFMwNjcnn0SrUfxf0aJIBQ</string>
 
     <string name="dialog_error_occured">An Error Has Occurred</string>
     <string name="dialog_close">Close</string>
