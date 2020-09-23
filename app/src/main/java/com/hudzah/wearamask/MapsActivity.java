@@ -153,13 +153,18 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
                 try{
                     startActivity(new Intent(Intent.ACTION_VIEW,
                             Uri.parse("market://details?id=" + getPackageName())));
+                    break;
                 } catch (ActivityNotFoundException e){
                     startActivity(new Intent(Intent.ACTION_VIEW,
                             Uri.parse("http://play.google.com/store/apps/details?id=" + getPackageName())));
+                    break;
                 }
 
             case R.id.logout:
                 parseLogout();
+
+            default:
+                break;
 
         }
         return true;
