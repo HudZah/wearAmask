@@ -409,7 +409,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Connect
             @Override
             public void onClick(View v) {
                 discardLocation();
-                location.getAllLocations(true);
+                //location.getAllLocations(true);
+                location.drawAllLocations();
                 getLastDeviceLocation();
             }
         });
