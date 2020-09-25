@@ -7,6 +7,8 @@ When you leave a certain location, wearAmask sends you a high priority push noti
 
 This notification will remind you to take your mask before you can even remind yourself! No more forgetting your mask at home and having to go all the way back just to get your mask.
 
+You can download [wearAmask](https://play.google.com/store/apps/details?id=com.hudzah.wearamask) on Google Play
+
 # How it works?
 
 Using Geofencing technology, wearAmask is able to tell when you leave a location radius using your location settings, WiFi and bluetooth services to accurately determine when you leave/enter a location.
