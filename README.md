@@ -15,5 +15,11 @@ Using Geofencing technology, wearAmask is able to tell when you leave a location
 
 You can view all your locations in a single list in your "Locations" tab, allowing you to edit or delete a location.
 
+
+
+![](wAmFullScreenshot.png)
+
+
+
 # Other
 Please note that this app is still in an alpha stage and is my second large android app since I started learning android developement at the start of this year :)
