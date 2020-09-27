@@ -7,10 +7,10 @@
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
-/.idea
+.idea
 .DS_Store
 /build
 /captures
 .externalNativeBuild
 .cxx
-/.app/google-services.json
+.app/google-services.json
