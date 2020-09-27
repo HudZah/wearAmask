@@ -7,10 +7,5 @@
 /captures
 .externalNativeBuild
 .cxx
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
 app/google-services.json
+app/release
