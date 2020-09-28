@@ -182,6 +182,35 @@ public enum DialogAdapter {
         });
     }
 
+    public void displayLegal(){
+        // Show legal stuff with dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+        builder.setView(inflater.inflate(R.layout.dialog_legal, null));
+
+        final AlertDialog legalDialog = builder.create();
+        legalDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        legalDialog.show();
+
+        ImageView closeDialogButton = (ImageView) legalDialog.findViewById(R.id.closeDialogButton);
+        Button actionButton = (Button) legalDialog.findViewById(R.id.actionButton);
+
+        actionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                legalDialog.dismiss();
+
+            }
+        });
+
+        closeDialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                legalDialog.dismiss();
+            }
+        });
+    }
+
     public void dismissSafeAndWarningDialog(){
         dialog.dismiss();
     }

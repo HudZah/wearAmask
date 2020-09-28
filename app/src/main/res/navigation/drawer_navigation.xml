@@ -48,4 +48,9 @@
             android:name="location"
             app:argType="com.hudzah.wearamask.Location" />
     </fragment>
+    <fragment
+        android:id="@+id/legalFragment"
+        android:name="com.hudzah.wearamask.LegalFragment"
+        android:label="fragment_legal"
+        tools:layout="@layout/fragment_legal" />
 </navigation>

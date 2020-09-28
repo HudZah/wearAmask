@@ -13,6 +13,7 @@
     <string name="drawer_title_contact">Contact us</string>
     <string name="drawer_title_settings">Settings</string>
     <string name="drawer_title_logout">Log out</string>
+    <string name="drawer_title_legal">Legal</string>
 
     <string name="google_maps_key">AIzaSyDZW0woPTJhu41Q_R3KZSQ9-2_mxhfDjac</string>
     <string name="places_api_key">AIzaSyAgICV8FcIuYbFMwNjcnn0SrUfxf0aJIBQ</string>
@@ -112,6 +113,62 @@
 
     <string name="coach_marks_1">Hold down on the screen to\nadd a new location at that position</string>
     <string name="coach_marks_2">Or, you can add a specific location\nby searching for it</string>
+
+    <!-- For privacy policy & legal   -->
+    <string name="legal_privacy_policy_header">Privacy Policy</string>
+    <string name="legal_privacy_policy_header_info_collection_and_use">Information Collection and Use</string>
+    <string name="legal_privacy_policy_header_log_data">Log Data</string>
+    <string name="legal_privacy_policy_header_cookies">Cookies</string>
+    <string name="legal_privacy_policy_header_service_providers">Service Providers</string>
+    <string name="legal_privacy_policy_header_security">Security</string>
+    <string name="legal_privacy_policy_header_links_to_other_sites">Links to Other Sites</string>
+    <string name="legal_privacy_policy_header_childrens_privacy">Children\'s Privacy</string>
+    <string name="legal_privacy_policy_header_changes">Changes to This Privacy Policy</string>
+    <string name="legal_privacy_policy_header_contact_us">Contact Us</string>
+    <string name="legal_privacy_policy_para_1">HudZah built the wearAmask app as an Open Source app. This SERVICE is provided by HudZah at no cost and is intended for use as is.
+
+This page is used to inform visitors regarding my policies with the collection, use, and disclosure of Personal Information if anyone decided to use my Service.\n\nIf you choose to use my Service, then you agree to the collection and use of information in relation to this policy. The Personal Information that I collect is used for providing and improving the Service. I will not use or share your information with anyone except as described in this Privacy Policy.
+
+The terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, which is accessible at wearAmask unless otherwise defined in this Privacy Policy.</string>
+    <string name="legal_privacy_policy_para_info_collection_and_use">For a better experience, while using our Service, I may require you to provide us with certain personally identifiable information, including but not limited to user locations.\n\nThe information that I request will be retained on your device and is not collected by me in any way.\n\nThe app does use third party services that may collect information used to identify you.Link to privacy policy of third party service providers used by the app\n\n
+        \t- Google Play Services\n\t- Google Analytics for Firebase\n\t- Firebase Crashlytics\n\t- Facebook</string>
+    <string name="legal_privacy_policy_para_log_data">I want to inform you that whenever you use my Service, in a case of an error in the app I collect data and information (through third party products) on your phone called Log Data.\n\nThis Log Data may include information such as your device Internet Protocol (“IP”) address, device name, operating system version, the configuration of the app when utilizing my Service, the time and date of your use of the Service, and other statistics.</string>
+    <string name="legal_privacy_policy_cookies">Cookies are files with a small amount of data that are commonly used as anonymous unique identifiers.\n\nThese are sent to your browser from the websites that you visit and are stored on your device\'s internal memory.\n\nThis Service does not use these “cookies” explicitly. However, the app may use third party code and libraries that use “cookies” to collect information and improve their services. You have the option to either accept or refuse these cookies and know when a cookie is being sent to your device.\n\nIf you choose to refuse our cookies, you may not be able to use some portions of this Service.
+    </string>
+    <string name="legal_privacy_policy_para_security_providers">I may employ third-party companies and individuals due to the following reasons:\n\n
+        \t- To facilitate our Service;\n
+        \t- To provide the Service on our behalf;\n
+        \t- To perform Service-related services; or\n
+        \t- To assist us in analyzing how our Service is used.\n\n
+        I want to inform users of this Service that these third parties have access to your Personal Information.\n\nThe reason is to perform the tasks assigned to them on our behalf. However, they are obligated not to disclose or use the information for any other purpose.</string>
+    <string name="legal_privacy_policy_para_security">I value your trust in providing us your Personal Information, thus we are striving to use commercially acceptable means of protecting it. But remember that no method of transmission over the internet, or method of electronic storage is 100% secure and reliable, and I cannot guarantee its absolute security.</string>
+    <string name="legal_privacy_policy_para_links_to_other_sites">This Service may contain links to other sites. If you click on a third-party link, you will be directed to that site. Note that these external sites are not operated by me.\n\nTherefore, I strongly advise you to review the Privacy Policy of these websites. I have no control over and assume no responsibility for the content, privacy policies, or practices of any third-party sites or services.</string>
+    <string name="legal_privacy_policy_para_childrens_privacy">This Service may contain links to other sites. If you click on a third-party link, you will be directed to that site. Note that these external sites are not operated by me.\n\nTherefore, I strongly advise you to review the Privacy Policy of these websites. I have no control over and assume no responsibility for the content, privacy policies, or practices of any third-party sites or services.</string>
+    <string name="legal_privacy_policy_para_changes">I may update our Privacy Policy from time to time.\n\nThus, you are advised to review this page periodically for any changes. I will notify you of any changes by posting the new Privacy Policy on this page.\nThis policy is effective as of 2020-09-26</string>
+    <string name="legal_privacy_policy_para_contact">If you have any questions or suggestions about my Privacy Policy, do not hesitate to contact me at wearamask@hudzah.com</string>
+
+    <!-- For terms and conditions -->
+    <string name="legal_terms_and_conditions_header">Terms And Conditions</string>
+    <string name="legal_terms_and_conditions_header_changes">Changes to This Terms and Conditions</string>
+    <string name="legal_terms_and_conditions_header_contact_us">Contact Us</string>
+    <string name="legal_terms_and_conditions_para_1">By downloading or using the app, these terms will automatically apply to you – you should make sure therefore that you read them carefully before using the app. You’re not allowed to copy, or modify the app, any part of the app, or our trademarks in any way. You’re not allowed to attempt to extract the source code of the app, and you also shouldn’t try to translate the app into other languages, or make derivative versions. The app itself, and all the trade marks, copyright, database rights and other intellectual property rights related to it, still belong to HudZah.\n\n
+        HudZah is committed to ensuring that the app is as useful and efficient as possible. For that reason, we reserve the right to make changes to the app or to charge for its services, at any time and for any reason. We will never charge you for the app or its services without making it very clear to you exactly what you’re paying for.\n\n
+        The wearAmask app stores and processes personal data that you have provided to us, in order to provide my Service. It’s your responsibility to keep your phone and access to the app secure. We therefore recommend that you do not jailbreak or root your phone, which is the process of removing software restrictions and limitations imposed by the official operating system of your device.\nIt could make your phone vulnerable to malware/viruses/malicious programs, compromise your phone’s security features and it could mean that the wearAmask app won’t work properly or at all.
+        \n\nThe app does use third party services that declare their own Terms and Conditions.
+        \nLink to Terms and Conditions of third party service providers used by the app\n\n
+        \t- Google Play Services\n
+        \t- Google Analytics for Firebase\n
+        \t- Firebase Crashlytics\n
+        \t- Facebook\n\n
+        You should be aware that there are certain things that HudZah will not take responsibility for. Certain functions of the app will require the app to have an active internet connection. The connection can be Wi-Fi, or provided by your mobile network provider, but HudZah cannot take responsibility for the app not working at full functionality if you don’t have access to Wi-Fi, and you don’t have any of your data allowance left.
+        If you’re using the app outside of an area with Wi-Fi, you should remember that your terms of the agreement with your mobile network provider will still apply.\n\nAs a result, you may be charged by your mobile provider for the cost of data for the duration of the connection while accessing the app, or other third party charges. In using the app, you’re accepting responsibility for any such charges, including roaming data charges if you use the app outside of your home territory (i.e. region or country) without turning off data roaming.\n\nIf you are not the bill payer for the device on which you’re using the app, please be aware that we assume that you have received permission from the bill payer for using the app.
+        \n\nAlong the same lines, HudZah cannot always take responsibility for the way you use the app i.e. You need to make sure that your device stays charged – if it runs out of battery and you can’t turn it on to avail the Service, HudZah cannot accept responsibility.
+        \n\nWith respect to HudZah’s responsibility for your use of the app, when you’re using the app, it’s important to bear in mind that although we endeavour to ensure that it is updated and correct at all times, we do rely on third parties to provide information to us so that we can make it available to you. HudZah accepts no liability for any loss, direct or indirect, you experience as a result of relying wholly on this functionality of the app.
+        \n\nAt some point, we may wish to update the app. The app is currently available on Android – the requirements for system(and for any additional systems we decide to extend the availability of the app to) may change, and you’ll need to download the updates if you want to keep using the app. HudZah does not promise that it will always update the app so that it is relevant to you and/or works with the Android version that you have installed on your device. However, you promise to always accept updates to the application when offered to you, We may also wish to stop providing the app, and may terminate use of it at any time without giving notice of termination to you. Unless we tell you otherwise, upon any termination, (a) the rights and licenses granted to you in these terms will end; (b) you must stop using the app, and (if needed) delete it from your device.</string>
+    <string name="legal_terms_and_conditions_para_changes">I may update our Terms and Conditions from time to time. Thus, you are advised to review this page periodically for any changes.\n\nI will notify you of any changes by posting the new Terms and Conditions on this page.\n\nThese terms and conditions are effective as of 2020-09-26</string>
+    <string name="legal_terms_and_conditions_para_contact">If you have any questions or suggestions about my Terms and Conditions, do not hesitate to contact me at wearamask@hudzah.com.</string>
+    <string name="legal_agreement_sign_up">By clicking Sign Up, you agree to wearAmask\'s Privacy Policy and Terms and Conditions</string>
+
 
     <string name="notification_exit_text">Make sure you wearAmask</string>
     <string name="notification_exit_big_text">You are no longer in a safe location, make sure to wearAmask!</string>

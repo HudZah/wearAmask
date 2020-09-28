@@ -160,6 +160,10 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
                     break;
                 }
 
+            case R.id.legalFragment:
+                navController.navigate(R.id.legalFragment);
+                break;
+
             case R.id.logout:
                 parseLogout();
 

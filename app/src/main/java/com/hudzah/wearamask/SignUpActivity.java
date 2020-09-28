@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.FragmentManager;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -59,6 +60,7 @@ public class SignUpActivity extends AppCompatActivity {
     FloatingActionButton signInTwitterButton;
     Dialog errorDialog;
     TextView registerButton;
+    TextView termsAgreement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,9 @@ public class SignUpActivity extends AppCompatActivity {
 
         DialogAdapter.ADAPTER.initDialogAdapter(this);
 
+        final LegalFragment legalFragment = new LegalFragment();
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+
         usernameInput = (TextInputLayout) findViewById(R.id.usernameInput);
         passwordInput = (TextInputLayout) findViewById(R.id.passwordInput);
         emailInput = (TextInputLayout) findViewById(R.id.emailInput);
@@ -77,7 +82,7 @@ public class SignUpActivity extends AppCompatActivity {
         signInTwitterButton = (FloatingActionButton) findViewById(R.id.signInTwitterButton);
         errorDialog = new Dialog(this);
         registerButton = (TextView) findViewById(R.id.registerButton);
-
+        termsAgreement = (TextView) findViewById(R.id.termsAgreement);
 
         androidx.appcompat.widget.Toolbar toolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -133,6 +138,13 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
+        termsAgreement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Go to terms and conditions
+                DialogAdapter.ADAPTER.displayLegal();
+            }
+        });
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
