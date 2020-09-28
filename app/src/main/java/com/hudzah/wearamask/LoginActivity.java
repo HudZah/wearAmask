@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -171,8 +172,12 @@ public class LoginActivity extends AppCompatActivity {
         password = passwordInput.getEditText().getText().toString();
         if(validateData()){
 
-            DialogAdapter.ADAPTER.loadingDialog();
-
+            try {
+                DialogAdapter.ADAPTER.loadingDialog();
+            }
+            catch (WindowManager.BadTokenException e){
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
             ParseUser.logInInBackground(username, password, new LogInCallback() {
                 @Override
                 public void done(ParseUser user, ParseException e) {

@@ -44,6 +44,10 @@
                 android:icon="@drawable/ic_help_black_24dp"
                 android:title="@string/drawer_title_contact" />
 
+            <item
+                android:id="@+id/legalFragment"
+                android:icon="@drawable/ic_security_black_24dp"
+                android:title="@string/drawer_title_legal" />
 
             <item
                 android:id="@+id/logout"

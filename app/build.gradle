@@ -9,8 +9,8 @@ android {
         applicationId "com.hudzah.wearamask"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 7
-        versionName "0.7.16"
+        versionCode 8
+        versionName "0.7.17"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -75,7 +75,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
 
     implementation "androidx.preference:preference:1.1.1"
-
 
 
 }
