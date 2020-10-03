@@ -21,7 +21,7 @@
     <string name="dialog_error_occured">An Error Has Occurred</string>
     <string name="dialog_close">Close</string>
     <string name="dialog_enable_location_button">Enable</string>
-    <string name="dialog_enable_location_prompt">Your location is turned off, to continue using wearAmask, please turn it on.</string>
+    <string name="dialog_enable_location_prompt">Turn on your location to allow wearAmask to remind you the next time you leave.</string>
     <string name="dialog_enter_a_name">Name Your Location</string>
     <string name="dialog_enter_name_para">And finally, select a good and easy to remember name for this location.</string>
     <string name="dialog_enter_name_leave_blank">Leave blank</string>
@@ -39,9 +39,9 @@
     <string name="onboarding_heading_2">Mask Reminder</string>
     <string name="onboarding_heading_3">Save Lives</string>
 
-    <string name="onboarding_desc_1">We allow for you to select a location, and upon leaving it, we send you a reminder to wear your mask</string>
-    <string name="onboarding_desc_2">We remind you to take and wear your mask in case you ever forget it</string>
-    <string name="onboarding_desc_3">Wearing a mask helps save lives and protects you and others around you</string>
+    <string name="onboarding_desc_1">Set your location to be reminded to wear your mask</string>
+    <string name="onboarding_desc_2">Never leave without your mask again</string>
+    <string name="onboarding_desc_3">Wearing your mask helps save lives</string>
 
     <string name="onboarding_next">Next</string>
     <string name="onboarding_back">Back</string>
@@ -49,9 +49,9 @@
     <string name="onboarding_skip">Skip</string>
     <string name="title_activity_maps">Map</string>
 
-    <string name="bottom_sheet_to_start">To get started, you need to login to your account</string>
+    <string name="bottom_sheet_to_start">Login to get started</string>
     <string name="bottom_sheet_login">Login</string>
-    <string name="bottom_sheet_register">Or else, create an account</string>
+    <string name="bottom_sheet_register">Create an account</string>
     <string name="bottom_sheet_welcome">Welcome, </string>
     <string name="bottom_sheet_add_location_hint">Enter Address, City or Zip Code</string>
 
@@ -63,7 +63,7 @@
 
     <string name="username_hint">Username</string>
     <string name="forgot_password_heading">Forgot password?</string>
-    <string name="forgot_password_para">You can enter your account email and we will send you an email that will allow you to verify your identity. </string>
+    <string name="forgot_password_para">Enter your email to verify your account and reset your password.</string>
     <string name="forgot_password_button">Send email</string>
     <string name="forgot_password_toast">A password reset email was sent!</string>
 
