@@ -55,7 +55,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         locations.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                NavController navController = Navigation.findNavController(getActivity(), R.id.fragment);
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
                 navController.navigate(R.id.locationsFragment);
 
                 return false;
@@ -104,7 +104,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         location = MapFragment.getInstance().location;
 
         try {
-            pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
+            pInfo = requireContext().getPackageManager().getPackageInfo(requireContext().getPackageName(), 0);
             version = pInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -123,7 +123,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onResume() {
         super.onResume();
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         boolean darkMode = preferences.getBoolean("enable_dark_mode", false);
 
     }
