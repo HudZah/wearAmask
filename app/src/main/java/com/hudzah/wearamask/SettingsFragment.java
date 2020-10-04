@@ -66,16 +66,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(Preference preference) {
 
-                if(ConnectivityReceiver.isConnected()){
+                if (ConnectivityReceiver.isConnected()) {
                     ParseUser.logOutInBackground(new LogOutCallback() {
                         @Override
                         public void done(ParseException e) {
-                            if(e == null){
+                            if (e == null) {
                                 Intent intent = new Intent(getContext(), LoginActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
-                            }
-                            else{
+                            } else {
                                 DialogAdapter.ADAPTER.displayErrorDialog(e.getMessage(), "");
                             }
                         }
@@ -91,10 +90,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 Log.d(TAG, "onPreferenceChange: changed with " + newValue.toString());
-                if((Boolean) newValue){
+                if ((Boolean) newValue) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                }
-                else{
+                } else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 }
                 return true;
@@ -115,8 +113,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         locations.setSummary(location.getLocationsArrayList().size() + " locations");
         appVersion.setSummary(version);
     }
-
-
 
 
     @Override
