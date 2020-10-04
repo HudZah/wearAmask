@@ -55,7 +55,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         locations.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                NavController navController = Navigation.findNavController(getActivity(), R.id.fragment);
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
                 navController.navigate(R.id.locationsFragment);
 
                 return false;
@@ -66,16 +66,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(Preference preference) {
 
-                if(ConnectivityReceiver.isConnected()){
+                if (ConnectivityReceiver.isConnected()) {
                     ParseUser.logOutInBackground(new LogOutCallback() {
                         @Override
                         public void done(ParseException e) {
-                            if(e == null){
+                            if (e == null) {
                                 Intent intent = new Intent(getContext(), LoginActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
-                            }
-                            else{
+                            } else {
                                 DialogAdapter.ADAPTER.displayErrorDialog(e.getMessage(), "");
                             }
                         }
@@ -86,25 +85,25 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         darkModeSwitch = (SwitchPreference) findPreference("enable_dark_mode");
-
-        darkModeSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                Log.d(TAG, "onPreferenceChange: changed with " + newValue.toString());
-                if((Boolean) newValue){
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        if (darkModeSwitch != null) {
+            darkModeSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    Log.d(TAG, "onPreferenceChange: changed with " + newValue.toString());
+                    if ((Boolean) newValue) {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    } else {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    }
+                    return true;
                 }
-                else{
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                }
-                return true;
-            }
-        });
+            });
+        }
 
         location = MapFragment.getInstance().location;
 
         try {
-            pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
+            pInfo = requireContext().getPackageManager().getPackageInfo(requireContext().getPackageName(), 0);
             version = pInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -117,13 +116,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     }
 
 
-
-
     @Override
     public void onResume() {
         super.onResume();
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         boolean darkMode = preferences.getBoolean("enable_dark_mode", false);
 
     }
