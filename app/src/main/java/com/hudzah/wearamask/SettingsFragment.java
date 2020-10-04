@@ -85,19 +85,20 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         darkModeSwitch = (SwitchPreference) findPreference("enable_dark_mode");
-
-        darkModeSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                Log.d(TAG, "onPreferenceChange: changed with " + newValue.toString());
-                if ((Boolean) newValue) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        if (darkModeSwitch != null) {
+            darkModeSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    Log.d(TAG, "onPreferenceChange: changed with " + newValue.toString());
+                    if ((Boolean) newValue) {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    } else {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    }
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
+        }
 
         location = MapFragment.getInstance().location;
 
