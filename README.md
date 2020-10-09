@@ -15,6 +15,8 @@ Using Geofencing technology, wearAmask is able to tell when you leave a location
 
 You can view all your locations in a single list in your "Locations" tab, allowing you to edit or delete a location.
 
+wearAmask stores your locations locally on your device, we never send data to a server to protect your privacy.
+
 
 
 ![](wAmFullScreenshot.png)
