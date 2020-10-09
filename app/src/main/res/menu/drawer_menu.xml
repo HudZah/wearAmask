@@ -49,10 +49,7 @@
                 android:icon="@drawable/ic_security_black_24dp"
                 android:title="@string/drawer_title_legal" />
 
-            <item
-                android:id="@+id/logout"
-                android:icon="@drawable/ic_exit_to_app_black_24dp"
-                android:title="@string/drawer_title_logout" />
+
         </menu>
 
     </item>

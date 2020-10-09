@@ -39,7 +39,7 @@
     <string name="onboarding_heading_2">Mask Reminder</string>
     <string name="onboarding_heading_3">Save Lives</string>
 
-    <string name="onboarding_desc_1">Set your location to be reminded to wear your mask</string>
+    <string name="onboarding_desc_1">Set your location to be reminded to wear your mask, with complete privacy</string>
     <string name="onboarding_desc_2">Never leave without your mask again</string>
     <string name="onboarding_desc_3">Wearing your mask helps save lives</string>
 
@@ -52,7 +52,7 @@
     <string name="bottom_sheet_to_start">Login to get started</string>
     <string name="bottom_sheet_login">Login</string>
     <string name="bottom_sheet_register">Create an account</string>
-    <string name="bottom_sheet_welcome">Welcome, </string>
+    <string name="bottom_sheet_welcome">Welcome!</string>
     <string name="bottom_sheet_add_location_hint">Enter Address, City or Zip Code</string>
 
     <string name="location_radius">Select radius (m)</string>
@@ -174,7 +174,7 @@ The terms used in this Privacy Policy have the same meanings as in our Terms and
     <string name="notification_exit_big_text">You are no longer in a safe location, make sure to wearAmask!</string>
     <string name="notification_enter_title">You have entered a safe location</string>
     <string name="notification_enter_text">You are now safe!</string>
-    <string name="notification_enter_big_text">has entered,</string>
+    <string name="notification_enter_big_text">You have entered,</string>
     <string name="notification_exit_part">make sure you wearAmask!</string>
     <string name="notification_enter_part">you are now safe!</string>
     <string name="notification_location_off_title">Location services turned off</string>
