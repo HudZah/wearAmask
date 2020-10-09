@@ -11,7 +11,6 @@ import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
-import com.parse.ParseUser;
 
 import java.io.IOException;
 import java.util.List;
@@ -81,7 +80,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                 if(!prefs.getBoolean("inBackground", false)) MapFragment.getInstance().switchFabSafeState(Geofence.GEOFENCE_TRANSITION_ENTER);
                 notificationHelper.sendHighPriorityNotification(mContext.getResources().getString(R.string.notification_enter_title),
                         mContext.getResources().getString(R.string.notification_enter_text),
-                        ParseUser.getCurrentUser().getUsername() + " "  + mContext.getResources().getString(R.string.notification_enter_big_text) + " " + address + ", " + mContext.getResources().getString(R.string.notification_enter_part),
+                        mContext.getResources().getString(R.string.notification_enter_big_text) + " " + address + ", " + mContext.getResources().getString(R.string.notification_enter_part),
                         BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_noti_safe),
                         MainActivity.class);
                 break;

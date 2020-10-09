@@ -15,8 +15,6 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.parse.ParseUser;
-
 import java.util.Random;
 
 public class NotificationHelper extends ContextWrapper {
@@ -61,8 +59,7 @@ public class NotificationHelper extends ContextWrapper {
                 .setLargeIcon(largeIcon)
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(bigBody)
-                        .setBigContentTitle(title)
-                        .setSummaryText(ParseUser.getCurrentUser().getUsername()))
+                        .setBigContentTitle(title))
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .build();

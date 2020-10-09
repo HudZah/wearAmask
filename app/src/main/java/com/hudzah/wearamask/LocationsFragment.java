@@ -18,13 +18,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.parse.DeleteCallback;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
-
 
 public class LocationsFragment extends Fragment {
 
@@ -84,7 +77,7 @@ public class LocationsFragment extends Fragment {
                 choiceBuilder.setItems(new String[]{"Delete"}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(which == 0){
+                        if (which == 0) {
                             deleteItem(position);
                         }
                     }
@@ -93,7 +86,7 @@ public class LocationsFragment extends Fragment {
         });
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
-                                                                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
@@ -106,34 +99,17 @@ public class LocationsFragment extends Fragment {
         }).attachToRecyclerView(recyclerView);
     }
 
-    private void deleteItem(int position){
-        if(ConnectivityReceiver.isConnected()) {
-            DialogAdapter.ADAPTER.loadingDialog();
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("Locations");
-            query.whereEqualTo("username", ParseUser.getCurrentUser().getUsername());
-            query.whereEqualTo("objectId", location.getLocationsArrayList().get(position).getLocationID());
-            query.getFirstInBackground(new GetCallback<ParseObject>() {
-                @Override
-                public void done(ParseObject object, ParseException e) {
-                    if (e == null) {
-                        object.deleteInBackground(new DeleteCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                if (e == null) {
-                                    DialogAdapter.ADAPTER.dismissLoadingDialog();
-                                    Toast.makeText(getContext(), "Deleted Successfully!", Toast.LENGTH_SHORT).show();
-                                    CircleManager.Manager.clearGeofences();
-                                }
-                            }
-                        });
-                    }
-                }
-            });
-            location.getLocationsArrayList().remove(position);
-            adapter.notifyItemRemoved(position);
-        }
-        else{
-            Toast.makeText(getContext(), "You need to have a valid connection to delete an item", Toast.LENGTH_SHORT).show();
-        }
+    private void deleteItem(int position) {
+        DialogAdapter.ADAPTER.loadingDialog();
+        LocationRepository locationRepository = new LocationRepository(getContext());
+        locationRepository.delete(location.getLocationsArrayList().get(position));
+        location.getLocationsArrayList().remove(position);
+        adapter.notifyItemRemoved(position);
+        MapFragment.getInstance().discardLocation();
+        CircleManager.Manager.clearGeofences();
+        location.getAllLocations(true);
+        DialogAdapter.ADAPTER.dismissLoadingDialog();
+        Toast.makeText(getContext(), "Deleted successfully", Toast.LENGTH_SHORT).show();
+
     }
 }

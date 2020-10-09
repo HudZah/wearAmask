@@ -1,13 +1,13 @@
 package com.hudzah.wearamask;
 
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -17,21 +17,15 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
 
-import com.parse.LogOutCallback;
-import com.parse.ParseException;
-import com.parse.ParseUser;
-
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class SettingsFragment extends PreferenceFragmentCompat {
 
-    Preference username;
-    Preference email;
     Preference locations;
     Preference appVersion;
-    Preference logout;
+    Preference data;
 
     String version;
     PackageInfo pInfo;
@@ -46,11 +40,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_preferences, rootKey);
 
-        username = (Preference) findPreference("username");
-        email = (Preference) findPreference("email");
+
         locations = (Preference) findPreference("locations");
         appVersion = (Preference) findPreference("version");
-        logout = (Preference) findPreference("logout");
+        data = (Preference) findPreference("data");
 
         locations.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -62,24 +55,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
-        logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        data.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
 
-                if (ConnectivityReceiver.isConnected()) {
-                    ParseUser.logOutInBackground(new LogOutCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if (e == null) {
-                                Intent intent = new Intent(getContext(), LoginActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-                            } else {
-                                DialogAdapter.ADAPTER.displayErrorDialog(e.getMessage(), "");
-                            }
-                        }
-                    });
-                }
+                new AlertDialog.Builder(getContext())
+                        .setTitle("wearAmask and your data")
+                        .setMessage("To protect your location data, we store sensitive information directly on your phone.\n\nwearAmask does" +
+                                " not collect your data nor store it on a server, but rather it is stored on your local database.")
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
                 return false;
             }
         });
@@ -109,8 +94,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             e.printStackTrace();
         }
 
-        username.setSummary(ParseUser.getCurrentUser().getUsername());
-        email.setSummary(ParseUser.getCurrentUser().getEmail());
         locations.setSummary(location.getLocationsArrayList().size() + " locations");
         appVersion.setSummary(version);
     }

@@ -8,8 +8,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,9 +19,6 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
-import com.parse.LogOutCallback;
-import com.parse.ParseException;
-import com.parse.ParseUser;
 
 import java.util.List;
 
@@ -41,6 +36,7 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_maps);
 
         DarkModeHandler.DARK_MODE_HANDLER.checkDarkMode(this);
@@ -72,10 +68,7 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
 
         navView.setNavigationItemSelectedListener(this);
 
-        TextView tv = navView.getHeaderView(0).findViewById(R.id.userTextView);
-        if (ParseUser.getCurrentUser() != null) {
-            tv.setText(ParseUser.getCurrentUser().getUsername());
-        }
+
     }
 
     @Override
@@ -93,7 +86,7 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == R.id.help){
+        if (item.getItemId() == R.id.help) {
             CoachMarks.Manager.init(this);
             CoachMarks.Manager.showLocationCoachMarks();
         }
@@ -119,13 +112,6 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
 
         int id = menuItem.getItemId();
 
-        if(ParseUser.getCurrentUser() == null) {
-            if (id == R.id.locationsFragment || id == R.id.settingsFragment || id == R.id.dashboardFragment) {
-                Toast.makeText(this, "You need to be logged in first", Toast.LENGTH_SHORT).show();
-                menuItem.setChecked(false);
-                return false;
-            }
-        }
 
         switch (id) {
 
@@ -150,11 +136,11 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.rateUs:
-                try{
+                try {
                     startActivity(new Intent(Intent.ACTION_VIEW,
                             Uri.parse("market://details?id=" + getPackageName())));
                     break;
-                } catch (ActivityNotFoundException e){
+                } catch (ActivityNotFoundException e) {
                     startActivity(new Intent(Intent.ACTION_VIEW,
                             Uri.parse("http://play.google.com/store/apps/details?id=" + getPackageName())));
                     break;
@@ -163,9 +149,6 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
             case R.id.legalFragment:
                 navController.navigate(R.id.legalFragment);
                 break;
-
-            case R.id.logout:
-                parseLogout();
 
             default:
                 break;
@@ -184,23 +167,6 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private void parseLogout() {
-        DialogAdapter.ADAPTER.loadingDialog();
-        ParseUser.logOutInBackground(new LogOutCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                } else {
-                    DialogAdapter.ADAPTER.displayErrorDialog(e.getMessage(), "");
-                }
-
-                DialogAdapter.ADAPTER.dismissLoadingDialog();
-            }
-        });
-    }
 
     @Override
     protected void onResume() {

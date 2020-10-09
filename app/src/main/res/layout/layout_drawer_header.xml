@@ -34,19 +34,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Logged in as:"
+                android:text="wearAmask"
                 android:textColor="@color/white"
                 android:fontFamily="@font/coco_regular"
-                android:textSize="16sp"/>
+                android:textSize="21sp"/>
 
-            <TextView
-                android:id="@+id/userTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="@color/white"
-                android:fontFamily="sans-serif-medium"
-                android:textSize="26sp"/>
+
 
         </LinearLayout>
 

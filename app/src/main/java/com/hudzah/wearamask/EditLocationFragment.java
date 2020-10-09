@@ -23,12 +23,6 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 
@@ -129,8 +123,7 @@ public class EditLocationFragment extends Fragment {
                 if (!locationNameInput.getEditText().getText().equals("")) {
                     if (ConnectivityReceiver.isConnected()) {
                         updateLocationToParse();
-                    }
-                    else{
+                    } else {
                         Toast.makeText(getContext(), "Connection required!", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -139,32 +132,18 @@ public class EditLocationFragment extends Fragment {
     }
 
     private void updateLocationToParse() {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Locations");
-        query.whereEqualTo("username", ParseUser.getCurrentUser().getUsername());
-        query.whereEqualTo("objectId", location.getLocationID());
-
-        query.getFirstInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject object, ParseException e) {
-                object.put("name", locationNameInput.getEditText().getText().toString());
-                object.put("radius", radiusSeekBar.getProgress());
-                object.put("color", String.valueOf(selectedColor));
-                DialogAdapter.ADAPTER.loadingDialog();
-                object.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e == null) {
-                            NavController navController = Navigation.findNavController(getActivity(), R.id.fragment);
-                            navController.navigate(R.id.mapFragment);
-                        }
-
-                        DialogAdapter.ADAPTER.dismissLoadingDialog();
-
-                    }
-                });
-            }
-        });
+        LocationRepository locationRepository = new LocationRepository(getContext());
+        Location newLocation = new Location(radiusSeekBar.getProgress(), selectedColor,
+                location.getLatitude(), location.getLongitude(), location.getAddress(),
+                locationNameInput.getEditText().getText().toString());
+        newLocation.setLocationID(location.getLocationID());
+        locationRepository.update(newLocation);
+        NavController navController = Navigation.findNavController(getActivity(), R.id.fragment);
+        navController.navigate(R.id.mapFragment);
+        Log.d(TAG, "updateLocationToParse: updated successfully");
+        Toast.makeText(getContext(), "Updated successfully", Toast.LENGTH_SHORT).show();
     }
+
 
     private void initUI() {
         locationNameInput.getEditText().setText(location.getLocationName());

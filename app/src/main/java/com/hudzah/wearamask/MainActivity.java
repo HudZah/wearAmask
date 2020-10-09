@@ -15,10 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.parse.ParseInstallation;
-import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,25 +49,11 @@ public class MainActivity extends AppCompatActivity {
 
         firstTime = sharedPreferences.getBoolean("firstTime", true);
         Log.d(TAG, "onCreate: firstTime is " + firstTime);
-        if(!firstTime){
-            if(ParseUser.getCurrentUser() != null){
-                goToMaps();
-            }
 
-            else{
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                this.overridePendingTransition(0, 0);
-
-            }
-        }
-
+        // If not the first time go to maps, else show onboarding screen
+        if(!firstTime) goToMaps();
 
         ParseInstallation.getCurrentInstallation().saveInBackground();
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        // TODO: 8/6/2020 FIX GOOGLE SIGN IN
-
 
         sliderViewPager = (ViewPager) findViewById(R.id.slideViewPager);
         dotsLayout = (LinearLayout) findViewById(R.id.dotsLayout);
@@ -80,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
         skipButton = (Button) findViewById(R.id.skipButton);
 
         sliderAdapter = new SliderAdapter(this);
-
 
         sliderViewPager.setAdapter(sliderAdapter);
 

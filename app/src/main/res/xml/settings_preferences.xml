@@ -7,16 +7,6 @@
         app:key="account"
         app:title="Account">
 
-        <Preference
-            android:summary="HudZah"
-            app:key="username"
-
-            app:title="Username" />
-
-        <Preference
-            android:summary="chiefhudhafya@gmail.com"
-            app:key="email"
-            app:title="Email" />
 
         <Preference
             android:summary="59 locations"
@@ -24,9 +14,9 @@
             app:title="Locations" />
 
         <Preference
-            app:key="logout"
-            app:title="Logout"
-            android:summary="Logout of your account"/>
+            app:key="data"
+            app:title="Data collection"
+            android:summary="How does wearAmask guarantee my data security?"/>
 
 
     </PreferenceCategory>
