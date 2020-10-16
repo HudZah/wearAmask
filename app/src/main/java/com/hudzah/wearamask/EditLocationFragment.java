@@ -158,7 +158,7 @@ public class EditLocationFragment extends Fragment {
     private void hideKeyboard(View v) {
         if (v.getId() == R.id.layout) {
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+            if(imm != null) imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
         }
 
     }
