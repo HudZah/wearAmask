@@ -21,6 +21,8 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="27dp"
         android:layout_gravity="bottom"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         app:layout_dodgeInsetEdges="bottom">
 
         <androidx.cardview.widget.CardView
@@ -56,6 +58,9 @@
             android:layout_marginRight="30dp"
             android:layout_marginBottom="15dp"
             android:orientation="vertical"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+
             >
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
